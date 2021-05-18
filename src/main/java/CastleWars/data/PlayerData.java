@@ -18,12 +18,12 @@ import mindustry.gen.WaterMovec;
 
 public class PlayerData {
 
-    public static IntMap<PlayerData> datas = new IntMap<PlayerData>();
+    public static IntMap<PlayerData> datas = new IntMap<>();
     public static float MoneyInterval = 60f;
     public static float LabelInterval = 60f * 30f;
 
     public Player player;
-    public int money, income = 10;
+    public int money, income = 30;
     Interval interval;
 
     public PlayerData(Player player) {
@@ -60,10 +60,9 @@ public class PlayerData {
         }
 
         // Set Hud Text
-        StringBuilder str = new StringBuilder();
-        str.append("[gold]money: [white]").append(money).append("\n")
-                .append("[lime]income: [white]").append(income);
-        Call.setHudText(player.con, str.toString());
+        String str = "[gold]money: [white]" + money + "\n" +
+                "[lime]income: [white]" + income;
+        Call.setHudText(player.con, str);
     }
 
     public static void init() {
@@ -74,15 +73,11 @@ public class PlayerData {
                 if (Groups.player.size() == 1) {
                     labels(Groups.player.index(0));
                 }
-                Timer.schedule(() -> {
-                    labels(event.player);
-                }, 1);
+                Timer.schedule(() -> labels(event.player), 1);
             }
         });
 
-        Events.on(EventType.PlayerLeave.class, event -> {
-            datas.remove(event.player.id);
-        });
+        Events.on(EventType.PlayerLeave.class, event -> datas.remove(event.player.id));
     }
 
     public static void labels(Player player) {
@@ -99,7 +94,7 @@ public class PlayerData {
     }
 
     public void reset() {
-        this.income = 10;
+        this.income = 30;
         this.money = 0;
     }
 }

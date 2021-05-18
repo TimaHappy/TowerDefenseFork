@@ -6,34 +6,34 @@ import mindustry.world.Tiles;
 import mindustry.world.blocks.environment.Floor;
 
 public interface RoomComp {
-    public int cost();
+    int cost();
     
-    public int size();
-    public float drawSize();
+    int size();
+    float drawSize();
     
-    public int x();
-    public int y();
+    int x();
+    int y();
     
-    public int centrex();
-    public int centrey();
+    int centrex();
+    int centrey();
     
-    public int endx();
-    public int endy();
+    int endx();
+    int endy();
     
-    public float drawx();
-    public float drawy();
+    float drawx();
+    float drawy();
     
-    public float centreDrawx();
-    public float centreDrawy();
+    float centreDrawx();
+    float centreDrawy();
     
-    public float endDrawx();
-    public float endDrawy();
+    float endDrawx();
+    float endDrawy();
     
-    public String label();
+    String label();
     
-    public void buy(PlayerData data);
+    void buy(PlayerData data);
     
-    public void update();
+    void update();
     
     default boolean canBuy(PlayerData data) {
         return data.money >= cost();

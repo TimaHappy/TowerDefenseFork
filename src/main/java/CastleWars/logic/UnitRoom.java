@@ -16,27 +16,25 @@ public class UnitRoom extends Room {
     public static Tile blueSpawn, shardedSpawn;
 
     public enum Type {
-        Attacker, Defender;
+        Attacker, Defender
     }
 
     public UnitType unit;
     public Type type;
-    public int income = 0;
+    public int income;
 
-    public UnitRoom(UnitType type, int x, int y, int cost, int income, Type clas) {
+    public UnitRoom(UnitType unit, int x, int y, int cost, int income, Type type) {
         super(x, y, cost, 4);
-        this.unit = type;
-        this.type = clas;
+        this.unit = unit;
+        this.type = type;
         this.income = income;
         StringBuilder str = new StringBuilder();
 
         int len = String.valueOf(income).length() + 2 + String.valueOf(cost).length();
-        for (int i = 0; i < len / 2; i++) {
-            str.append(" ");
-        }
-        str.append(Icon.get(type));
+        str.append(" ".repeat(Math.max(0, len / 2)));
+        str.append(Icon.get(unit));
 
-        if (clas == Type.Attacker) {
+        if (type == Type.Attacker) {
             str.append(" [accent]").append(Icon.get(Blocks.commandCenter));
         } else {
             str.append(" [scarlet]").append(Icon.get(Blocks.duo));
@@ -80,8 +78,7 @@ public class UnitRoom extends Room {
     }
 
     @Override
-    public void spawn(Tiles t
-    ) {
+    public void spawn(Tiles t) {
         super.spawn(t);
     }
 

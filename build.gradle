@@ -6,7 +6,7 @@ repositories{
 }
 
 ext{
-    mindustryVersion = 'v121'
+    mindustryVersion = 'v131'
     gsonVersion      = '2.8.6'
 }
 

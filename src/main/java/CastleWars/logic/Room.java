@@ -5,11 +5,11 @@ import mindustry.Vars;
 
 public abstract class Room implements RoomComp {
 
-    public static Seq<Room> rooms = new Seq<Room>();
+    public static Seq<Room> rooms = new Seq<>();
     public static int ROOM_SIZE = 8;
 
-    public int size = ROOM_SIZE;
-    public float drawSize = ROOM_SIZE * Vars.tilesize;
+    public int size;
+    public float drawSize;
     public String label = "";
 
     public int x, y, centrex, centrey, endx, endy;
@@ -38,10 +38,6 @@ public abstract class Room implements RoomComp {
         this.endDrawy = drawy + drawSize;
     }
 
-    public Room(int x, int y, int cost) {
-        this(x, y, cost, ROOM_SIZE);
-    }
-
     @Override
     public int cost() {
         return cost;
@@ -54,7 +50,7 @@ public abstract class Room implements RoomComp {
 
     @Override
     public float drawSize() {
-        return drawSize();
+        return drawSize;
     }
 
     @Override
