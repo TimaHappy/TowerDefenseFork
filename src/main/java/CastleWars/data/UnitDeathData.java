@@ -34,6 +34,7 @@ public class UnitDeathData {
         cost.put(UnitTypes.bryde, 300);
         cost.put(UnitTypes.sei, 2500);
         cost.put(UnitTypes.omura, 6500);
+
         // Spiders
         cost.put(UnitTypes.crawler, 20);
         cost.put(UnitTypes.atrax, 80);
@@ -41,7 +42,7 @@ public class UnitDeathData {
         cost.put(UnitTypes.arkyid, 1300);
         cost.put(UnitTypes.toxopid, 5000);
 
-        // Air ?xd
+        // Air | xd?
         cost.put(UnitTypes.flare, 25);
         cost.put(UnitTypes.horizon, 50);
         cost.put(UnitTypes.zenith, 250);
@@ -61,15 +62,14 @@ public class UnitDeathData {
         cost.put(UnitTypes.gamma, 250);
 
         // Block xd | oh no
-        cost.put(UnitTypes.block, 100);
+        cost.put(UnitTypes.block, 1);
 
         Events.on(EventType.UnitDestroyEvent.class, event -> {
             if (cost.containsKey(event.unit.type)) {
                 for (PlayerData data : PlayerData.datas.values()) {
                     if (event.unit.team != data.player.team() && !event.unit.spawnedByCore) {
-                        int money = get(event.unit.type);
-                        data.money += money;
-                        Call.label(data.player.con, "[lime]" + money, 0.5f, event.unit.x, event.unit.y);
+                        data.money += get(event.unit.type);
+                        Call.label(data.player.con, "[accent]+ [lime]" + get(event.unit.type), 0.5f, event.unit.x, event.unit.y);
                     }
                 }
             }

@@ -65,6 +65,6 @@ public class Icon {
         if (icons.containsKey(item)) {
             return icons.get(item).toString();
         }
-        return "";
+        return "???";
     }
 }

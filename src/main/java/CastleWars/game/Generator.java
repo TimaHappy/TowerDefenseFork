@@ -37,14 +37,13 @@ public class Generator implements Cons<Tiles> {
         height = saved.height * 2 + (Room.ROOM_SIZE * 6);
     }
 
-    public Seq<Tile> run() {
+    public void run() {
         Vars.world.loadGenerator(width, height, this);
         for (Teams.TeamData teamData : Vars.state.teams.active) {
             for (CoreBlock.CoreBuild core : teamData.cores) {
                 core.kill();
             }
         }
-        return cores;
     }
 
     @Override
@@ -97,14 +96,14 @@ public class Generator implements Cons<Tiles> {
             }
         }
         // UnitShop in centre
-        unitInit(t);
+        unitInit();
 
         for (Room room : Room.rooms) {
             room.spawn(t);
         }
     }
 
-    private void unitInit(Tiles t) {
+    private void unitInit() {
         int cx = 2, cy = saved.height + 2;
         int Padding = Room.ROOM_SIZE + 2;
         // Ground

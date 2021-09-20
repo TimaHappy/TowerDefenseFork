@@ -3,6 +3,7 @@ package CastleWars.game;
 import CastleWars.Main;
 import CastleWars.data.PlayerData;
 import CastleWars.logic.Room;
+import CastleWars.Bundle;
 import arc.Events;
 import arc.struct.Seq;
 import arc.util.Timer;
@@ -26,7 +27,6 @@ public class Logic {
     Seq<Tile> cores = new Seq<>();
 
     public Logic() {
-
         Events.on(EventType.BlockDestroyEvent.class, e -> {
             if (!(e.tile.build instanceof CoreBlock.CoreBuild) || e.tile.build.team.cores().size > 1 || !worldLoaded) return;
 
@@ -95,12 +95,7 @@ public class Logic {
     }
 
     public void gameOver(Team team) {
-        String winner = "[gold]Winner: ";
-
-        if (team != Team.derelict) {
-            winner += "[#" + team.color.toString() + "]" + team.name;
-        }
-        Call.infoMessage(winner);
+        Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.blue ? "events.win.blue" : "events.win.sharded", Bundle.findLocale(p))));
         Timer.schedule(this::restart, 3);
         worldLoaded = false;
     }
