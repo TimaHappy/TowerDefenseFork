@@ -1,25 +1,29 @@
 package CastleWars;
 
 import CastleWars.data.Icon;
-import arc.util.CommandHandler;
-import arc.util.Time;
-import mindustry.mod.Plugin;
-import mindustry.gen.Player;
 import CastleWars.data.PlayerData;
 import CastleWars.data.UnitDeathData;
 import CastleWars.game.Logic;
 import arc.Events;
+import arc.struct.Seq;
+import arc.util.CommandHandler;
+import arc.util.Log;
+import arc.util.Time;
 import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.game.EventType;
 import mindustry.game.Rules;
 import mindustry.game.Team;
+import mindustry.gen.Call;
+import mindustry.gen.Player;
+import mindustry.mod.Plugin;
 import mindustry.world.Block;
 import mindustry.world.blocks.storage.CoreBlock;
 
 public class Main extends Plugin {
 
     public static Rules rules;
+    public static Seq<String> disabledHud = new Seq<>();
     public Logic logic;
 
     @Override
@@ -53,6 +57,7 @@ public class Main extends Plugin {
             Vars.content.units().each(u -> u.canBoost = false);
 
             logic.restart();
+            Log.info("Castle Wars loaded.");
             Vars.netServer.openServer();
         });
 
@@ -61,11 +66,22 @@ public class Main extends Plugin {
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        handler.<Player>register("label", "Show shops label | use when labels hidden", (args, player) -> PlayerData.labels(player));
+        handler.<Player>register("label", "Show shops label. Use when labels are hidden. Debug only.", (args, player) -> PlayerData.labels(player));
+
+        handler.<Player>register("hud", "Disable/Enable hud.", (args, player) -> {
+            if (disabledHud.contains(player.uuid())) {
+                disabledHud.remove(player.uuid());
+                Bundle.bundled(player, "commands.hud.on");
+            } else {
+                disabledHud.add(player.uuid());
+                Call.setHudText(player.con, "");
+                Bundle.bundled(player,"commands.hud.off");
+            }
+        });
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        handler.register("restart", "start new game", (args) -> logic.restart());
+        handler.register("restart", "Перезапустить раунд.", (args) -> logic.restart());
     }
 }

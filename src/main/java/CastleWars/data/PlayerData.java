@@ -2,6 +2,8 @@ package CastleWars.data;
 
 import CastleWars.logic.Room;
 import CastleWars.logic.TurretRoom;
+import CastleWars.Bundle;
+import CastleWars.Main;
 import arc.Events;
 import arc.math.Mathf;
 import arc.struct.IntMap;
@@ -23,7 +25,7 @@ public class PlayerData {
     public static float LabelInterval = 60f * 30f;
 
     public Player player;
-    public int money, income = 30;
+    public int money, income = 25;
     Interval interval;
 
     public PlayerData(Player player) {
@@ -33,16 +35,12 @@ public class PlayerData {
 
     public void update() {
         // Income Math
-        if (interval.get(0, MoneyInterval)) {
-            money += income;
-        }
-        if (interval.get(1, LabelInterval)) {
-            labels(player);
-        }
+        if (interval.get(0, MoneyInterval)) money += income;
+        if (interval.get(1, LabelInterval)) labels(player);
         // For Room Rect
         if (player.shooting && player.unit() != null) {
             for (Room room : Room.rooms) {
-                if (room instanceof TurretRoom && !(((TurretRoom) room).team == player.team())) {
+                if (room instanceof TurretRoom && !(((TurretRoom)room).team == player.team())) {
                     continue;
                 }
                 if (room.check(player.unit().aimX, player.unit().aimY) && room.canBuy(this)) {
@@ -50,7 +48,7 @@ public class PlayerData {
                 }
             }
         }
-        // Set Unit ro risso :Ç
+        // Set Unit to risso
         if (player.unit().spawnedByCore && !(player.unit() instanceof WaterMovec)) {
             if (player.team().core() != null) {
                 Unit u = UnitTypes.risso.spawn(player.team(), player.team().core().x + 30, player.team().core().y + Mathf.random(-40, 40));
@@ -60,9 +58,7 @@ public class PlayerData {
         }
 
         // Set Hud Text
-        String str = "[gold]money: [white]" + money + "\n" +
-                "[lime]income: [white]" + income;
-        Call.setHudText(player.con, str);
+        if (!Main.disabledHud.contains(player.uuid())) Call.setHudText(player.con, Bundle.format("commands.hud.display", Bundle.findLocale(player), money, income));
     }
 
     public static void init() {
@@ -70,9 +66,7 @@ public class PlayerData {
             datas.put(event.player.id, new PlayerData(event.player));
             Vars.netServer.assignTeam(event.player, Groups.player);
             if (Groups.player.size() >= 1) {
-                if (Groups.player.size() == 1) {
-                    labels(Groups.player.index(0));
-                }
+                if (Groups.player.size() == 1) labels(Groups.player.index(0));
                 Timer.schedule(() -> labels(event.player), 1);
             }
         });
@@ -82,11 +76,7 @@ public class PlayerData {
 
     public static void labels(Player player) {
         for (Room room : Room.rooms) {
-            if (room instanceof TurretRoom) {
-                if (((TurretRoom) (room)).team != player.team()) {
-                    continue;
-                }
-            }
+            if (room instanceof TurretRoom && ((TurretRoom)room).team != player.team()) continue;
             if (room.labelVisible) {
                 Call.label(player.con, room.label, LabelInterval / 60f, room.centreDrawx, room.centreDrawy - room.size * 8 / 4);
             }
@@ -94,7 +84,7 @@ public class PlayerData {
     }
 
     public void reset() {
-        this.income = 30;
+        this.income = 25;
         this.money = 0;
     }
 }

@@ -34,20 +34,14 @@ public class UnitRoom extends Room {
         str.append(" ".repeat(Math.max(0, len / 2)));
         str.append(Icon.get(unit));
 
-        if (type == Type.Attacker) {
-            str.append(" [accent]").append(Icon.get(Blocks.commandCenter));
-        } else {
-            str.append(" [scarlet]").append(Icon.get(Blocks.duo));
-        }
+        if (type == Type.Attacker) str.append(" [accent]").append(Icon.get(Blocks.commandCenter));
+        else str.append(" [scarlet]").append(Icon.get(Blocks.duo));
 
         str.append("\n[gray]").append(cost).append("\n[white]").append(Icon.get(Blocks.plastaniumCompressor)).append(" : ");
-        if (income < 0) {
-            str.append("[crimson]");
-        } else if (income > 0) {
-            str.append("[lime]");
-        } else {
-            str.append("[gray]");
-        }
+
+        if (income < 0) str.append("[crimson]");
+        else if (income > 0) str.append("[lime]");
+        else str.append("[gray]");
         str.append(income);
         label = str.toString();
     }
