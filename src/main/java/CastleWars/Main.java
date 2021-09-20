@@ -53,6 +53,7 @@ public class Main extends Plugin {
             Vars.content.units().each(u -> u.canBoost = false);
 
             logic.restart();
+            Log.info("Запущен сервер в режиме Castle Wars!");
             Vars.netServer.openServer();
         });
 
