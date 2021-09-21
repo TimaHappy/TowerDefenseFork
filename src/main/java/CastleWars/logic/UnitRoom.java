@@ -1,15 +1,14 @@
 package CastleWars.logic;
 
-import CastleWars.data.Icon;
-import CastleWars.data.PlayerData;
 import CastleWars.Bundle;
 import CastleWars.Main;
+import CastleWars.data.Icon;
+import CastleWars.data.PlayerData;
 import arc.math.Mathf;
 import mindustry.content.Blocks;
-import mindustry.content.UnitTypes;
 import mindustry.game.Team;
-import mindustry.gen.Unit;
 import mindustry.gen.Groups;
+import mindustry.gen.Unit;
 import mindustry.type.UnitType;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
@@ -78,7 +77,5 @@ public class UnitRoom extends Room {
     }
 
     @Override
-    public void update() {
-    }
-
+    public void update() {}
 }

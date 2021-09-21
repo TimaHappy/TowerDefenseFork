@@ -49,11 +49,6 @@ public abstract class Room implements RoomComp {
     }
 
     @Override
-    public float drawSize() {
-        return drawSize;
-    }
-
-    @Override
     public int x() {
         return x;
     }
@@ -61,16 +56,6 @@ public abstract class Room implements RoomComp {
     @Override
     public int y() {
         return y;
-    }
-
-    @Override
-    public int endx() {
-        return endx;
-    }
-
-    @Override
-    public int endy() {
-        return endy;
     }
 
     @Override
@@ -91,30 +76,5 @@ public abstract class Room implements RoomComp {
     @Override
     public float endDrawy() {
         return endDrawy;
-    }
-    
-    @Override
-    public int centrex() {
-        return centrex;
-    }
-
-    @Override
-    public int centrey() {
-        return centrey;
-    }
-
-    @Override
-    public float centreDrawx() {
-        return centreDrawx;
-    }
-
-    @Override
-    public float centreDrawy() {
-        return centreDrawy;
-    }
-
-    @Override
-    public String label() {
-        return label;
     }
 }

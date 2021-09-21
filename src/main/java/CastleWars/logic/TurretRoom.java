@@ -16,6 +16,8 @@ import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.LaserTurret;
 
+import static mindustry.content.Blocks.*;
+
 public class TurretRoom extends Room {
 
     public boolean bought = false;
@@ -55,18 +57,16 @@ public class TurretRoom extends Room {
 
     @Override
     public void update() {
-        if (buyyed && interval.get(0, updateTime)) {
+        if (bought && interval.get(0, updateTime)) {
             if (Vars.world.tile(centrex, centrey).build == null) Vars.world.tile(centrex, centrey).setNet(block, team, 0);
         }
     }
 
     public static Item ammo(Block block) {
-        return switch(block) {
-            case foreshadow, swarmer -> Items.surgeAlloy;
-            case cyclone -> Items.plastanium;
-            case ripple -> Items.blastCompound;
-            case spectre, fuse, salvo -> Items.thorium;
-            default -> Items.copper;
-        };
+        if (block == foreshadow || block == swarmer) return Items.surgeAlloy;
+        if (block == cyclone) return Items.plastanium;
+        if (block == ripple) return Items.blastCompound;
+        if (block == spectre || block == fuse || block == salvo) return Items.thorium;
+        return Items.copper;
     }
 }

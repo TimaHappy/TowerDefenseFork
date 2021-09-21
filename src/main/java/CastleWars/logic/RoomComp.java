@@ -9,27 +9,15 @@ public interface RoomComp {
     int cost();
     
     int size();
-    float drawSize();
     
     int x();
     int y();
-    
-    int centrex();
-    int centrey();
-    
-    int endx();
-    int endy();
-    
+
     float drawx();
     float drawy();
-    
-    float centreDrawx();
-    float centreDrawy();
-    
+
     float endDrawx();
     float endDrawy();
-    
-    String label();
     
     void buy(PlayerData data);
     

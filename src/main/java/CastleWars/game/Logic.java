@@ -61,9 +61,10 @@ public class Logic {
 
         UnitTypes.omura.abilities.clear();
         UnitTypes.mono.weapons.add(UnitTypes.crawler.weapons.get(0));
-        Blocks.coreShard.unitCapModifier = 99999;
         Blocks.itemSource.health = 999999;
-        Blocks.coreNucleus.unitCapModifier = 99999;
+        Blocks.liquidSource.health = 999999;
+        Blocks.coreNucleus.unitCapModifier = 999;
+        Blocks.coreShard.unitCapModifier = 999;
         Room.rooms.clear();
 
         PlayerData.datas.values().forEach(PlayerData::reset);

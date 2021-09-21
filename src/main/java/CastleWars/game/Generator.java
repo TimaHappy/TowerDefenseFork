@@ -109,22 +109,22 @@ public class Generator implements Cons<Tiles> {
         // Ground
         addUnit(UnitTypes.dagger, cx, cy + 2, 50, 0);
         addUnit(UnitTypes.mace, cx + Padding, cy + 2, 100, 1);
-        addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 300, 3);
-        addUnit(UnitTypes.scepter, cx + Padding * 3, cy + 2, 2400, 24);
+        addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 350, 3);
+        addUnit(UnitTypes.scepter, cx + Padding * 3, cy + 2, 2800, 25);
         addUnit(UnitTypes.reign, cx + Padding * 4, cy + 2, 7000, 70);
         // Support 
         cx += 2;
         addUnit(UnitTypes.nova, cx + Padding * 5, cy + 2, 60, 0);
         addUnit(UnitTypes.pulsar, cx + Padding * 6, cy + 2, 120, 1);
-        addUnit(UnitTypes.quasar, cx + Padding * 7, cy + 2, 400, 4);
-        addUnit(UnitTypes.vela, cx + Padding * 8, cy + 2, 2000, 20);
+        addUnit(UnitTypes.quasar, cx + Padding * 7, cy + 2, 500, 4);
+        addUnit(UnitTypes.vela, cx + Padding * 8, cy + 2, 2500, 20);
         addUnit(UnitTypes.corvus, cx + Padding * 9, cy + 2, 8000, 80);
         // Spiders
         cx -= 2;
         addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 40, 0);
         addUnit(UnitTypes.atrax, cx + Padding, cy + 2 + Padding * 2, 100, 1);
         addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 300, 3);
-        addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 2600, 26);
+        addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 3000, 30);
         addUnit(UnitTypes.toxopid, cx + Padding * 4, cy + 2 + Padding * 2, 9000, 90);
         // Naval 
         cx += 2;
@@ -181,7 +181,7 @@ public class Generator implements Cons<Tiles> {
     private void addUnit(UnitType type, int x, int y, int cost, int income) {
         Room.rooms.add(new UnitRoom(type, x, y, cost, income, UnitRoom.Type.Attacker));
         if (type != UnitTypes.nova && type != UnitTypes.dagger && type != UnitTypes.crawler) {
-            Room.rooms.add(new UnitRoom(type, x, y + Room.ROOM_SIZE + 2, cost, -income, UnitRoom.Type.Defender));
+            Room.rooms.add(new UnitRoom(type, x, y + Room.ROOM_SIZE + 2, cost, -income + 2, UnitRoom.Type.Defender));
         }
         // Some Resource Room Why be not? xd
         if (type == UnitTypes.nova) {

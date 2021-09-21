@@ -1,9 +1,9 @@
 package CastleWars.data;
 
+import static CastleWars.Bundle.findLocale;
+import static CastleWars.Bundle.format;
 import CastleWars.logic.Room;
 import CastleWars.logic.TurretRoom;
-import CastleWars.Bundle;
-import CastleWars.Main;
 import arc.Events;
 import arc.math.Mathf;
 import arc.struct.IntMap;
@@ -12,11 +12,7 @@ import arc.util.Timer;
 import mindustry.Vars;
 import mindustry.content.UnitTypes;
 import mindustry.game.EventType;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
-import mindustry.gen.Unit;
-import mindustry.gen.WaterMovec;
+import mindustry.gen.*;
 
 public class PlayerData {
 
@@ -59,7 +55,7 @@ public class PlayerData {
         }
 
         // Set Hud Text
-        if (!disabledHud) Call.setHudText(player.con, Bundle.format("commands.hud.display", Bundle.findLocale(player), money, income));
+        if (!disabledHud) Call.setHudText(player.con, format("commands.hud.display", findLocale(player), money, income));
     }
 
     public static void init() {
@@ -69,6 +65,10 @@ public class PlayerData {
             if (Groups.player.size() >= 1) {
                 if (Groups.player.size() == 1) labels(Groups.player.index(0));
                 Timer.schedule(() -> labels(event.player), 1);
+            }
+            if (event.player.getInfo().timesJoined <= 1) {
+                String[][] optionsFirst = {{format("server.first-join.yes", findLocale(event.player))}, {format("server.first-join.no", findLocale(event.player))}};
+                Call.menu(event.player.con, 1, format("server.first-join.header", findLocale(event.player)), format("server.first-join.content", findLocale(event.player)), optionsFirst);
             }
         });
 
