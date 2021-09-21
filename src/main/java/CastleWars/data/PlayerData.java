@@ -25,7 +25,7 @@ public class PlayerData {
     public static float LabelInterval = 60f * 30f;
 
     public Player player;
-    public int money, income = 25;
+    public int money, income = 10;
     Interval interval;
 
     public PlayerData(Player player) {
@@ -84,7 +84,7 @@ public class PlayerData {
     }
 
     public void reset() {
-        this.income = 25;
+        this.income = 10;
         this.money = 0;
     }
 }

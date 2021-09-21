@@ -7,14 +7,11 @@ repositories{
 
 ext{
     mindustryVersion = 'v131'
-    gsonVersion      = '2.8.6'
 }
 
 dependencies{
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
-
-    implementation "com.google.code.gson:gson:$gsonVersion"
 }
 
 jar{
