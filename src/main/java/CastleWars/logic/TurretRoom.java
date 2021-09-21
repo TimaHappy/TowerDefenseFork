@@ -18,7 +18,7 @@ import mindustry.world.blocks.defense.turrets.LaserTurret;
 
 public class TurretRoom extends Room {
 
-    public boolean buyyed = false;
+    public boolean bought = false;
     public Team team;
     Interval interval = new Interval(1);
     float updateTime = 60f * 15f;
@@ -35,7 +35,7 @@ public class TurretRoom extends Room {
     @Override
     public void buy(PlayerData data) {
         data.money -= cost;
-        buyyed = true;
+        bought = true;
         labelVisible = false;
         Groups.player.each(p -> Call.label(p.con(), Bundle.format("events.buy", Bundle.findLocale(p), data.player.name), 5f, centreDrawx, centreDrawy));
         Vars.world.tile(centrex, centrey).setNet(block, team, 0);
@@ -50,7 +50,7 @@ public class TurretRoom extends Room {
 
     @Override
     public boolean canBuy(PlayerData data) {
-        return super.canBuy(data) && !(buyyed = Vars.world.build(centrex, centrey) != null);
+        return super.canBuy(data) && !(bought = Vars.world.build(centrex, centrey) != null);
     }
 
     @Override
