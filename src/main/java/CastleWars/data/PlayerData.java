@@ -25,6 +25,7 @@ public class PlayerData {
     public static float LabelInterval = 60f * 30f;
 
     public Player player;
+    boolean disabledHud = false;
     public int money, income = 10;
     Interval interval;
 
@@ -58,7 +59,7 @@ public class PlayerData {
         }
 
         // Set Hud Text
-        if (!Main.disabledHud.contains(player.uuid())) Call.setHudText(player.con, Bundle.format("commands.hud.display", Bundle.findLocale(player), money, income));
+        if (!disabledHud) Call.setHudText(player.con, Bundle.format("commands.hud.display", Bundle.findLocale(player), money, income));
     }
 
     public static void init() {
