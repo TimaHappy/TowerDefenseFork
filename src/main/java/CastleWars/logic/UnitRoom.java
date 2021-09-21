@@ -40,7 +40,7 @@ public class UnitRoom extends Room {
         str.append("\n[gray]").append(cost).append("\n[white]").append(Icon.get(Blocks.plastaniumCompressor)).append(" : ");
 
         if (income < 0) str.append("[crimson]");
-        else if (income > 0) str.append("[lime]");
+        else if (income > 0) str.append("[lime]+");
         else str.append("[gray]");
         str.append(income);
         label = str.toString();
@@ -53,15 +53,9 @@ public class UnitRoom extends Room {
 
         if (type == Type.Attacker) {
             Unit u = unit.spawn(data.player.team(), (data.player.team() == Team.sharded ? blueSpawn.drawx() : shardedSpawn.drawx()) + Mathf.random(-40, 40), (data.player.team() == Team.sharded ? blueSpawn.drawy() : shardedSpawn.drawy()) + Mathf.random(-40, 40));
-            if (unit == UnitTypes.crawler) {
-                u.type = UnitTypes.mono;
-            }
             u.team(data.player.team());
         } else if (data.player.team().core() != null) {
             Unit u = unit.spawn(data.player.team(), data.player.team().core().x + 30, data.player.team().core().y + Mathf.random(-40, 40));
-            if (unit == UnitTypes.crawler) {
-                u.type = UnitTypes.mono;
-            }
             u.team(data.player.team());
         }
     }
