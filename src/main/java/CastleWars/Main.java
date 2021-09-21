@@ -23,7 +23,6 @@ import mindustry.world.blocks.storage.CoreBlock;
 public class Main extends Plugin {
 
     public static Rules rules;
-    public static Seq<String> disabledHud = new Seq<>();
     public Logic logic;
 
     @Override
@@ -69,14 +68,15 @@ public class Main extends Plugin {
         handler.<Player>register("label", "Show shops label. Use when labels are hidden. Debug only.", (args, player) -> PlayerData.labels(player));
 
         handler.<Player>register("hud", "Disable/Enable hud.", (args, player) -> {
-            if (disabledHud.contains(player.uuid())) {
-                disabledHud.remove(player.uuid());
+            PlayerData data = PlayerData.datas.find(d -> d.player == player);
+            if (data.disabledHud) {
+                data.disabledHud = false;
                 Bundle.bundled(player, "commands.hud.on");
-            } else {
-                disabledHud.add(player.uuid());
-                Call.setHudText(player.con, "");
-                Bundle.bundled(player,"commands.hud.off");
+                return;
             }
+            data.disabledHud = true;
+            Call.setHudText(player.con, "");
+            Bundle.bundled(player,"commands.hud.off");
         });
     }
 
