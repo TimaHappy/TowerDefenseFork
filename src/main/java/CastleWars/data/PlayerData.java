@@ -25,7 +25,7 @@ public class PlayerData {
     public static float LabelInterval = 60f * 30f;
 
     public Player player;
-    boolean disabledHud = false;
+    public boolean disabledHud = false;
     public int money, income = 10;
     Interval interval;
 
