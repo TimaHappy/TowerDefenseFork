@@ -16,6 +16,6 @@ public class CoreRoom extends TurretRoom{
 
     @Override
     public boolean canBuy(PlayerData data) {
-        return data.money >= cost() && !buyyed;
+        return data.money >= cost() && !bought;
     }
 }
