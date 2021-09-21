@@ -61,13 +61,12 @@ public class TurretRoom extends Room {
     }
 
     public static Item ammo(Block block) {
-        if (block == Blocks.foreshadow) return Items.surgeAlloy;
-        if (block == Blocks.cyclone) return Items.plastanium;
-        if (block == Blocks.ripple) return Items.blastCompound;
-        if (block == Blocks.spectre) return Items.thorium;
-        if (block == Blocks.fuse) return Items.thorium;
-        if (block == Blocks.swarmer) return Items.surgeAlloy;
-        if (block == Blocks.salvo) return Items.thorium;
-        return Items.copper;
+        return switch(block) {
+            case foreshadow, swarmer -> Items.surgeAlloy;
+            case cyclone -> Items.plastanium;
+            case ripple -> Items.blastCompound;
+            case spectre, fuse, salvo -> Items.thorium;
+            default -> Items.copper;
+        };
     }
 }
