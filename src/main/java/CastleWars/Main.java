@@ -52,7 +52,7 @@ public class Main extends Plugin {
 
         Events.on(EventType.ServerLoadEvent.class, e -> {
             Vars.content.blocks().each(block -> {
-                if (block != null && !(block instanceof CoreBlock)) block.health *= 10;
+                if (block != null && !(block instanceof CoreBlock)) block.health *= 25;
             });
 
             logic.restart();
