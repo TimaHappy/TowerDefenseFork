@@ -108,29 +108,29 @@ public class Generator implements Cons<Tiles> {
         int Padding = Room.ROOM_SIZE + 2;
         // Ground
         addUnit(UnitTypes.dagger, cx, cy + 2, 50, 0);
-        addUnit(UnitTypes.mace, cx + Padding, cy + 2, 100, 1);
-        addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 350, 3);
-        addUnit(UnitTypes.scepter, cx + Padding * 3, cy + 2, 2800, 25);
+        addUnit(UnitTypes.mace, cx + Padding, cy + 2, 120, 1);
+        addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 600, 5);
+        addUnit(UnitTypes.scepter, cx + Padding * 3, cy + 2, 2750, 25);
         addUnit(UnitTypes.reign, cx + Padding * 4, cy + 2, 7000, 70);
         // Support 
         cx += 2;
         addUnit(UnitTypes.nova, cx + Padding * 5, cy + 2, 60, 0);
-        addUnit(UnitTypes.pulsar, cx + Padding * 6, cy + 2, 120, 1);
+        addUnit(UnitTypes.pulsar, cx + Padding * 6, cy + 2, 150, 1);
         addUnit(UnitTypes.quasar, cx + Padding * 7, cy + 2, 500, 4);
-        addUnit(UnitTypes.vela, cx + Padding * 8, cy + 2, 2500, 20);
+        addUnit(UnitTypes.vela, cx + Padding * 8, cy + 2, 3000, 25);
         addUnit(UnitTypes.corvus, cx + Padding * 9, cy + 2, 8000, 80);
         // Spiders
         cx -= 2;
         addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 40, 0);
-        addUnit(UnitTypes.atrax, cx + Padding, cy + 2 + Padding * 2, 100, 1);
-        addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 300, 3);
+        addUnit(UnitTypes.atrax, cx + Padding, cy + 2 + Padding * 2, 150, 1);
+        addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 500, 5);
         addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 3000, 30);
         addUnit(UnitTypes.toxopid, cx + Padding * 4, cy + 2 + Padding * 2, 9000, 90);
         // Naval 
         cx += 2;
-        addUnit(UnitTypes.risso, cx + Padding * 5, cy + 2 + Padding * 2, 250, 2);
+        addUnit(UnitTypes.risso, cx + Padding * 5, cy + 2 + Padding * 2, 200, 1);
         addUnit(UnitTypes.minke, cx + Padding * 6, cy + 2 + Padding * 2, 350, 3);
-        addUnit(UnitTypes.bryde, cx + Padding * 7, cy + 2 + Padding * 2, 800, 8);
+        addUnit(UnitTypes.bryde, cx + Padding * 7, cy + 2 + Padding * 2, 1200, 10);
         addUnit(UnitTypes.sei, cx + Padding * 8, cy + 2 + Padding * 2, 3500, 32);
         addUnit(UnitTypes.omura, cx + Padding * 9, cy + 2 + Padding * 2, 10000, 100);
     }
@@ -155,18 +155,18 @@ public class Generator implements Cons<Tiles> {
         } // Cyclone        
         else if (tile.nearby(1, 1).floor().equals(Blocks.darkPanel4)
                 && tile.nearby(-1, -1).floor().equals(Blocks.darkPanel4)) {
-            addTurret(Blocks.cyclone, tile, yy, 1300, 4);
+            addTurret(Blocks.cyclone, tile, yy, 1500, 4);
         } // Ripple
         else if (tile.nearby(0, 1).floor().equals(Blocks.darkPanel4)
                 && tile.nearby(0, -1).floor().equals(Blocks.darkPanel4)) {
-            addTurret(Blocks.ripple, tile, yy, 1700, 4);
+            addTurret(Blocks.ripple, tile, yy, 1000, 4);
         } // Fuse
         else if (tile.nearby(1, 0).floor().equals(Blocks.darkPanel4)
                 && tile.nearby(-1, 0).floor().equals(Blocks.darkPanel4)) {
             addTurret(Blocks.fuse, tile, yy, 750, 4);
         }// Segment
         else if (tile.nearby(0, 1).floor().equals(Blocks.darkPanel4)) {
-            addTurret(Blocks.segment, tile, yy, 1400, 3);
+            addTurret(Blocks.segment, tile, yy, 750, 3);
         } // Lancer
         else if (tile.nearby(-1, -1).floor().equals(Blocks.darkPanel4)) {
             addTurret(Blocks.lancer, tile, yy, 350, 3);
