@@ -1,11 +1,7 @@
 package CastleWars.game;
 
 import CastleWars.Main;
-import CastleWars.logic.CoreRoom;
-import CastleWars.logic.ResourceRoom;
-import CastleWars.logic.Room;
-import CastleWars.logic.TurretRoom;
-import CastleWars.logic.UnitRoom;
+import CastleWars.logic.*;
 import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.Timer;
@@ -88,6 +84,10 @@ public class Generator implements Cons<Tiles> {
                 if (saved.getn(x, y).floor().equals(Blocks.darkPanel3)) {
                     turretGen(t.getn(x, y), yy);
                 }
+                // Drill room
+                if (saved.getn(x, y).floor().equals(Blocks.metalFloorDamaged)) {
+                    addDrillRoom(t.getn(x, y), yy);
+                }
                 // Spawners place
                 if (saved.getn(x, y).floor().equals(Blocks.darkPanel2)) {
                     UnitRoom.shardedSpawn = t.get(x, y);
@@ -107,32 +107,32 @@ public class Generator implements Cons<Tiles> {
         int cx = 2, cy = saved.height + 2;
         int Padding = Room.ROOM_SIZE + 2;
         // Ground
-        addUnit(UnitTypes.dagger, cx, cy + 2, 50, 0);
-        addUnit(UnitTypes.mace, cx + Padding, cy + 2, 120, 1);
-        addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 600, 5);
+        addUnit(UnitTypes.dagger, cx, cy + 2, 60, 0);
+        addUnit(UnitTypes.mace, cx + Padding, cy + 2, 150, 1);
+        addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 500, 5);
         addUnit(UnitTypes.scepter, cx + Padding * 3, cy + 2, 2750, 25);
-        addUnit(UnitTypes.reign, cx + Padding * 4, cy + 2, 7000, 70);
+        addUnit(UnitTypes.reign, cx + Padding * 4, cy + 2, 7500, 70);
         // Support 
         cx += 2;
         addUnit(UnitTypes.nova, cx + Padding * 5, cy + 2, 60, 0);
-        addUnit(UnitTypes.pulsar, cx + Padding * 6, cy + 2, 150, 1);
+        addUnit(UnitTypes.pulsar, cx + Padding * 6, cy + 2, 180, 1);
         addUnit(UnitTypes.quasar, cx + Padding * 7, cy + 2, 500, 4);
         addUnit(UnitTypes.vela, cx + Padding * 8, cy + 2, 3000, 25);
-        addUnit(UnitTypes.corvus, cx + Padding * 9, cy + 2, 8000, 80);
+        addUnit(UnitTypes.corvus, cx + Padding * 9, cy + 2, 7500, 70);
         // Spiders
         cx -= 2;
         addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 40, 0);
-        addUnit(UnitTypes.atrax, cx + Padding, cy + 2 + Padding * 2, 150, 1);
-        addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 500, 5);
+        addUnit(UnitTypes.atrax, cx + Padding, cy + 2 + Padding * 2, 160, 1);
+        addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 450, 4);
         addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 3000, 30);
         addUnit(UnitTypes.toxopid, cx + Padding * 4, cy + 2 + Padding * 2, 9000, 90);
         // Naval 
         cx += 2;
-        addUnit(UnitTypes.risso, cx + Padding * 5, cy + 2 + Padding * 2, 200, 1);
-        addUnit(UnitTypes.minke, cx + Padding * 6, cy + 2 + Padding * 2, 350, 3);
+        addUnit(UnitTypes.risso, cx + Padding * 5, cy + 2 + Padding * 2, 150, 1);
+        addUnit(UnitTypes.minke, cx + Padding * 6, cy + 2 + Padding * 2, 300, 3);
         addUnit(UnitTypes.bryde, cx + Padding * 7, cy + 2 + Padding * 2, 1200, 10);
         addUnit(UnitTypes.sei, cx + Padding * 8, cy + 2 + Padding * 2, 3500, 32);
-        addUnit(UnitTypes.omura, cx + Padding * 9, cy + 2 + Padding * 2, 10000, 100);
+        addUnit(UnitTypes.omura, cx + Padding * 9, cy + 2 + Padding * 2, 9000, 90);
     }
 
     private void turretGen(Tile tile, int yy) {
@@ -181,9 +181,9 @@ public class Generator implements Cons<Tiles> {
     private void addUnit(UnitType type, int x, int y, int cost, int income) {
         Room.rooms.add(new UnitRoom(type, x, y, cost, income, UnitRoom.Type.Attacker));
         if (type != UnitTypes.nova && type != UnitTypes.dagger && type != UnitTypes.crawler) {
-            Room.rooms.add(new UnitRoom(type, x, y + Room.ROOM_SIZE + 2, cost, -income + 2, UnitRoom.Type.Defender));
+            Room.rooms.add(new UnitRoom(type, x, y + Room.ROOM_SIZE + 2, cost, -income + 1, UnitRoom.Type.Defender));
         }
-        // Some Resource Room Why be not? xd
+        // Some Resource Room
         if (type == UnitTypes.nova) {
             Room.rooms.add(new ResourceRoom(Items.plastanium, x, y + Room.ROOM_SIZE + 2, 350));
         } else if (type == UnitTypes.dagger) {
@@ -196,6 +196,11 @@ public class Generator implements Cons<Tiles> {
     private void addCoreRoom(Tile tile, int yy) {
         Room.rooms.add(new CoreRoom(Team.sharded, tile.x - 2, tile.y - 2));
         Room.rooms.add(new CoreRoom(Team.blue, tile.x - 2, yy - 2));
+    }
+
+    private void addDrillRoom(Tile tile, int yy) {
+        Room.rooms.add(new DrillRoom(Team.sharded, tile.x - 2, tile.y - 2));
+        Room.rooms.add(new DrillRoom(Team.blue, tile.x - 2, yy - 2));
     }
 
 }

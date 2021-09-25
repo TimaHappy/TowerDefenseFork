@@ -59,12 +59,13 @@ public class Icon {
         icons.put(Blocks.duo, Iconc.defense);
         icons.put(Blocks.commandCenter, Iconc.units);
         icons.put(Blocks.plastaniumCompressor, Iconc.blockPlastaniumCompressor);
+        icons.put(Blocks.laserDrill, Iconc.blockLaserDrill);
     }
 
     public static String get(Content item) {
         if (icons.containsKey(item)) {
             return icons.get(item).toString();
         }
-        return "???";
+        return "ohno";
     }
 }

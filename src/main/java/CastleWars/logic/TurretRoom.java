@@ -23,7 +23,7 @@ public class TurretRoom extends Room {
     public boolean bought = false;
     public Team team;
     Interval interval = new Interval(1);
-    float updateTime = 60f * 15f;
+    float updateTime = 60f * 10f;
     Block block;
 
     public TurretRoom(Team team, Block block, int x, int y, int cost, int size) {

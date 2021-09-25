@@ -22,7 +22,7 @@ public class PlayerData {
 
     public Player player;
     public boolean disabledHud = false;
-    public int money, income = 10;
+    public int money, income = 15;
     Interval interval;
 
     public PlayerData(Player player) {
@@ -37,12 +37,8 @@ public class PlayerData {
         // For Room Rect
         if (player.shooting && player.unit() != null) {
             for (Room room : Room.rooms) {
-                if (room instanceof TurretRoom && !(((TurretRoom)room).team == player.team())) {
-                    continue;
-                }
-                if (room.check(player.unit().aimX, player.unit().aimY) && room.canBuy(this)) {
-                    room.buy(this);
-                }
+                if (room instanceof TurretRoom && !(((TurretRoom)room).team == player.team())) continue;
+                if (room.check(player.unit().aimX, player.unit().aimY) && room.canBuy(this)) room.buy(this);
             }
         }
         // Set Unit to risso
@@ -62,11 +58,10 @@ public class PlayerData {
         Events.on(EventType.PlayerJoin.class, event -> {
             datas.put(event.player.id, new PlayerData(event.player));
             Vars.netServer.assignTeam(event.player, Groups.player);
-            if (Groups.player.size() >= 1) {
-                if (Groups.player.size() == 1) labels(Groups.player.index(0));
-                Timer.schedule(() -> labels(event.player), 1);
-            }
-            if (event.player.getInfo().timesJoined <= 1) {
+            Timer.schedule(() -> labels(event.player), 1);
+
+            if (Groups.player.size() == 1) labels(Groups.player.index(0));
+            else if (event.player.getInfo().timesJoined <= 1) {
                 String[][] optionsFirst = {{format("server.first-join.yes", findLocale(event.player))}, {format("server.first-join.no", findLocale(event.player))}};
                 Call.menu(event.player.con, 1, format("server.first-join.header", findLocale(event.player)), format("server.first-join.content", findLocale(event.player)), optionsFirst);
             }
@@ -76,16 +71,16 @@ public class PlayerData {
     }
 
     public static void labels(Player player) {
-        for (Room room : Room.rooms) {
-            if (room instanceof TurretRoom && ((TurretRoom)room).team != player.team()) continue;
+        Room.rooms.each(room -> {
+            if (room instanceof TurretRoom && ((TurretRoom)room).team != player.team()) return;
             if (room.labelVisible) {
                 Call.label(player.con, room.label, LabelInterval / 60f, room.centreDrawx, room.centreDrawy - room.size * 8 / 4);
             }
-        }
+        });
     }
 
     public void reset() {
-        this.income = 10;
+        this.income = 15;
         this.money = 0;
     }
 }
