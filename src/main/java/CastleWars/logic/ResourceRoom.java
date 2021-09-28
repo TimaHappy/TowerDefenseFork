@@ -14,16 +14,16 @@ public class ResourceRoom extends Room {
     public ResourceRoom(Item item, int x, int y, int cost) {
         super(x, y, cost, 4);
         this.item = item;
-        label = "[white]96x" + Icon.get(item) + " [white]: [gray]" + cost;
+        label = "[white]120x" + Icon.get(item) + " [white]: [gray]" + cost;
     }
 
     @Override
     public void buy(PlayerData data) {
         data.money -= cost;
         if (data.player.team().core() != null) {
-            Call.transferItemTo(Nulls.unit, item, 96, centreDrawx, centreDrawy, data.player.team().core());
+            Call.transferItemTo(Nulls.unit, item, 120, centreDrawx, centreDrawy, data.player.team().core());
             if (item == Items.plastanium) {
-                Call.transferItemTo(Nulls.unit, Items.metaglass, 28, centreDrawx, centreDrawy, data.player.team().core());
+                Call.transferItemTo(Nulls.unit, Items.metaglass, 35, centreDrawx, centreDrawy, data.player.team().core());
             }
         }
     }

@@ -15,32 +15,32 @@ public class UnitDeathData {
         cost = new ObjectMap<>();
 
         // Ground
-        cost.put(UnitTypes.dagger, 30);
+        cost.put(UnitTypes.dagger, 20);
         cost.put(UnitTypes.mace, 50);
-        cost.put(UnitTypes.fortress, 200);
-        cost.put(UnitTypes.scepter, 1000);
-        cost.put(UnitTypes.reign, 3000);
+        cost.put(UnitTypes.fortress, 150);
+        cost.put(UnitTypes.scepter, 750);
+        cost.put(UnitTypes.reign, 2500);
 
         // Ground Support
         cost.put(UnitTypes.nova, 50);
         cost.put(UnitTypes.pulsar, 75);
-        cost.put(UnitTypes.quasar, 250);
-        cost.put(UnitTypes.vela, 1000);
-        cost.put(UnitTypes.corvus, 3000);
+        cost.put(UnitTypes.quasar, 200);
+        cost.put(UnitTypes.vela, 800);
+        cost.put(UnitTypes.corvus, 2500);
 
         // Naval
         cost.put(UnitTypes.risso, 50);
         cost.put(UnitTypes.minke, 100);
         cost.put(UnitTypes.bryde, 300);
-        cost.put(UnitTypes.sei, 1250);
-        cost.put(UnitTypes.omura, 3500);
+        cost.put(UnitTypes.sei, 1000);
+        cost.put(UnitTypes.omura, 3000);
 
         // Spiders
         cost.put(UnitTypes.crawler, 20);
         cost.put(UnitTypes.atrax, 60);
         cost.put(UnitTypes.spiroct, 150);
-        cost.put(UnitTypes.arkyid, 1000);
-        cost.put(UnitTypes.toxopid, 3000);
+        cost.put(UnitTypes.arkyid, 900);
+        cost.put(UnitTypes.toxopid, 2500);
 
         // Block. Just a block.
         cost.put(UnitTypes.block, 1);

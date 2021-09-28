@@ -42,6 +42,7 @@ public class Logic {
 
     public void update() {
         if (state.isPaused() || !worldLoaded) return;
+
         PlayerData.datas.values().forEach(PlayerData::update);
 
         Room.rooms.each(RoomComp::update);
@@ -91,13 +92,12 @@ public class Logic {
         logic.play();
         state.rules = Main.rules;
         Call.setRules(state.rules);
-        // AntiInstantGameStart
-        Timer.schedule(() -> worldLoaded = true, 3);
+        Timer.schedule(() -> worldLoaded = true, 5);
     }
 
     public void gameOver(Team team) {
         Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.blue ? "events.win.blue" : "events.win.sharded", Bundle.findLocale(p))));
-        Timer.schedule(this::restart, 5);
+        Timer.schedule(this::restart, 3);
         worldLoaded = false;
     }
 }

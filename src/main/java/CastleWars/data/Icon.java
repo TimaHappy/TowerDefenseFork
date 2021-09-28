@@ -52,7 +52,7 @@ public class Icon {
         icons.put(Blocks.swarmer, Iconc.blockSwarmer);
         icons.put(Blocks.salvo, Iconc.blockSalvo);
         // Items
-        icons.put(Items.thorium, Iconc.itemThorium);
+        icons.put(Items.surgeAlloy, Iconc.itemSurgeAlloy);
         icons.put(Items.plastanium, Iconc.itemPlastanium);
         icons.put(Items.phaseFabric, Iconc.itemPhaseFabric);
         // Some stuff xd

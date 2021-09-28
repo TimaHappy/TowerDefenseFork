@@ -24,6 +24,7 @@ import java.util.Objects;
 import static CastleWars.Bundle.findLocale;
 import static arc.util.Time.toMinutes;
 import static mindustry.Vars.netServer;
+import static mindustry.Vars.content;
 import static mindustry.game.Team.blue;
 import static mindustry.game.Team.sharded;
 
@@ -44,9 +45,7 @@ public class Main extends Plugin {
         rules.waveTimer = false;
         rules.waveSpacing = 30 * toMinutes;
 
-        Vars.content.blocks().each(block -> {
-            if (!(block == Blocks.thoriumWall || block == Blocks.thoriumWallLarge || block == Blocks.plastaniumWall || block == Blocks.plastaniumWallLarge || block == Blocks.phaseWall || block == Blocks.phaseWallLarge)) rules.bannedBlocks.add(block);
-        });
+        content.blocks().each(block -> !(block instanceof Wall), block -> rules.bannedBlocks.add(block));
 
         netServer.admins.addActionFilter(action -> (action.type != Administration.ActionType.breakBlock && action.type != Administration.ActionType.placeBlock) || action.tile == null || (action.tile.floor() != Blocks.metalFloor.asFloor() && action.tile.floor() != Blocks.metalFloor5.asFloor()));
 
@@ -70,48 +69,6 @@ public class Main extends Plugin {
         });
 
         Events.run(EventType.Trigger.update, () -> logic.update());
-
-        Menus.registerMenu(1, (player, selection) -> {
-            if (selection == 0) {
-                String[][] options = {{Bundle.format("server.tutorial.yes", findLocale(player))}, {Bundle.format("server.tutorial.no", findLocale(player))}};
-                Call.menu(player.con, 2, Bundle.format("server.tutorial-1.header", findLocale(player)), Bundle.format("server.tutorial-1.content", findLocale(player)), options);
-            }
-        });
-
-        Menus.registerMenu(2, (player, selection) -> {
-            if (selection == 0) {
-                String[][] options = {{Bundle.format("server.tutorial.yes", findLocale(player))}, {Bundle.format("server.tutorial.no", findLocale(player))}};
-                Call.menu(player.con, 3, Bundle.format("server.tutorial-2.header", findLocale(player)), Bundle.format("server.tutorial-2.content", findLocale(player)), options);
-            }
-        });
-
-        Menus.registerMenu(3, (player, selection) -> {
-            if (selection == 0) {
-                String[][] options = {{Bundle.format("server.tutorial.yes", findLocale(player))}, {Bundle.format("server.tutorial.no", findLocale(player))}};
-                Call.menu(player.con, 4, Bundle.format("server.tutorial-3.header", findLocale(player)), Bundle.format("server.tutorial-3.content", findLocale(player)), options);
-            }
-        });
-
-        Menus.registerMenu(4, (player, selection) -> {
-            if (selection == 0) {
-                String[][] options = {{Bundle.format("server.tutorial.yes", findLocale(player))}, {Bundle.format("server.tutorial.no", findLocale(player))}};
-                Call.menu(player.con, 5, Bundle.format("server.tutorial-4.header", findLocale(player)), Bundle.format("server.tutorial-4.content", findLocale(player)), options);
-            }
-        });
-
-        Menus.registerMenu(5, (player, selection) -> {
-            if (selection == 0) {
-                String[][] options = {{Bundle.format("server.tutorial.yes", findLocale(player))}, {Bundle.format("server.tutorial.no", findLocale(player))}};
-                Call.menu(player.con, 6, Bundle.format("server.tutorial-5.header", findLocale(player)), Bundle.format("server.tutorial-5.content", findLocale(player)), options);
-            }
-        });
-
-        Menus.registerMenu(6, (player, selection) -> {
-            if (selection == 0) {
-                String[][] optionFinal = {{Bundle.format("server.tutorial-final", findLocale(player))}};
-                Call.menu(player.con, 7, Bundle.format("server.tutorial-6.header", findLocale(player)), Bundle.format("server.tutorial-6.content", findLocale(player)), optionFinal);
-            }
-        });
     }
 
     @Override
@@ -129,12 +86,11 @@ public class Main extends Plugin {
             Call.hideHudText(player.con);
             Bundle.bundled(player,"commands.hud.off");
         });
-
-        handler.<Player>register("info", "Information about gamemode.", (args, player) -> Call.menuChoose(player, 1, 0));
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        handler.register("restart", "Restart the game.", (args) -> logic.restart());
+        // Breaks the game
+        handler.removeCommand("gameover");
     }
 }

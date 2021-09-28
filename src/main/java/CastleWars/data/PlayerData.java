@@ -33,7 +33,7 @@ public class PlayerData {
     public void update() {
         // Income Math
         if (interval.get(0, MoneyInterval)) money += income;
-        if (interval.get(1, LabelInterval)) labels(player);
+        updateLabels();
         // For Room Rect
         if (player.shooting && player.unit() != null) {
             for (Room room : Room.rooms) {
@@ -54,6 +54,10 @@ public class PlayerData {
         if (!disabledHud) Call.setHudText(player.con, format("commands.hud.display", findLocale(player), money, income));
     }
 
+    public void updateLabels() {
+        if (interval.get(1, LabelInterval)) labels(player);
+    }
+
     public static void init() {
         Events.on(EventType.PlayerJoin.class, event -> {
             datas.put(event.player.id, new PlayerData(event.player));
@@ -61,10 +65,6 @@ public class PlayerData {
             Timer.schedule(() -> labels(event.player), 1);
 
             if (Groups.player.size() == 1) labels(Groups.player.index(0));
-            else if (event.player.getInfo().timesJoined <= 1) {
-                String[][] optionsFirst = {{format("server.first-join.yes", findLocale(event.player))}, {format("server.first-join.no", findLocale(event.player))}};
-                Call.menu(event.player.con, 1, format("server.first-join.header", findLocale(event.player)), format("server.first-join.content", findLocale(event.player)), optionsFirst);
-            }
         });
 
         Events.on(EventType.PlayerLeave.class, event -> datas.remove(event.player.id));
