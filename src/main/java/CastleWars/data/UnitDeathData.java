@@ -49,7 +49,7 @@ public class UnitDeathData {
             if (cost.containsKey(event.unit.type)) {
                 PlayerData.datas.values().forEach(data -> {
                     if (event.unit.team != data.player.team() && !event.unit.spawnedByCore) {
-                        data.money += get(event.unit.type);
+                        data.increaseMoney(get(event.unit.type));
                         Call.label(data.player.con, "[accent]+ [lime]" + get(event.unit.type), 0.5f, event.unit.x, event.unit.y);
                     }
                 });

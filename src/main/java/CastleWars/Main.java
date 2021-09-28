@@ -15,16 +15,14 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration;
-import mindustry.ui.Menus;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import java.util.Objects;
 
-import static CastleWars.Bundle.findLocale;
 import static arc.util.Time.toMinutes;
-import static mindustry.Vars.netServer;
 import static mindustry.Vars.content;
+import static mindustry.Vars.netServer;
 import static mindustry.game.Team.blue;
 import static mindustry.game.Team.sharded;
 
@@ -33,6 +31,7 @@ public class Main extends Plugin {
     public static Rules rules;
     public Logic logic;
     public static int unitTeamLimit = 300;
+    public static int moneyPlayerLimit = 250000;
 
     @Override
     public void init() {

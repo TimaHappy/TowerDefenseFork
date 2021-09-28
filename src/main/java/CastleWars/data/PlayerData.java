@@ -2,6 +2,8 @@ package CastleWars.data;
 
 import static CastleWars.Bundle.findLocale;
 import static CastleWars.Bundle.format;
+
+import CastleWars.Main;
 import CastleWars.logic.Room;
 import CastleWars.logic.TurretRoom;
 import arc.Events;
@@ -31,15 +33,14 @@ public class PlayerData {
     }
 
     public void update() {
-        // Income Math
-        if (interval.get(0, MoneyInterval)) money += income;
+        if (interval.get(0, MoneyInterval)) increaseMoney(income);
         updateLabels();
-        // For Room Rect
+
         if (player.shooting && player.unit() != null) {
-            for (Room room : Room.rooms) {
-                if (room instanceof TurretRoom && !(((TurretRoom)room).team == player.team())) continue;
+            Room.rooms.each(room -> {
+                if (room instanceof TurretRoom && !(((TurretRoom)room).team == player.team())) return;
                 if (room.check(player.unit().aimX, player.unit().aimY) && room.canBuy(this)) room.buy(this);
-            }
+            });
         }
         // Set Unit to risso
         if (player.unit().spawnedByCore && !(player.unit() instanceof WaterMovec)) {
@@ -52,6 +53,15 @@ public class PlayerData {
 
         // Set Hud Text
         if (!disabledHud) Call.setHudText(player.con, format("commands.hud.display", findLocale(player), money, income));
+    }
+
+    public void increaseMoney(int num) {
+        if (money >= Main.moneyPlayerLimit) return;
+        if ((money + num) < Main.moneyPlayerLimit) {
+            money += num;
+            return;
+        }
+        money = Main.moneyPlayerLimit;
     }
 
     public void updateLabels() {
