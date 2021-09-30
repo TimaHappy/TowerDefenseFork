@@ -35,6 +35,13 @@ public class UnitDeathData {
         cost.put(UnitTypes.sei, 1000);
         cost.put(UnitTypes.omura, 3000);
 
+        // Naval Support
+        cost.put(UnitTypes.retusa, 50);
+        cost.put(UnitTypes.oxynoe, 100);
+        cost.put(UnitTypes.cyerce, 300);
+        cost.put(UnitTypes.aegires, 1000);
+        cost.put(UnitTypes.navanax, 3000);
+
         // Spiders
         cost.put(UnitTypes.crawler, 20);
         cost.put(UnitTypes.atrax, 60);

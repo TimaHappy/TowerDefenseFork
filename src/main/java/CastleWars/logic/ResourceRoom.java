@@ -10,20 +10,22 @@ import mindustry.content.Items;
 public class ResourceRoom extends Room {
 
     Item item;
+    int amount;
 
-    public ResourceRoom(Item item, int x, int y, int cost) {
+    public ResourceRoom(Item item, int x, int y, int cost, int amount) {
         super(x, y, cost, 4);
         this.item = item;
-        label = "[white]120x" + Icon.get(item) + " [white]: [gray]" + cost;
+        this.amount = amount;
+        label = "[white]" + amount + "x" + Icon.get(item) + " [white]: [gray]" + cost;
     }
 
     @Override
     public void buy(PlayerData data) {
         data.money -= cost;
         if (data.player.team().core() != null) {
-            Call.transferItemTo(Nulls.unit, item, 120, centreDrawx, centreDrawy, data.player.team().core());
+            Call.transferItemTo(Nulls.unit, item, amount, centreDrawx, centreDrawy, data.player.team().core());
             if (item == Items.plastanium) {
-                Call.transferItemTo(Nulls.unit, Items.metaglass, 35, centreDrawx, centreDrawy, data.player.team().core());
+                Call.transferItemTo(Nulls.unit, Items.metaglass, amount * 2 / 5, centreDrawx, centreDrawy, data.player.team().core());
             }
         }
     }

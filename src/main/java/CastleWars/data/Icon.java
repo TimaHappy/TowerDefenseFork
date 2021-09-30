@@ -36,6 +36,12 @@ public class Icon {
         icons.put(UnitTypes.bryde, Iconc.unitBryde);
         icons.put(UnitTypes.sei, Iconc.unitSei);
         icons.put(UnitTypes.omura, Iconc.unitOmura);
+        // Naval Support
+        icons.put(UnitTypes.retusa, Iconc.unitRetusa);
+        icons.put(UnitTypes.oxynoe, Iconc.unitOxynoe);
+        icons.put(UnitTypes.cyerce, Iconc.unitCyerce);
+        icons.put(UnitTypes.aegires, Iconc.unitAegires);
+        icons.put(UnitTypes.navanax, Iconc.unitNavanax);
         // Cores
         icons.put(Blocks.coreNucleus, Iconc.blockCoreNucleus);
         icons.put(Blocks.coreFoundation, Iconc.blockCoreFoundation);
@@ -55,6 +61,8 @@ public class Icon {
         icons.put(Items.surgeAlloy, Iconc.itemSurgeAlloy);
         icons.put(Items.plastanium, Iconc.itemPlastanium);
         icons.put(Items.phaseFabric, Iconc.itemPhaseFabric);
+        icons.put(Items.copper, Iconc.itemCopper);
+        icons.put(Items.titanium, Iconc.itemTitanium);
         // Some stuff xd
         icons.put(Blocks.duo, Iconc.defense);
         icons.put(Blocks.commandCenter, Iconc.units);
