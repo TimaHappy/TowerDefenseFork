@@ -4,10 +4,10 @@ import CastleWars.data.Icon;
 import CastleWars.data.PlayerData;
 import CastleWars.data.UnitDeathData;
 import CastleWars.game.Logic;
+import CastleWars.logic.UnitRoom;
 import arc.Events;
 import arc.util.CommandHandler;
 import arc.util.Log;
-import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.game.EventType;
 import mindustry.game.Rules;
@@ -30,7 +30,7 @@ public class Main extends Plugin {
 
     public static Rules rules;
     public Logic logic;
-    public static int unitTeamLimit = 300;
+    public static int unitTeamLimit = 400;
     public static int moneyPlayerLimit = 250000;
 
     @Override
@@ -44,10 +44,12 @@ public class Main extends Plugin {
         rules.waveTimer = false;
         rules.waveSpacing = 30 * toMinutes;
 
-        content.blocks().each(block -> !(block instanceof Wall), block -> rules.bannedBlocks.add(block));
+        content.blocks().each(block -> !(block instanceof Wall && block != Blocks.thruster), block -> rules.bannedBlocks.add(block));
 
-        netServer.admins.addActionFilter(action -> (action.type != Administration.ActionType.breakBlock && action.type != Administration.ActionType.placeBlock) || action.tile == null || (action.tile.floor() != Blocks.metalFloor.asFloor() && action.tile.floor() != Blocks.metalFloor5.asFloor()));
-
+        netServer.admins.addActionFilter(action -> {
+            if ((UnitRoom.shardedSpawn != null && UnitRoom.blueSpawn != null) && (action.type == Administration.ActionType.placeBlock && action.tile != null) && (action.tile.dst(UnitRoom.blueSpawn.x, UnitRoom.blueSpawn.y) > 100) || (action.tile.dst(UnitRoom.shardedSpawn.x, UnitRoom.shardedSpawn.y) > 100)) return false;
+            return (action.type != Administration.ActionType.breakBlock && action.type != Administration.ActionType.placeBlock) || action.tile == null || (action.tile.floor() != Blocks.metalFloor.asFloor() && action.tile.floor() != Blocks.metalFloor5.asFloor());
+        });
 
         UnitDeathData.init();
         PlayerData.init();
@@ -56,8 +58,8 @@ public class Main extends Plugin {
         logic = new Logic();
 
         Events.on(EventType.ServerLoadEvent.class, e -> {
-            Vars.content.blocks().each(Objects::nonNull, block ->{
-                if (block instanceof CoreBlock) block.health *= 2;
+            content.blocks().each(Objects::nonNull, block ->{
+                if (block instanceof CoreBlock) block.health *= 0.9;
                 else if (block instanceof Wall) block.health *= 5;
                 else block.health *= 25;
             });

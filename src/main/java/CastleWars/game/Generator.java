@@ -108,14 +108,14 @@ public class Generator implements Cons<Tiles> {
         int cx = 2, cy = saved.height + 2;
         int Padding = Room.ROOM_SIZE + 2;
         // Ground
-        addUnit(UnitTypes.dagger, cx, cy + 2, 60, 0);
+        addUnit(UnitTypes.dagger, cx, cy + 2, 100, 0);
         addUnit(UnitTypes.mace, cx + Padding, cy + 2, 150, 1);
         addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 500, 5);
         addUnit(UnitTypes.scepter, cx + Padding * 3, cy + 2, 2750, 20);
         addUnit(UnitTypes.reign, cx + Padding * 4, cy + 2, 7500, 50);
         // Support 
         cx += 1;
-        addUnit(UnitTypes.nova, cx + Padding * 5, cy + 2, 60, 0);
+        addUnit(UnitTypes.nova, cx + Padding * 5, cy + 2, 100, 0);
         addUnit(UnitTypes.pulsar, cx + Padding * 6, cy + 2, 180, 1);
         addUnit(UnitTypes.quasar, cx + Padding * 7, cy + 2, 500, 4);
         addUnit(UnitTypes.vela, cx + Padding * 8, cy + 2, 3000, 25);
@@ -123,13 +123,13 @@ public class Generator implements Cons<Tiles> {
         // Naval Support
         cx += 1;
         addUnit(UnitTypes.retusa, cx + Padding * 10, cy + 2, 150, 1);
-        addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 300, 2);
-        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1000, 8);
+        addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 350, 2);
+        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1200, 8);
         addUnit(UnitTypes.aegires, cx + Padding * 13, cy + 2, 3500, 25);
         addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 8000, 60);
         // Spiders
         cx -= 2;
-        addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 40, 0);
+        addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 75, 0);
         addUnit(UnitTypes.atrax, cx + Padding, cy + 2 + Padding * 2, 160, 1);
         addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 450, 4);
         addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 3000, 25);
@@ -138,16 +138,21 @@ public class Generator implements Cons<Tiles> {
         cx += 1;
         addUnit(UnitTypes.risso, cx + Padding * 5, cy + 2 + Padding * 2, 150, 1);
         addUnit(UnitTypes.minke, cx + Padding * 6, cy + 2 + Padding * 2, 350, 2);
-        addUnit(UnitTypes.bryde, cx + Padding * 7, cy + 2 + Padding * 2, 1200, 10);
-        addUnit(UnitTypes.sei, cx + Padding * 8, cy + 2 + Padding * 2, 3500, 30);
+        addUnit(UnitTypes.bryde, cx + Padding * 7, cy + 2 + Padding * 2, 1200, 8);
+        addUnit(UnitTypes.sei, cx + Padding * 8, cy + 2 + Padding * 2, 3500, 25);
         addUnit(UnitTypes.omura, cx + Padding * 9, cy + 2 + Padding * 2, 9000, 75);
         // Resources
         cx += 1;
         addResources(Items.copper, cx + Padding * 10, cy + 2 + Padding * 2, 100);
+        addResources(Items.silicon, cx + Padding * 10, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
         addResources(Items.titanium, cx + Padding * 11, cy + 2 + Padding * 2, 200);
+        addResources(Items.silicon, cx + Padding * 11, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
         addResources(Items.plastanium, cx + Padding * 12, cy + 2 + Padding * 2, 300);
+        // TODO сделать покупку усилений (эффекты?) (блоки?)
         addResources(Items.phaseFabric, cx + Padding * 13, cy + 2 + Padding * 2, 400);
+
         addResources(Items.surgeAlloy, cx + Padding * 14, cy + 2 + Padding * 2, 500);
+
     }
 
     private void turretGen(Tile tile, int yy) {
@@ -195,7 +200,7 @@ public class Generator implements Cons<Tiles> {
 
     private void addUnit(UnitType type, int x, int y, int cost, int income) {
         Room.rooms.add(new UnitRoom(type, x, y, cost, income, UnitRoom.Type.Attacker));
-        Room.rooms.add(new UnitRoom(type, x, y + Room.ROOM_SIZE + 2, cost, -income + 1, UnitRoom.Type.Defender));
+        Room.rooms.add(new UnitRoom(type, x, y + Room.ROOM_SIZE + 2, cost, -income + income > 0 ? 1 : 0, UnitRoom.Type.Defender));
     }
 
     private void addCoreRoom(Tile tile, int yy) {
@@ -210,6 +215,5 @@ public class Generator implements Cons<Tiles> {
 
     private void addResources(Item item, int x, int y, int cost) {
         Room.rooms.add(new ResourceRoom(item, x, y, cost, 240));
-        Room.rooms.add(new ResourceRoom(item, x, y + Room.ROOM_SIZE + 2, cost * 8, 240 * 10));
     }
 }
