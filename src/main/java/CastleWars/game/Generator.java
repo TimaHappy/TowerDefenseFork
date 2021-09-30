@@ -143,11 +143,11 @@ public class Generator implements Cons<Tiles> {
         addUnit(UnitTypes.omura, cx + Padding * 9, cy + 2 + Padding * 2, 9000, 75);
         // Resources
         cx += 1;
-        addResources(Items.copper, cx + Padding * 5, cy + 2 + Padding * 2, 100);
-        addResources(Items.titanium, cx + Padding * 6, cy + 2 + Padding * 2, 200);
-        addResources(Items.plastanium, cx + Padding * 7, cy + 2 + Padding * 2, 300);
-        addResources(Items.phaseFabric, cx + Padding * 9, cy + 2 + Padding * 2, 400);
-        addResources(Items.surgeAlloy, cx + Padding * 8, cy + 2 + Padding * 2, 500);
+        addResources(Items.copper, cx + Padding * 10, cy + 2 + Padding * 2, 100);
+        addResources(Items.titanium, cx + Padding * 11, cy + 2 + Padding * 2, 200);
+        addResources(Items.plastanium, cx + Padding * 12, cy + 2 + Padding * 2, 300);
+        addResources(Items.phaseFabric, cx + Padding * 13, cy + 2 + Padding * 2, 400);
+        addResources(Items.surgeAlloy, cx + Padding * 14, cy + 2 + Padding * 2, 500);
     }
 
     private void turretGen(Tile tile, int yy) {
