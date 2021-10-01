@@ -19,28 +19,28 @@ public class UnitDeathData {
         cost.put(UnitTypes.mace, 50);
         cost.put(UnitTypes.fortress, 150);
         cost.put(UnitTypes.scepter, 750);
-        cost.put(UnitTypes.reign, 2500);
+        cost.put(UnitTypes.reign, 2000);
 
         // Ground Support
         cost.put(UnitTypes.nova, 50);
         cost.put(UnitTypes.pulsar, 75);
         cost.put(UnitTypes.quasar, 200);
         cost.put(UnitTypes.vela, 800);
-        cost.put(UnitTypes.corvus, 2500);
+        cost.put(UnitTypes.corvus, 2000);
 
         // Naval
         cost.put(UnitTypes.risso, 50);
         cost.put(UnitTypes.minke, 100);
         cost.put(UnitTypes.bryde, 300);
         cost.put(UnitTypes.sei, 1000);
-        cost.put(UnitTypes.omura, 3000);
+        cost.put(UnitTypes.omura, 2500);
 
         // Naval Support
         cost.put(UnitTypes.retusa, 50);
         cost.put(UnitTypes.oxynoe, 100);
         cost.put(UnitTypes.cyerce, 300);
         cost.put(UnitTypes.aegires, 1000);
-        cost.put(UnitTypes.navanax, 3000);
+        cost.put(UnitTypes.navanax, 2500);
 
         // Spiders
         cost.put(UnitTypes.crawler, 20);

@@ -4,8 +4,8 @@ import CastleWars.data.Icon;
 import CastleWars.data.PlayerData;
 import CastleWars.data.UnitDeathData;
 import CastleWars.game.Logic;
-import CastleWars.logic.UnitRoom;
 import arc.Events;
+import arc.math.geom.Geometry;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import mindustry.content.Blocks;
@@ -15,14 +15,15 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration;
+import mindustry.world.Tile;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import java.util.Objects;
 
 import static arc.util.Time.toMinutes;
-import static mindustry.Vars.content;
-import static mindustry.Vars.netServer;
+import static mindustry.Vars.*;
+import static mindustry.core.Logic.gameOver;
 import static mindustry.game.Team.blue;
 import static mindustry.game.Team.sharded;
 
@@ -47,8 +48,16 @@ public class Main extends Plugin {
         content.blocks().each(block -> !(block instanceof Wall && block != Blocks.thruster), block -> rules.bannedBlocks.add(block));
 
         netServer.admins.addActionFilter(action -> {
-            if ((UnitRoom.shardedSpawn != null && UnitRoom.blueSpawn != null) && (action.type == Administration.ActionType.placeBlock && action.tile != null) && (action.tile.dst(UnitRoom.blueSpawn.x, UnitRoom.blueSpawn.y) > 100) || (action.tile.dst(UnitRoom.shardedSpawn.x, UnitRoom.shardedSpawn.y) > 100)) return false;
-            return (action.type != Administration.ActionType.breakBlock && action.type != Administration.ActionType.placeBlock) || action.tile == null || (action.tile.floor() != Blocks.metalFloor.asFloor() && action.tile.floor() != Blocks.metalFloor5.asFloor());
+            if ((action.type != Administration.ActionType.placeBlock && action.type != Administration.ActionType.breakBlock) || action.tile == null) return true;
+            if (action.tile.floor() == Blocks.metalFloor.asFloor() || action.tile.floor() == Blocks.metalFloor5.asFloor() || action.tile.floor() == Blocks.darkPanel2.asFloor()) return false;
+
+            boolean[] nearbyPanels = {true};
+            Geometry.circle(action.tile.x, action.tile.y, 10, (x, y) -> {
+                Tile t = world.tile(x, y);
+                if (t != null && t.floor() == Blocks.darkPanel2.asFloor()) nearbyPanels[0] = false;
+            });
+
+            return nearbyPanels[0];
         });
 
         UnitDeathData.init();
@@ -65,7 +74,7 @@ public class Main extends Plugin {
             });
 
             logic.restart();
-            Log.info("Castle Wars loaded. Hosting a server...");
+            Log.info("[Darkdustry] Castle Wars loaded. Hosting a server...");
             netServer.openServer();
         });
 
@@ -93,5 +102,6 @@ public class Main extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         // Breaks the game
         handler.removeCommand("gameover");
+        handler.register("gameover", "End the game.", args -> gameOver(sharded));
     }
 }

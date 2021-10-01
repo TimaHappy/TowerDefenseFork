@@ -123,10 +123,10 @@ public class Generator implements Cons<Tiles> {
         // Naval Support
         cx += 1;
         addUnit(UnitTypes.retusa, cx + Padding * 10, cy + 2, 150, 1);
-        addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 350, 2);
-        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1200, 8);
+        addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 400, 2);
+        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1250, 8);
         addUnit(UnitTypes.aegires, cx + Padding * 13, cy + 2, 3500, 25);
-        addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 8000, 60);
+        addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 10000, 75);
         // Spiders
         cx -= 2;
         addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 75, 0);
@@ -200,7 +200,8 @@ public class Generator implements Cons<Tiles> {
 
     private void addUnit(UnitType type, int x, int y, int cost, int income) {
         Room.rooms.add(new UnitRoom(type, x, y, cost, income, UnitRoom.Type.Attacker));
-        Room.rooms.add(new UnitRoom(type, x, y + Room.ROOM_SIZE + 2, cost, -income + income > 0 ? 1 : 0, UnitRoom.Type.Defender));
+        if (income > 0) income -= 1;
+        Room.rooms.add(new UnitRoom(type, x, y + Room.ROOM_SIZE + 2, cost, -income, UnitRoom.Type.Defender));
     }
 
     private void addCoreRoom(Tile tile, int yy) {
