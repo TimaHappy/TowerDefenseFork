@@ -22,8 +22,9 @@ import mindustry.world.blocks.storage.CoreBlock;
 import java.util.Objects;
 
 import static arc.util.Time.toMinutes;
-import static mindustry.Vars.*;
-import static mindustry.core.Logic.gameOver;
+import static mindustry.Vars.content;
+import static mindustry.Vars.world;
+import static mindustry.Vars.netServer;
 import static mindustry.game.Team.blue;
 import static mindustry.game.Team.sharded;
 
@@ -102,6 +103,6 @@ public class Main extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         // Breaks the game
         handler.removeCommand("gameover");
-        handler.register("gameover", "End the game.", args -> gameOver(sharded));
+        handler.register("gameover", "End the game.", args -> logic.gameOver(sharded));
     }
 }
