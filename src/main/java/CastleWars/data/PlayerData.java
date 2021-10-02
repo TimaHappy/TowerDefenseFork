@@ -74,14 +74,14 @@ public class PlayerData {
             datas.put(event.player.id, new PlayerData(event.player));
             Vars.netServer.assignTeam(event.player, Groups.player);
             Timer.schedule(() -> labels(event.player), 1);
-            Groups.player.each(p -> labels(p));
+            Groups.player.each(PlayerData::labels);
         });
 
         Events.on(EventType.PlayerLeave.class, event -> {
-            datas.remove(event.player.id));
+            datas.remove(event.player.id);
             Groups.player.update();
             if (Groups.player.size() == 0) Main.logic.gameOver(Team.sharded);
-        }
+        });
     }
 
     public static void labels(Player player) {

@@ -31,7 +31,7 @@ import static mindustry.game.Team.sharded;
 public class Main extends Plugin {
 
     public static Rules rules;
-    public Logic logic;
+    public static Logic logic;
     public static int unitTeamLimit = 400;
     public static int moneyPlayerLimit = 250000;
 
