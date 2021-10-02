@@ -103,6 +103,6 @@ public class Main extends Plugin {
     public void registerServerCommands(CommandHandler handler) {
         // Breaks the game
         handler.removeCommand("gameover");
-        handler.register("gameover", "End the game.", args -> logic.gameOver(sharded));
+        handler.register("gameover", "End the game.", args -> logic.endGame(sharded));
     }
 }

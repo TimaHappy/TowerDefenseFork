@@ -155,10 +155,10 @@ public class Generator implements Cons<Tiles> {
         addResources(Items.blastCompound, cx + Padding * 12, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 250);
 
         addResources(Items.phaseFabric, cx + Padding * 13, cy + 2 + Padding * 2, 400);
-        addEffectRoom(StatusEffects.overdrive, cx + Padding * 13, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 800, "Overdrive\n effect");
+        addEffectRoom(StatusEffects.overdrive, cx + Padding * 13, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 2000, "Overdrive\n effect");
 
         addResources(Items.surgeAlloy, cx + Padding * 14, cy + 2 + Padding * 2, 500);
-        addEffectRoom(StatusEffects.boss, cx + Padding * 14, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 2400, "Boss\n effect");
+        addEffectRoom(StatusEffects.boss, cx + Padding * 14, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 3000, "Boss\n effect");
     }
 
     private void turretGen(Tile tile, int yy) {

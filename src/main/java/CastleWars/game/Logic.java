@@ -36,7 +36,7 @@ public class Logic {
             if (!(e.tile.build instanceof CoreBlock.CoreBuild) || e.tile.build.team.cores().size > 1 || !worldLoaded) return;
 
             Team team = e.tile.build.team() == Team.sharded ? Team.blue : Team.sharded;
-            gameOver(team);
+            endGame(team);
         });
     }
 
@@ -92,12 +92,12 @@ public class Logic {
         logic.play();
         state.rules = Main.rules;
         Call.setRules(state.rules);
-        Timer.schedule(() -> worldLoaded = true, 5);
+        Timer.schedule(() -> worldLoaded = true, 7.5f);
     }
 
-    public void gameOver(Team team) {
+    public void endGame(Team team) {
         Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.blue ? "events.win.blue" : "events.win.sharded", Bundle.findLocale(p))));
-        Timer.schedule(this::restart, 3);
+        Timer.schedule(this::restart, 7.5f);
         worldLoaded = false;
     }
 }
