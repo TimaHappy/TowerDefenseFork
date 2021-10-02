@@ -146,13 +146,13 @@ public class Generator implements Cons<Tiles> {
         addResources(Items.copper, cx + Padding * 10, cy + 2 + Padding * 2, 100);
         addResources(Items.silicon, cx + Padding * 10, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
         addResources(Items.titanium, cx + Padding * 11, cy + 2 + Padding * 2, 200);
-        addResources(Items.silicon, cx + Padding * 11, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
+        addResources(Items.sporePod, cx + Padding * 11, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
         addResources(Items.plastanium, cx + Padding * 12, cy + 2 + Padding * 2, 300);
-        // TODO сделать покупку усилений (эффекты?) (блоки?)
+        addResources(Items.pyratite, cx + Padding * 12, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
         addResources(Items.phaseFabric, cx + Padding * 13, cy + 2 + Padding * 2, 400);
-
+        addResources(Items.blastCompound, cx + Padding * 13, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
         addResources(Items.surgeAlloy, cx + Padding * 14, cy + 2 + Padding * 2, 500);
-
+        //TODO сделать какую-то прикольную фишку
     }
 
     private void turretGen(Tile tile, int yy) {
