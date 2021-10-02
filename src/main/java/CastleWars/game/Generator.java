@@ -124,11 +124,11 @@ public class Generator implements Cons<Tiles> {
         addUnit(UnitTypes.corvus, cx + Padding * 9, cy + 2, 7500, 50);
         // Naval Support
         cx += 1;
-        addUnit(UnitTypes.retusa, cx + Padding * 10, cy + 2, 150, 1);
+        addUnit(UnitTypes.retusa, cx + Padding * 10, cy + 2, 200, 1);
         addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 400, 2);
-        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1250, 8);
-        addUnit(UnitTypes.aegires, cx + Padding * 13, cy + 2, 3500, 25);
-        addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 10000, 75);
+        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1200, 8);
+        addUnit(UnitTypes.aegires, cx + Padding * 13, cy + 2, 4000, 25);
+        addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 9000, 75);
         // Spiders
         cx -= 2;
         addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 75, 0);
@@ -147,14 +147,18 @@ public class Generator implements Cons<Tiles> {
         cx += 1;
         addResources(Items.copper, cx + Padding * 10, cy + 2 + Padding * 2, 100);
         addResources(Items.silicon, cx + Padding * 10, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
+
         addResources(Items.titanium, cx + Padding * 11, cy + 2 + Padding * 2, 200);
-        addResources(Items.sporePod, cx + Padding * 11, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
+        addResources(Items.pyratite, cx + Padding * 11, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 200);
+
         addResources(Items.plastanium, cx + Padding * 12, cy + 2 + Padding * 2, 300);
-        addResources(Items.pyratite, cx + Padding * 12, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 200);
+        addResources(Items.blastCompound, cx + Padding * 12, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 250);
+
         addResources(Items.phaseFabric, cx + Padding * 13, cy + 2 + Padding * 2, 400);
-        addResources(Items.blastCompound, cx + Padding * 13, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 250);
+        addEffectRoom(StatusEffects.overdrive, cx + Padding * 13, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 800, "Overdrive\n effect");
+
         addResources(Items.surgeAlloy, cx + Padding * 14, cy + 2 + Padding * 2, 500);
-        addEffectRoom(StatusEffects.overdrive, cx + Padding * 14, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2);
+        addEffectRoom(StatusEffects.boss, cx + Padding * 14, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 2400, "Boss\n effect");
     }
 
     private void turretGen(Tile tile, int yy) {
@@ -220,7 +224,7 @@ public class Generator implements Cons<Tiles> {
         Room.rooms.add(new ResourceRoom(item, x, y, cost, 240));
     }
 
-    private void addEffectRoom(StatusEffect effect, int x, int y) {
-        Room.rooms.add(new EffectRoom(effect, x, y, 1000));
+    private void addEffectRoom(StatusEffect effect, int x, int y, int cost, String name) {
+        Room.rooms.add(new EffectRoom(effect, x, y, cost, name));
     }
 }

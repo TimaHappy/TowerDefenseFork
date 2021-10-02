@@ -64,8 +64,7 @@ public class TurretRoom extends Room {
 
     public static Item ammo(Block block) {
         if (block == foreshadow || block == swarmer) return Items.surgeAlloy;
-        if (block == cyclone) return Items.plastanium;
-        if (block == ripple) return Items.blastCompound;
+        if (block == cyclone || block == ripple) return Items.plastanium;
         if (block == spectre || block == fuse || block == salvo) return Items.thorium;
         return Items.copper;
     }

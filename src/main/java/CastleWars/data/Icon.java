@@ -3,6 +3,7 @@ package CastleWars.data;
 import arc.struct.ObjectMap;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
+import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.ctype.Content;
 import mindustry.gen.Iconc;
@@ -64,7 +65,6 @@ public class Icon {
         icons.put(Items.copper, Iconc.itemCopper);
         icons.put(Items.titanium, Iconc.itemTitanium);
         icons.put(Items.silicon, Iconc.itemSilicon);
-        icons.put(Items.sporePod, Iconc.itemSporePod);
         icons.put(Items.pyratite, Iconc.itemPyratite);
         icons.put(Items.blastCompound, Iconc.itemBlastCompound);
         // Some stuff xd
@@ -72,6 +72,8 @@ public class Icon {
         icons.put(Blocks.commandCenter, Iconc.units);
         icons.put(Blocks.plastaniumCompressor, Iconc.blockPlastaniumCompressor);
         icons.put(Blocks.laserDrill, Iconc.blockLaserDrill);
+        icons.put(StatusEffects.boss, Iconc.statusBoss);
+        icons.put(StatusEffects.overdrive, Iconc.statusOverdrive);
     }
 
     public static String get(Content item) {
