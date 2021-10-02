@@ -64,7 +64,9 @@ public class Icon {
         icons.put(Items.copper, Iconc.itemCopper);
         icons.put(Items.titanium, Iconc.itemTitanium);
         icons.put(Items.silicon, Iconc.itemSilicon);
-        icons.put(Items.graphite, Iconc.itemGraphite);
+        icons.put(Items.sporePod, Iconc.itemSporePod);
+        icons.put(Items.pyratite, Iconc.itemPyratite);
+        icons.put(Items.blastCompound, Iconc.itemBlastCompound);
         // Some stuff xd
         icons.put(Blocks.duo, Iconc.defense);
         icons.put(Blocks.commandCenter, Iconc.units);

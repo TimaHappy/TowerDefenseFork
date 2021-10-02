@@ -8,11 +8,13 @@ import arc.util.Timer;
 import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
+import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.game.Gamemode;
 import mindustry.game.Team;
 import mindustry.game.Teams;
 import mindustry.type.Item;
+import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
@@ -148,11 +150,11 @@ public class Generator implements Cons<Tiles> {
         addResources(Items.titanium, cx + Padding * 11, cy + 2 + Padding * 2, 200);
         addResources(Items.sporePod, cx + Padding * 11, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
         addResources(Items.plastanium, cx + Padding * 12, cy + 2 + Padding * 2, 300);
-        addResources(Items.pyratite, cx + Padding * 12, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
+        addResources(Items.pyratite, cx + Padding * 12, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 200);
         addResources(Items.phaseFabric, cx + Padding * 13, cy + 2 + Padding * 2, 400);
-        addResources(Items.blastCompound, cx + Padding * 13, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
+        addResources(Items.blastCompound, cx + Padding * 13, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 250);
         addResources(Items.surgeAlloy, cx + Padding * 14, cy + 2 + Padding * 2, 500);
-        //TODO сделать какую-то прикольную фишку
+        addEffectRoom(StatusEffects.overdrive, cx + Padding * 14, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2);
     }
 
     private void turretGen(Tile tile, int yy) {
@@ -216,5 +218,9 @@ public class Generator implements Cons<Tiles> {
 
     private void addResources(Item item, int x, int y, int cost) {
         Room.rooms.add(new ResourceRoom(item, x, y, cost, 240));
+    }
+
+    private void addEffectRoom(StatusEffect effect, int x, int y) {
+        Room.rooms.add(new EffectRoom(effect, x, y, 1000));
     }
 }
