@@ -14,6 +14,7 @@ import arc.util.Timer;
 import mindustry.Vars;
 import mindustry.content.UnitTypes;
 import mindustry.game.EventType;
+import mindustry.game.Team;
 import mindustry.gen.*;
 
 public class PlayerData {
@@ -73,11 +74,14 @@ public class PlayerData {
             datas.put(event.player.id, new PlayerData(event.player));
             Vars.netServer.assignTeam(event.player, Groups.player);
             Timer.schedule(() -> labels(event.player), 1);
-
-            if (Groups.player.size() == 1) labels(Groups.player.index(0));
+            Groups.player.each(p -> labels(p));
         });
 
-        Events.on(EventType.PlayerLeave.class, event -> datas.remove(event.player.id));
+        Events.on(EventType.PlayerLeave.class, event -> {
+            datas.remove(event.player.id));
+            Groups.player.update();
+            if (Groups.player.size() == 0) Main.logic.gameOver(Team.sharded);
+        }
     }
 
     public static void labels(Player player) {
