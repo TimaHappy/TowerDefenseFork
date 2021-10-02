@@ -120,7 +120,7 @@ public class Generator implements Cons<Tiles> {
         addUnit(UnitTypes.nova, cx + Padding * 5, cy + 2, 100, 0);
         addUnit(UnitTypes.pulsar, cx + Padding * 6, cy + 2, 180, 1);
         addUnit(UnitTypes.quasar, cx + Padding * 7, cy + 2, 500, 4);
-        addUnit(UnitTypes.vela, cx + Padding * 8, cy + 2, 3000, 25);
+        addUnit(UnitTypes.vela, cx + Padding * 8, cy + 2, 3500, 25);
         addUnit(UnitTypes.corvus, cx + Padding * 9, cy + 2, 7500, 50);
         // Naval Support
         cx += 1;
