@@ -49,15 +49,15 @@ public class UnitDeathData {
         cost.put(UnitTypes.arkyid, 900);
         cost.put(UnitTypes.toxopid, 2500);
 
-        // Block. Just a block.
+        // Block. Just a block. Anuke, what?
         cost.put(UnitTypes.block, 1);
 
         Events.on(EventType.UnitDestroyEvent.class, event -> {
             if (cost.containsKey(event.unit.type)) {
                 PlayerData.datas.values().forEach(data -> {
                     if (event.unit.team != data.player.team() && !event.unit.spawnedByCore) {
-                        data.increaseMoney(get(event.unit.type));
-                        Call.label(data.player.con, "[accent]+ [lime]" + get(event.unit.type), 0.5f, event.unit.x, event.unit.y);
+                        data.money += get(event.unit.type);
+                        Call.label(data.player.con, "[lime]+ [accent]" + get(event.unit.type), 0.4f, event.unit.x, event.unit.y);
                     }
                 });
             }
