@@ -22,9 +22,7 @@ import mindustry.world.blocks.storage.CoreBlock;
 import java.util.Objects;
 
 import static arc.util.Time.toMinutes;
-import static mindustry.Vars.content;
-import static mindustry.Vars.world;
-import static mindustry.Vars.netServer;
+import static mindustry.Vars.*;
 import static mindustry.game.Team.blue;
 import static mindustry.game.Team.sharded;
 
@@ -104,5 +102,7 @@ public class Main extends Plugin {
         // Breaks the game
         handler.removeCommand("gameover");
         handler.register("gameover", "End the game.", args -> logic.endGame(sharded));
+        handler.removeCommand("rules");
+        handler.register("rules", "Add custom rules to the server.", args -> Log.err("You can't change game rules with this plugin. Change them in code."))
     }
 }
