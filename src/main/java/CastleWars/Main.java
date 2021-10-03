@@ -33,7 +33,6 @@ public class Main extends Plugin {
     public static Rules rules;
     public static Logic logic;
     public static int unitTeamLimit = 400;
-    public static int moneyPlayerLimit = 250000;
 
     @Override
     public void init() {
@@ -45,6 +44,7 @@ public class Main extends Plugin {
         rules.waves = true;
         rules.waveTimer = false;
         rules.waveSpacing = 30 * toMinutes;
+        rules.revealedBlocks.addAll(Blocks.duct, Blocks.ductRouter, Blocks.ductBridge, Blocks.thruster, Blocks.blockForge, Blocks.blockLoader, Blocks.blockUnloader, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic);
 
         content.blocks().each(block -> !(block instanceof Wall && block != Blocks.thruster), block -> rules.bannedBlocks.add(block));
 
