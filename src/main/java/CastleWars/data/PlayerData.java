@@ -33,7 +33,7 @@ public class PlayerData {
     }
 
     public void update() {
-        if (interval.get(0, MoneyInterval)) increaseMoney(income);
+        if (interval.get(0, MoneyInterval)) money += income;
         updateLabels();
 
         if (player.shooting && player.unit() != null) {
@@ -53,15 +53,6 @@ public class PlayerData {
 
         // Set Hud Text
         if (!disabledHud) Call.setHudText(player.con, format("commands.hud.display", findLocale(player), money, income));
-    }
-
-    public void increaseMoney(int num) {
-        if (money >= Main.moneyPlayerLimit) return;
-        if ((money + num) < Main.moneyPlayerLimit) {
-            money += num;
-            return;
-        }
-        money = Main.moneyPlayerLimit;
     }
 
     public void updateLabels() {
