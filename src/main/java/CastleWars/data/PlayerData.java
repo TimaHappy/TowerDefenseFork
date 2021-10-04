@@ -51,7 +51,11 @@ public class PlayerData {
         }
 
         // Set Hud Text
-        if (!disabledHud) Call.setHudText(player.con, format("commands.hud.display", findLocale(player), money, income));
+        if (!disabledHud) {
+            String text = format("commands.hud.display", findLocale(player), money, income);
+            if (player.unit() != null && player.unit().isFlying()) text += format("commands.hud.fly-warning", findLocale(player), money, income);
+            Call.setHudText(player.con, text);
+        }
     }
 
     public void updateLabels() {
