@@ -125,8 +125,8 @@ public class Generator implements Cons<Tiles> {
         // Naval Support
         cx += 1;
         addUnit(UnitTypes.retusa, cx + Padding * 10, cy + 2, 200, 1);
-        addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 400, 2);
-        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1200, 8);
+        addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 550, 3);
+        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1400, 9);
         addUnit(UnitTypes.aegires, cx + Padding * 13, cy + 2, 4000, 25);
         addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 9000, 75);
         // Spiders
@@ -155,10 +155,10 @@ public class Generator implements Cons<Tiles> {
         addResources(Items.blastCompound, cx + Padding * 12, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 250);
 
         addResources(Items.phaseFabric, cx + Padding * 13, cy + 2 + Padding * 2, 400);
-        addEffectRoom(StatusEffects.overdrive, cx + Padding * 13, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 2000, "Overdrive\n effect");
+        addEffectRoom(StatusEffects.overdrive, cx + Padding * 13, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 2000, "Overdrive\neffect");
 
         addResources(Items.surgeAlloy, cx + Padding * 14, cy + 2 + Padding * 2, 500);
-        addEffectRoom(StatusEffects.boss, cx + Padding * 14, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 3000, "Boss\n effect");
+        addEffectRoom(StatusEffects.boss, cx + Padding * 14, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 3000, "Boss\neffect");
     }
 
     private void turretGen(Tile tile, int yy) {

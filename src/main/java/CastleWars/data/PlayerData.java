@@ -3,7 +3,6 @@ package CastleWars.data;
 import static CastleWars.Bundle.findLocale;
 import static CastleWars.Bundle.format;
 
-import CastleWars.Main;
 import CastleWars.logic.Room;
 import CastleWars.logic.TurretRoom;
 import arc.Events;

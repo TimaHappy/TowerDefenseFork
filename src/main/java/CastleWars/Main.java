@@ -103,6 +103,6 @@ public class Main extends Plugin {
         handler.removeCommand("gameover");
         handler.register("gameover", "End the game.", args -> logic.endGame(sharded));
         handler.removeCommand("rules");
-        handler.register("rules", "Add custom rules to the server.", args -> Log.err("You can't change game rules with this plugin. Change them in code."))
+        handler.register("rules", "Add custom rules to the server.", args -> Log.err("You can't change game rules with this plugin. Change them in code."));
     }
 }
