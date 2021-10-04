@@ -8,6 +8,7 @@ import CastleWars.logic.RoomComp;
 import arc.Events;
 import arc.struct.Seq;
 import arc.util.Timer;
+import arc.util.Interval;
 import mindustry.content.Blocks;
 import mindustry.content.UnitTypes;
 import mindustry.game.EventType;
@@ -31,6 +32,8 @@ public class Logic {
 
     Seq<Tile> cores = new Seq<>();
 
+    Interval interval = new Interval();
+
     public Logic() {
         Events.on(EventType.BlockDestroyEvent.class, e -> {
             if (!(e.tile.build instanceof CoreBlock.CoreBuild) || e.tile.build.team.cores().size > 1 || !worldLoaded) return;
@@ -52,6 +55,10 @@ public class Logic {
             if (u.isPlayer()) u.getPlayer().unit(Nulls.unit);
             u.kill();
         });
+
+        if (interval.get(60f)) {
+            Groups.unit.each(u -> u.isFlying(), unit -> unit.damagePierce(unit.maxHealth / 10));
+        }
     }
 
     public void restart() {
