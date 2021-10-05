@@ -53,9 +53,9 @@ public class Logic {
             u.kill();
         });
 
-        if (interval.get(60f)) {
+        if (interval.get(6f)) {
             Groups.unit.each(Flyingc::isFlying, unit -> {
-                if (!Main.logic.placeCheck(unit.team(), unit.tileOn())) unit.damagePierce(unit.maxHealth / 10);
+                if (!Main.logic.placeCheck(unit.team(), unit.tileOn())) unit.damagePierce(unit.maxHealth / 100);
             });
         }
     }
