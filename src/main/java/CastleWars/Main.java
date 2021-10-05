@@ -70,7 +70,7 @@ public class Main extends Plugin {
         Events.on(EventType.ServerLoadEvent.class, e -> {
             content.blocks().each(Objects::nonNull, block ->{
                 if (block instanceof CoreBlock) block.health *= 0.9;
-                else if (block instanceof Wall) block.health *= 5;
+                else if (block instanceof Wall) block.health *= 1.25;
                 else block.health *= 25;
             });
 
