@@ -11,8 +11,7 @@ public class CoreRoom extends TurretRoom{
     }
     
     @Override
-    public void update() {
-    }
+    public void update() {}
 
     @Override
     public boolean canBuy(PlayerData data) {

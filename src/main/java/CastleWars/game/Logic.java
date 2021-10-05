@@ -67,6 +67,7 @@ public class Logic {
         logic.reset();
 
         UnitTypes.omura.abilities.clear();
+        UnitTypes.corvus.abilities.clear();
         Blocks.itemSource.health = 999999;
         Blocks.liquidSource.health = 999999;
         Blocks.coreNucleus.unitCapModifier = 999;
@@ -97,21 +98,28 @@ public class Logic {
         logic.play();
         state.rules = Main.rules;
         Call.setRules(state.rules);
+        // 7.5 секунд после загрузки мира, чтобы надписи и магазин точно успели загрузиться
         Timer.schedule(() -> worldLoaded = true, 7.5f);
     }
 
     public void endGame(Team team) {
+        // Не самая лучшая проверка, но конкретно здесь сойдет
         Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.blue ? "events.win.blue" : "events.win.sharded", Bundle.findLocale(p))));
         Timer.schedule(this::restart, 7.5f);
         worldLoaded = false;
     }
 
+    /**
+     * @param team - Команда, для которой надо произвести проверку
+     * @param tile - Тайл, для которого надо произвести проверку
+     * @return - Находится ли данный тайл на территории данной команды
+     */
     public boolean placeCheck(Team team, Tile tile) {
         if (tile == null) return true;
         if (team == Team.blue) {
-            return tile.y * tilesize > x + endx;
+            return (tile.y * tilesize) > (y + endy);
         } else if (team == Team.sharded) {
-            return tile.y * tilesize < x;
+            return (tile.y * tilesize) < y;
         }
         return true;
     }

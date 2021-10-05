@@ -32,8 +32,8 @@ public abstract class Room implements RoomComp {
         this.endy = y + size;
         this.drawx = x * Vars.tilesize;
         this.drawy = y * Vars.tilesize;
-        this.centreDrawx = (x + size / 2) * Vars.tilesize;
-        this.centreDrawy = (y + size / 2) * Vars.tilesize;
+        this.centreDrawx = (x + size / 2f) * Vars.tilesize;
+        this.centreDrawy = (y + size / 2f) * Vars.tilesize;
         this.endDrawx = drawx + drawSize;
         this.endDrawy = drawy + drawSize;
     }

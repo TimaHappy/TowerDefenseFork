@@ -6,7 +6,6 @@ import arc.struct.StringMap;
 import arc.util.Log;
 import arc.util.Structs;
 import mindustry.Vars;
-import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
 import java.text.MessageFormat;
@@ -97,9 +96,5 @@ public class Bundle {
 
     public static void bundled(Player player, String key, Object... values) {
         player.sendMessage(format(key, findLocale(player), values));
-    }
-
-    public static void bundledAll(String key, Object... values) {
-        Groups.player.each(p -> bundled(p, key, values));
     }
 }
