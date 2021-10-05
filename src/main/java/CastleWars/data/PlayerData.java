@@ -77,7 +77,7 @@ public class PlayerData {
         Room.rooms.each(room -> {
             if (room instanceof TurretRoom && ((TurretRoom)room).team != player.team()) return;
             if (room.labelVisible) {
-                Call.label(player.con, room.label, LabelInterval / 60f, room.centreDrawx, room.centreDrawy - room.size * 8 / 4);
+                Call.label(player.con, room.label, LabelInterval / 60f, room.centreDrawx, room.centreDrawy - room.size * 2);
             }
         });
     }

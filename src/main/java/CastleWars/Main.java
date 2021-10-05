@@ -50,6 +50,8 @@ public class Main extends Plugin {
             if ((action.type != Administration.ActionType.placeBlock && action.type != Administration.ActionType.breakBlock) || action.tile == null) return true;
             if (action.tile.floor() == Blocks.metalFloor.asFloor() || action.tile.floor() == Blocks.metalFloor5.asFloor() || action.tile.floor() == Blocks.darkPanel2.asFloor()) return false;
 
+            if (!logic.placeCheck(action.player.team(), action.tile)) return false;
+
             boolean[] nearbyPanels = {true};
             Geometry.circle(action.tile.x, action.tile.y, 10, (x, y) -> {
                 Tile t = world.tile(x, y);

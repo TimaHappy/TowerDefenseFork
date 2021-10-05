@@ -13,10 +13,7 @@ import mindustry.content.Blocks;
 import mindustry.content.UnitTypes;
 import mindustry.game.EventType;
 import mindustry.game.Team;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Nulls;
-import mindustry.gen.Player;
+import mindustry.gen.*;
 import mindustry.world.Tile;
 import mindustry.world.blocks.storage.CoreBlock;
 
@@ -57,7 +54,7 @@ public class Logic {
         });
 
         if (interval.get(60f)) {
-            Groups.unit.each(u -> u.isFlying(), unit -> unit.damagePierce(unit.maxHealth / 10));
+            Groups.unit.each(Flyingc::isFlying, unit -> unit.damagePierce(unit.maxHealth / 10));
         }
     }
 
@@ -105,5 +102,14 @@ public class Logic {
         Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.blue ? "events.win.blue" : "events.win.sharded", Bundle.findLocale(p))));
         Timer.schedule(this::restart, 7.5f);
         worldLoaded = false;
+    }
+
+    public boolean placeCheck(Team team, Tile tile) {
+        if (team == Team.blue) {
+            return tile.y * tilesize > x + endx;
+        } else if (team == Team.sharded) {
+            return tile.y * tilesize < x;
+        }
+        return true;
     }
 }
