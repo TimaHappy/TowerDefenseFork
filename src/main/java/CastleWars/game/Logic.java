@@ -54,7 +54,9 @@ public class Logic {
         });
 
         if (interval.get(60f)) {
-            Groups.unit.each(Flyingc::isFlying, unit -> unit.damagePierce(unit.maxHealth / 10));
+            Groups.unit.each(Flyingc::isFlying, unit -> {
+                if (!Main.logic.placeCheck(unit.team(), unit.tileOn())) unit.damagePierce(unit.maxHealth / 10);
+            });
         }
     }
 
@@ -105,6 +107,7 @@ public class Logic {
     }
 
     public boolean placeCheck(Team team, Tile tile) {
+        if (tile == null) return true;
         if (team == Team.blue) {
             return tile.y * tilesize > x + endx;
         } else if (team == Team.sharded) {

@@ -3,6 +3,7 @@ package CastleWars.data;
 import static CastleWars.Bundle.findLocale;
 import static CastleWars.Bundle.format;
 
+import CastleWars.Main;
 import CastleWars.logic.Room;
 import CastleWars.logic.TurretRoom;
 import arc.Events;
@@ -53,7 +54,7 @@ public class PlayerData {
         // Set Hud Text
         if (!disabledHud) {
             StringBuilder text = new StringBuilder(format("commands.hud.display", findLocale(player), money, income));
-            if (player.unit() != null && player.unit().isFlying()) text.append(format("commands.hud.fly-warning", findLocale(player)));
+            if (player.unit() != null && player.unit().isFlying() && !Main.logic.placeCheck(player.team(), player.tileOn())) text.append(format("commands.hud.fly-warning", findLocale(player)));
             Call.setHudText(player.con, text.toString());
         }
     }
