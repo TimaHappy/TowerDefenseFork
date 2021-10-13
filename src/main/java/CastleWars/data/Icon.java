@@ -80,6 +80,6 @@ public class Icon {
         if (icons.containsKey(item)) {
             return icons.get(item).toString();
         }
-        return "oh no";
+        return "[scarlet]oh no";
     }
 }

@@ -24,7 +24,7 @@ public class PlayerData {
 
     public Player player;
     public boolean disabledHud = false;
-    public int money, income = 15;
+    public int money, income = 10;
     Interval interval;
 
     public PlayerData(Player player) {
@@ -45,9 +45,9 @@ public class PlayerData {
         // Set Unit to risso
         if (player.unit().spawnedByCore && !(player.unit() instanceof WaterMovec)) {
             if (player.team().core() != null) {
-                Unit u = UnitTypes.risso.spawn(player.team(), player.team().core().x + 30, player.team().core().y + Mathf.random(-40, 40));
-                u.spawnedByCore = true;
-                player.unit(u);
+                Unit unit = UnitTypes.risso.spawn(player.team(), player.team().core().x + 30, player.team().core().y + Mathf.random(-40, 40));
+                unit.spawnedByCore = true;
+                player.unit(unit);
             }
         }
 
@@ -84,7 +84,7 @@ public class PlayerData {
     }
 
     public void reset() {
-        this.income = 15;
+        this.income = 10;
         this.money = 0;
     }
 }

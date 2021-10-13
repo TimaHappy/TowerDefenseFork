@@ -32,11 +32,10 @@ public class Logic {
     Interval interval = new Interval();
 
     public Logic() {
-        Events.on(EventType.BlockDestroyEvent.class, e -> {
-            if (!(e.tile.build instanceof CoreBlock.CoreBuild) || e.tile.build.team.cores().size > 1 || !worldLoaded) return;
+        Events.on(EventType.BlockDestroyEvent.class, event -> {
+            if (!(event.tile.build instanceof CoreBlock.CoreBuild) || event.tile.build.team.cores().size > 1 || !worldLoaded) return;
 
-            Team team = e.tile.build.team() == Team.sharded ? Team.blue : Team.sharded;
-            endGame(team);
+            endGame(event.tile.build.team() == Team.sharded ? Team.blue : Team.sharded);
         });
     }
 

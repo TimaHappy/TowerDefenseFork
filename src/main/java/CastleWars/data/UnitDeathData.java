@@ -15,39 +15,39 @@ public class UnitDeathData {
         cost = new ObjectMap<>();
 
         // Ground
-        cost.put(UnitTypes.dagger, 20);
+        cost.put(UnitTypes.dagger, 10);
         cost.put(UnitTypes.mace, 50);
         cost.put(UnitTypes.fortress, 150);
         cost.put(UnitTypes.scepter, 750);
-        cost.put(UnitTypes.reign, 2000);
+        cost.put(UnitTypes.reign, 1500);
 
         // Ground Support
-        cost.put(UnitTypes.nova, 50);
-        cost.put(UnitTypes.pulsar, 75);
-        cost.put(UnitTypes.quasar, 200);
-        cost.put(UnitTypes.vela, 800);
-        cost.put(UnitTypes.corvus, 2000);
+        cost.put(UnitTypes.nova, 15);
+        cost.put(UnitTypes.pulsar, 50);
+        cost.put(UnitTypes.quasar, 175);
+        cost.put(UnitTypes.vela, 750);
+        cost.put(UnitTypes.corvus, 1500);
 
         // Naval
-        cost.put(UnitTypes.risso, 50);
-        cost.put(UnitTypes.minke, 100);
-        cost.put(UnitTypes.bryde, 300);
-        cost.put(UnitTypes.sei, 1000);
-        cost.put(UnitTypes.omura, 2500);
+        cost.put(UnitTypes.risso, 25);
+        cost.put(UnitTypes.minke, 75);
+        cost.put(UnitTypes.bryde, 200);
+        cost.put(UnitTypes.sei, 800);
+        cost.put(UnitTypes.omura, 1750);
 
         // Naval Support
-        cost.put(UnitTypes.retusa, 50);
-        cost.put(UnitTypes.oxynoe, 100);
-        cost.put(UnitTypes.cyerce, 300);
-        cost.put(UnitTypes.aegires, 1000);
-        cost.put(UnitTypes.navanax, 2500);
+        cost.put(UnitTypes.retusa, 25);
+        cost.put(UnitTypes.oxynoe, 80);
+        cost.put(UnitTypes.cyerce, 200);
+        cost.put(UnitTypes.aegires, 800);
+        cost.put(UnitTypes.navanax, 2000);
 
         // Spiders
-        cost.put(UnitTypes.crawler, 20);
+        cost.put(UnitTypes.crawler, 10);
         cost.put(UnitTypes.atrax, 60);
         cost.put(UnitTypes.spiroct, 150);
-        cost.put(UnitTypes.arkyid, 900);
-        cost.put(UnitTypes.toxopid, 2500);
+        cost.put(UnitTypes.arkyid, 750);
+        cost.put(UnitTypes.toxopid, 1750);
 
         // Block. Just a block. Anuke, what?
         cost.put(UnitTypes.block, 1);

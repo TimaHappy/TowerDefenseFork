@@ -3,13 +3,11 @@ package CastleWars;
 import arc.files.Fi;
 import arc.struct.ObjectMap;
 import arc.struct.StringMap;
-import arc.util.Log;
 import arc.util.Structs;
 import mindustry.Vars;
 import mindustry.gen.Player;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -40,8 +38,6 @@ public class Bundle {
                 supportedLocales[i] = new Locale(code);
             }
         }
-
-        Log.debug("Loaded locales: @", Arrays.toString(supportedLocales));
     }
 
     private Bundle(){
