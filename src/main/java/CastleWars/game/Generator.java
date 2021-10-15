@@ -91,6 +91,10 @@ public class Generator implements Cons<Tiles> {
                 if (saved.getn(x, y).floor().equals(Blocks.metalFloorDamaged)) {
                     addDrillRoom(t.getn(x, y), yy);
                 }
+                // Command room
+                if (saved.getn(x, y).floor().equals(Blocks.metalFloor4)) {
+                    addCommandRoom(t.getn(x, y), yy);
+                }
                 // Spawners place
                 if (saved.getn(x, y).floor().equals(Blocks.darkPanel2)) {
                     UnitRoom.shardedSpawn = t.get(x, y);
@@ -112,28 +116,28 @@ public class Generator implements Cons<Tiles> {
         // Ground
         addUnit(UnitTypes.dagger, cx, cy + 2, 100, 0);
         addUnit(UnitTypes.mace, cx + Padding, cy + 2, 150, 1);
-        addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 500, 4);
+        addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 475, 4);
         addUnit(UnitTypes.scepter, cx + Padding * 3, cy + 2, 3000, 18);
         addUnit(UnitTypes.reign, cx + Padding * 4, cy + 2, 8000, 50);
         // Support 
         cx += 1;
         addUnit(UnitTypes.nova, cx + Padding * 5, cy + 2, 100, 0);
-        addUnit(UnitTypes.pulsar, cx + Padding * 6, cy + 2, 180, 1);
+        addUnit(UnitTypes.pulsar, cx + Padding * 6, cy + 2, 175, 1);
         addUnit(UnitTypes.quasar, cx + Padding * 7, cy + 2, 500, 4);
         addUnit(UnitTypes.vela, cx + Padding * 8, cy + 2, 3500, 20);
         addUnit(UnitTypes.corvus, cx + Padding * 9, cy + 2, 8000, 50);
         // Naval Support
         cx += 1;
         addUnit(UnitTypes.retusa, cx + Padding * 10, cy + 2, 200, 1);
-        addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 550, 3);
-        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1400, 9);
+        addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 525, 3);
+        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1375, 9);
         addUnit(UnitTypes.aegires, cx + Padding * 13, cy + 2, 4500, 25);
         addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 10000, 70);
         // Spiders
         cx -= 2;
-        addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 75, 0);
+        addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 70, 0);
         addUnit(UnitTypes.atrax, cx + Padding, cy + 2 + Padding * 2, 160, 1);
-        addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 550, 4);
+        addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 525, 4);
         addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 3750, 20);
         addUnit(UnitTypes.toxopid, cx + Padding * 4, cy + 2 + Padding * 2, 9000, 70);
         // Naval 
@@ -164,16 +168,16 @@ public class Generator implements Cons<Tiles> {
     private void turretGen(Tile tile, int yy) {
         // ForeShadow
         if (tile.nearby(1, 1).floor().equals(Blocks.darkPanel6) && tile.nearby(-1, -1).floor().equals(Blocks.darkPanel6) && tile.nearby(-1, 1).floor().equals(Blocks.darkPanel6) && tile.nearby(1, -1).floor().equals(Blocks.darkPanel6)) {
-            addTurret(Blocks.foreshadow, tile, yy, 6000, 5);
+            addTurret(Blocks.foreshadow, tile, yy, 4000, 5);
         } // Spectre
         else if (tile.nearby(1, 1).floor().equals(Blocks.darkPanel4) && tile.nearby(-1, -1).floor().equals(Blocks.darkPanel4) && tile.nearby(-1, 1).floor().equals(Blocks.darkPanel4) && tile.nearby(1, -1).floor().equals(Blocks.darkPanel4)) {
-            addTurret(Blocks.spectre, tile, yy, 3000, 5);
+            addTurret(Blocks.spectre, tile, yy, 3250, 5);
         } // MeltDown 
         else if (tile.nearby(1, 1).floor().equals(Blocks.darkPanel6) && tile.nearby(-1, -1).floor().equals(Blocks.darkPanel6)) {
-            addTurret(Blocks.meltdown, tile, yy, 3000, 5);
+            addTurret(Blocks.meltdown, tile, yy, 2750, 5);
         } // Cyclone        
         else if (tile.nearby(1, 1).floor().equals(Blocks.darkPanel4) && tile.nearby(-1, -1).floor().equals(Blocks.darkPanel4)) {
-            addTurret(Blocks.cyclone, tile, yy, 2200, 4);
+            addTurret(Blocks.cyclone, tile, yy, 1750, 4);
         } // Ripple
         else if (tile.nearby(0, 1).floor().equals(Blocks.darkPanel4) && tile.nearby(0, -1).floor().equals(Blocks.darkPanel4)) {
             addTurret(Blocks.ripple, tile, yy, 1250, 4);
@@ -185,10 +189,10 @@ public class Generator implements Cons<Tiles> {
             addTurret(Blocks.segment, tile, yy, 600, 3);
         } // Lancer
         else if (tile.nearby(-1, -1).floor().equals(Blocks.darkPanel4)) {
-            addTurret(Blocks.lancer, tile, yy, 400, 3);
+            addTurret(Blocks.lancer, tile, yy, 350, 3);
         }
         else if (tile.nearby(-1, -1).floor().equals(Blocks.darkPanel6)) {
-            addTurret(Blocks.salvo, tile, yy, 350, 3);
+            addTurret(Blocks.salvo, tile, yy, 500, 3);
         }
     }
 
@@ -211,6 +215,11 @@ public class Generator implements Cons<Tiles> {
     private void addDrillRoom(Tile tile, int yy) {
         Room.rooms.add(new DrillRoom(Team.sharded, tile.x - 2, tile.y - 2));
         Room.rooms.add(new DrillRoom(Team.blue, tile.x - 2, yy - 2));
+    }
+
+    private void addCommandRoom(Tile tile, int yy) {
+        Room.rooms.add(new CommandCentreRoom(Team.sharded, tile.x - 2, tile.y - 2));
+        Room.rooms.add(new CommandCentreRoom(Team.blue, tile.x - 2, yy - 2));
     }
 
     private void addResources(Item item, int x, int y, int cost) {
