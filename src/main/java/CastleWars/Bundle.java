@@ -40,8 +40,7 @@ public class Bundle {
         }
     }
 
-    private Bundle(){
-    }
+    private Bundle() {}
 
     public static String get(String key, Locale locale) {
         StringMap bundle = getOrLoad(locale);

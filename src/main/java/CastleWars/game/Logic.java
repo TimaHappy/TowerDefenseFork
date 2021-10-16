@@ -40,7 +40,7 @@ public class Logic {
     }
 
     public void update() {
-        if (state.isPaused() || !worldLoaded) return;
+        if (state.serverPaused || !worldLoaded) return;
 
         PlayerData.datas.values().forEach(PlayerData::update);
 
@@ -97,14 +97,14 @@ public class Logic {
         logic.play();
         state.rules = Main.rules;
         Call.setRules(state.rules);
-        // 7.5 секунд после загрузки мира, чтобы надписи и магазин точно успели загрузиться
-        Timer.schedule(() -> worldLoaded = true, 7.5f);
+        // 7 секунд после загрузки мира, чтобы надписи и магазин точно успели загрузиться
+        Timer.schedule(() -> worldLoaded = true, 7f);
     }
 
     public void endGame(Team team) {
         // Не самая лучшая проверка, но конкретно здесь сойдет
         Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.blue ? "events.win.blue" : "events.win.sharded", Bundle.findLocale(p))));
-        Timer.schedule(this::restart, 7.5f);
+        Timer.schedule(this::restart, 7f);
         worldLoaded = false;
     }
 
