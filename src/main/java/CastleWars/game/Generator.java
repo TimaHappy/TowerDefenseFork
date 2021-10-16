@@ -116,7 +116,7 @@ public class Generator implements Cons<Tiles> {
         // Ground
         addUnit(UnitTypes.dagger, cx, cy + 2, 100, 0);
         addUnit(UnitTypes.mace, cx + Padding, cy + 2, 150, 1);
-        addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 475, 4);
+        addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 525, 4);
         addUnit(UnitTypes.scepter, cx + Padding * 3, cy + 2, 3000, 18);
         addUnit(UnitTypes.reign, cx + Padding * 4, cy + 2, 8000, 50);
         // Support 
@@ -130,7 +130,7 @@ public class Generator implements Cons<Tiles> {
         cx += 1;
         addUnit(UnitTypes.retusa, cx + Padding * 10, cy + 2, 200, 1);
         addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 525, 3);
-        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1375, 9);
+        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1425, 9);
         addUnit(UnitTypes.aegires, cx + Padding * 13, cy + 2, 4500, 25);
         addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 10000, 70);
         // Spiders
