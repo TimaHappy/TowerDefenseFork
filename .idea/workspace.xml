@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97f1175e-e7aa-4a5c-9d95-6647c0817d07" name="Changes" comment="Комната с командным центром, старые цены турелей">
+    <list default="true" id="97f1175e-e7aa-4a5c-9d95-6647c0817d07" name="Changes" comment="м">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/Bundle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/Bundle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/game/Logic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/game/Logic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/game/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/game/Generator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +31,17 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="CastleWars" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="CastleWars" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="CastleWars" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -161,7 +171,21 @@
       <option name="project" value="LOCAL" />
       <updated>1634323067129</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="м">
+      <created>1634408368949</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1634408368949</updated>
+    </task>
+    <task id="LOCAL-00010" summary="м">
+      <created>1634408636987</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1634408636987</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -184,6 +208,7 @@
     <MESSAGE value="Нерф стен, фикс бура и т.д." />
     <MESSAGE value="Баланс, турель, фиксы" />
     <MESSAGE value="Комната с командным центром, старые цены турелей" />
-    <option name="LAST_COMMIT_MESSAGE" value="Комната с командным центром, старые цены турелей" />
+    <MESSAGE value="м" />
+    <option name="LAST_COMMIT_MESSAGE" value="м" />
   </component>
 </project>

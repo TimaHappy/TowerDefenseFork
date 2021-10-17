@@ -115,38 +115,38 @@ public class Generator implements Cons<Tiles> {
         int Padding = Room.ROOM_SIZE + 2;
         // Ground
         addUnit(UnitTypes.dagger, cx, cy + 2, 100, 0);
-        addUnit(UnitTypes.mace, cx + Padding, cy + 2, 150, 1);
+        addUnit(UnitTypes.mace, cx + Padding, cy + 2, 140, 1);
         addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 525, 4);
-        addUnit(UnitTypes.scepter, cx + Padding * 3, cy + 2, 3000, 18);
-        addUnit(UnitTypes.reign, cx + Padding * 4, cy + 2, 8000, 50);
+        addUnit(UnitTypes.scepter, cx + Padding * 3, cy + 2, 3000, 20);
+        addUnit(UnitTypes.reign, cx + Padding * 4, cy + 2, 8000, 55);
         // Support 
         cx += 1;
         addUnit(UnitTypes.nova, cx + Padding * 5, cy + 2, 100, 0);
         addUnit(UnitTypes.pulsar, cx + Padding * 6, cy + 2, 175, 1);
         addUnit(UnitTypes.quasar, cx + Padding * 7, cy + 2, 500, 4);
-        addUnit(UnitTypes.vela, cx + Padding * 8, cy + 2, 3500, 20);
-        addUnit(UnitTypes.corvus, cx + Padding * 9, cy + 2, 8000, 50);
+        addUnit(UnitTypes.vela, cx + Padding * 8, cy + 2, 3500, 22);
+        addUnit(UnitTypes.corvus, cx + Padding * 9, cy + 2, 8500, 65);
         // Naval Support
         cx += 1;
         addUnit(UnitTypes.retusa, cx + Padding * 10, cy + 2, 200, 1);
         addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 525, 3);
         addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1425, 9);
         addUnit(UnitTypes.aegires, cx + Padding * 13, cy + 2, 4500, 25);
-        addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 10000, 70);
+        addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 10000, 65);
         // Spiders
         cx -= 2;
         addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 70, 0);
         addUnit(UnitTypes.atrax, cx + Padding, cy + 2 + Padding * 2, 160, 1);
-        addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 525, 4);
-        addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 3750, 20);
-        addUnit(UnitTypes.toxopid, cx + Padding * 4, cy + 2 + Padding * 2, 9000, 70);
+        addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 500, 4);
+        addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 3750, 24);
+        addUnit(UnitTypes.toxopid, cx + Padding * 4, cy + 2 + Padding * 2, 9000, 60);
         // Naval 
         cx += 1;
         addUnit(UnitTypes.risso, cx + Padding * 5, cy + 2 + Padding * 2, 150, 1);
         addUnit(UnitTypes.minke, cx + Padding * 6, cy + 2 + Padding * 2, 350, 2);
         addUnit(UnitTypes.bryde, cx + Padding * 7, cy + 2 + Padding * 2, 1200, 8);
-        addUnit(UnitTypes.sei, cx + Padding * 8, cy + 2 + Padding * 2, 3750, 20);
-        addUnit(UnitTypes.omura, cx + Padding * 9, cy + 2 + Padding * 2, 10000, 70);
+        addUnit(UnitTypes.sei, cx + Padding * 8, cy + 2 + Padding * 2, 3750, 24);
+        addUnit(UnitTypes.omura, cx + Padding * 9, cy + 2 + Padding * 2, 10000, 65);
         // Resources
         cx += 1;
         addResources(Items.copper, cx + Padding * 10, cy + 2 + Padding * 2, 100);
@@ -203,7 +203,6 @@ public class Generator implements Cons<Tiles> {
 
     private void addUnit(UnitType type, int x, int y, int cost, int income) {
         Room.rooms.add(new UnitRoom(type, x, y, cost, income, UnitRoom.Type.Attacker));
-        if (income > 0) income -= 1;
         Room.rooms.add(new UnitRoom(type, x, y + Room.ROOM_SIZE + 2, cost, -income, UnitRoom.Type.Defender));
     }
 
