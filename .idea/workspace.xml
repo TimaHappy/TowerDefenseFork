@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97f1175e-e7aa-4a5c-9d95-6647c0817d07" name="Changes" comment="м">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/Bundle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/Bundle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/game/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/game/Generator.java" afterDir="false" />
-    </list>
+    <list default="true" id="97f1175e-e7aa-4a5c-9d95-6647c0817d07" name="Changes" comment="router" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
