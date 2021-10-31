@@ -1,14 +1,12 @@
 package CastleWars.data;
 
-import static CastleWars.Bundle.findLocale;
-import static CastleWars.Bundle.format;
-
+import CastleWars.Bundle;
 import CastleWars.Main;
 import CastleWars.logic.Room;
 import CastleWars.logic.TurretRoom;
 import arc.Events;
 import arc.math.Mathf;
-import arc.struct.IntMap;
+import arc.struct.ObjectMap;
 import arc.util.Interval;
 import arc.util.Timer;
 import mindustry.Vars;
@@ -16,9 +14,11 @@ import mindustry.content.UnitTypes;
 import mindustry.game.EventType;
 import mindustry.gen.*;
 
+import static CastleWars.Bundle.*;
+
 public class PlayerData {
 
-    public static IntMap<PlayerData> datas = new IntMap<>();
+    public static ObjectMap<String, PlayerData> datas = new ObjectMap<>();
     public static float MoneyInterval = 60f;
     public static float LabelInterval = 60f * 30f;
 
@@ -53,8 +53,8 @@ public class PlayerData {
 
         // Set Hud Text
         if (!disabledHud) {
-            StringBuilder text = new StringBuilder(format("commands.hud.display", findLocale(player), money, income));
-            if (player.unit() != null && player.unit().isFlying() && !Main.logic.placeCheck(player.team(), player.tileOn())) text.append(format("commands.hud.fly-warning", findLocale(player)));
+            StringBuilder text = new StringBuilder(format("labels.hud.display", findLocale(player), money, income));
+            if (player.unit() != null && player.unit().isFlying() && !Main.logic.placeCheck(player.team(), player.tileOn())) text.append(format("labels.hud.fly-warning", findLocale(player)));
             Call.setHudText(player.con, text.toString());
         }
     }
@@ -65,18 +65,18 @@ public class PlayerData {
 
     public static void init() {
         Events.on(EventType.PlayerJoin.class, event -> {
-            datas.put(event.player.id, new PlayerData(event.player));
+            if (datas.containsKey(event.player.uuid())) Bundle.bundled(event.player, "events.money-saved");
+            else datas.put(event.player.uuid(), new PlayerData(event.player));
+
             Vars.netServer.assignTeam(event.player, Groups.player);
             Timer.schedule(() -> labels(event.player), 1);
             Groups.player.each(PlayerData::labels);
         });
-
-        Events.on(EventType.PlayerLeave.class, event -> datas.remove(event.player.id));
     }
 
     public static void labels(Player player) {
         Room.rooms.each(room -> {
-            if (room instanceof TurretRoom && ((TurretRoom)room).team != player.team()) return;
+            if (room instanceof TurretRoom turretRoom && turretRoom.team != player.team()) return;
             if (room.labelVisible) {
                 Call.label(player.con, room.label, LabelInterval / 60f, room.centreDrawx, room.centreDrawy - room.size * 2);
             }
