@@ -24,7 +24,7 @@ public class PlayerData {
 
     public Player player;
     public boolean disabledHud = false;
-    public int money, income = 15;
+    public int money, income = 10;
     Interval interval;
 
     public PlayerData(Player player) {
@@ -84,7 +84,7 @@ public class PlayerData {
     }
 
     public void reset() {
-        this.income = 15;
+        this.income = 10;
         this.money = 0;
     }
 }
