@@ -73,9 +73,6 @@ public class Logic {
         Blocks.coreShard.unitCapModifier = 999;
         Room.rooms.clear();
 
-        PlayerData.datas.keys().forEach(uuid -> {
-            if (!Groups.player.contains(p -> p.uuid().equals(uuid))) PlayerData.datas.remove(uuid);
-        });
         PlayerData.datas.values().forEach(PlayerData::reset);
 
         Generator gen = new Generator();

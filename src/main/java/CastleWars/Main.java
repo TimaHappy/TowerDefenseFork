@@ -87,7 +87,7 @@ public class Main extends Plugin {
         handler.<Player>register("label", "Show shops label. Use when labels are hidden.", (args, player) -> PlayerData.labels(player));
 
         handler.<Player>register("hud", "Disable/Enable hud.", (args, player) -> {
-            PlayerData data = PlayerData.datas.get(player.uuid());
+            PlayerData data = PlayerData.datas.get(player.id);
             if (data.disabledHud) {
                 data.disabledHud = false;
                 Bundle.bundled(player, "commands.hud.on");
