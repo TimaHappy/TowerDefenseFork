@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97f1175e-e7aa-4a5c-9d95-6647c0817d07" name="Changes" comment="Фикс сохранения монет">
+    <list default="true" id="97f1175e-e7aa-4a5c-9d95-6647c0817d07" name="Changes" comment="router">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_10_2021_21_00_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_10_2021_21_00__Changes_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/data/PlayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/data/PlayerData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/game/Logic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/game/Logic.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/bundles/bundle_en.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/bundles/bundle_en.properties" afterDir="false" />
@@ -200,14 +204,7 @@
       <option name="project" value="LOCAL" />
       <updated>1635696918540</updated>
     </task>
-    <task id="LOCAL-00013" summary="Фикс сохранения монет">
-      <created>1635703096439</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1635703096439</updated>
-    </task>
-    <option name="localTasksCounter" value="14" />
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -233,7 +230,6 @@
     <MESSAGE value="м" />
     <MESSAGE value="Баланс" />
     <MESSAGE value="router" />
-    <MESSAGE value="Фикс сохранения монет" />
-    <option name="LAST_COMMIT_MESSAGE" value="Фикс сохранения монет" />
+    <option name="LAST_COMMIT_MESSAGE" value="router" />
   </component>
 </project>

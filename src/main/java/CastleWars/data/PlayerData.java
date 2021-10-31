@@ -1,5 +1,6 @@
 package CastleWars.data;
 
+import CastleWars.Bundle;
 import CastleWars.Main;
 import CastleWars.logic.Room;
 import CastleWars.logic.TurretRoom;
@@ -13,13 +14,13 @@ import mindustry.content.UnitTypes;
 import mindustry.game.EventType;
 import mindustry.gen.*;
 
-import static CastleWars.Bundle.findLocale;
-import static CastleWars.Bundle.format;
+import static CastleWars.Bundle.*;
 
 public class PlayerData {
+
     public static ObjectMap<String, PlayerData> datas = new ObjectMap<>();
     public static float MoneyInterval = 60f;
-    public static float LabelInterval = 60f * 15f;
+    public static float LabelInterval = 60f * 30f;
 
     public Player player;
     public boolean disabledHud = false;
@@ -64,13 +65,13 @@ public class PlayerData {
 
     public static void init() {
         Events.on(EventType.PlayerJoin.class, event -> {
-            datas.put(event.player.uuid(), new PlayerData(event.player));
+            if (datas.containsKey(event.player.uuid())) Bundle.bundled(event.player, "events.money-saved");
+            else datas.put(event.player.uuid(), new PlayerData(event.player));
+
             Vars.netServer.assignTeam(event.player, Groups.player);
             Timer.schedule(() -> labels(event.player), 1);
             Groups.player.each(PlayerData::labels);
         });
-
-        Events.on(EventType.PlayerJoin.class, event -> datas.remove(event.player.uuid()));
     }
 
     public static void labels(Player player) {
