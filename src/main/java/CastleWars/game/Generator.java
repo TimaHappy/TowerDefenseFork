@@ -115,7 +115,7 @@ public class Generator implements Cons<Tiles> {
         int Padding = Room.ROOM_SIZE + 2;
         // Ground
         addUnit(UnitTypes.dagger, cx, cy + 2, 100, 0);
-        addUnit(UnitTypes.mace, cx + Padding, cy + 2, 140, 1);
+        addUnit(UnitTypes.mace, cx + Padding, cy + 2, 150, 1);
         addUnit(UnitTypes.fortress, cx + Padding * 2, cy + 2, 525, 4);
         addUnit(UnitTypes.scepter, cx + Padding * 3, cy + 2, 3000, 20);
         addUnit(UnitTypes.reign, cx + Padding * 4, cy + 2, 8000, 55);
@@ -130,15 +130,15 @@ public class Generator implements Cons<Tiles> {
         cx += 1;
         addUnit(UnitTypes.retusa, cx + Padding * 10, cy + 2, 200, 1);
         addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 525, 3);
-        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1425, 9);
+        addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1450, 9);
         addUnit(UnitTypes.aegires, cx + Padding * 13, cy + 2, 4500, 25);
         addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 10000, 65);
         // Spiders
         cx -= 2;
         addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 70, 0);
-        addUnit(UnitTypes.atrax, cx + Padding, cy + 2 + Padding * 2, 160, 1);
+        addUnit(UnitTypes.atrax, cx + Padding, cy + 2 + Padding * 2, 175, 1);
         addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 500, 4);
-        addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 3750, 24);
+        addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 4000, 24);
         addUnit(UnitTypes.toxopid, cx + Padding * 4, cy + 2 + Padding * 2, 9000, 60);
         // Naval 
         cx += 1;
@@ -150,7 +150,7 @@ public class Generator implements Cons<Tiles> {
         // Resources
         cx += 1;
         addResources(Items.copper, cx + Padding * 10, cy + 2 + Padding * 2, 100);
-        addResources(Items.silicon, cx + Padding * 10, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 150);
+        addResources(Items.silicon, cx + Padding * 10, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 125);
 
         addResources(Items.titanium, cx + Padding * 11, cy + 2 + Padding * 2, 200);
         addResources(Items.pyratite, cx + Padding * 11, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 200);

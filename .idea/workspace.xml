@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97f1175e-e7aa-4a5c-9d95-6647c0817d07" name="Changes" comment="Маркси уговорил">
-      <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/Main.java" afterDir="false" />
+    <list default="true" id="97f1175e-e7aa-4a5c-9d95-6647c0817d07" name="Changes" comment="fixed">
       <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/data/PlayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/data/PlayerData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/game/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/game/Generator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -227,7 +227,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636560506750</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="fixed">
+      <created>1636562277530</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1636562277530</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -267,6 +274,7 @@
     <MESSAGE value="Автосборка" />
     <MESSAGE value="Ладно" />
     <MESSAGE value="Маркси уговорил" />
-    <option name="LAST_COMMIT_MESSAGE" value="Маркси уговорил" />
+    <MESSAGE value="fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed" />
   </component>
 </project>

@@ -55,7 +55,7 @@ public class PlayerData {
 
         if (!disabledHud) {
             StringBuilder text = new StringBuilder(format("commands.hud.display", findLocale(player), money, income));
-            if (bonus > 1) text.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", bonus));
+            if (bonus > 1) text.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", (bonus - 1) * 100));
             if (player.unit() != null && player.unit().isFlying() && !Main.logic.placeCheck(player.team(), player.tileOn())) text.append(format("commands.hud.fly-warning", findLocale(player)));
             Call.setHudText(player.con, text.toString());
         }
