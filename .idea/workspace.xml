@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97f1175e-e7aa-4a5c-9d95-6647c0817d07" name="Changes" comment="Ладно">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="97f1175e-e7aa-4a5c-9d95-6647c0817d07" name="Changes" comment="Маркси уговорил">
       <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/game/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/game/Generator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/logic/UnitRoom.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/logic/UnitRoom.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CastleWars/data/PlayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CastleWars/data/PlayerData.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -222,7 +220,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636558204127</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Маркси уговорил">
+      <created>1636560506750</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1636560506750</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -261,6 +266,7 @@
     <MESSAGE value="bruh" />
     <MESSAGE value="Автосборка" />
     <MESSAGE value="Ладно" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ладно" />
+    <MESSAGE value="Маркси уговорил" />
+    <option name="LAST_COMMIT_MESSAGE" value="Маркси уговорил" />
   </component>
 </project>

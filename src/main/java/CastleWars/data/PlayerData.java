@@ -37,7 +37,7 @@ public class PlayerData {
     }
 
     public void update() {
-        bonus = Math.max(Groups.player.count(p -> p.team() != player.team()) * 2f / Groups.player.size(), 1f);
+        bonus = Math.round(Math.max(Groups.player.count(p -> p.team() != player.team()) * 2f / Groups.player.size(), 1f) * 100) / 100f;
         if (interval.get(0, MoneyInterval)) money += income * bonus;
         if (interval.get(1, LabelInterval)) labels(player);
 
@@ -55,7 +55,7 @@ public class PlayerData {
 
         if (!disabledHud) {
             StringBuilder text = new StringBuilder(format("commands.hud.display", findLocale(player), money, income));
-            if (bonus > 1) text.append(Strings.format(" [lightgray]([accent]+{0}%[lightgray])", bonus));
+            if (bonus > 1) text.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", bonus));
             if (player.unit() != null && player.unit().isFlying() && !Main.logic.placeCheck(player.team(), player.tileOn())) text.append(format("commands.hud.fly-warning", findLocale(player)));
             Call.setHudText(player.con, text.toString());
         }

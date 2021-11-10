@@ -57,10 +57,9 @@ public class Main extends Plugin {
                 fieldAbility.maxTargets = 3;
                 fieldAbility.status = StatusEffects.freezing;
                 fieldAbility.statusDuration = 30f;
+                fieldAbility.damage = 14f;
             }
         });
-        UnitTypes.aegires.speed = 0.4f;
-        UnitTypes.aegires.rotateSpeed = 0.5f;
 
         Blocks.itemSource.health = Integer.MAX_VALUE;
         Blocks.liquidSource.health = Integer.MAX_VALUE;
