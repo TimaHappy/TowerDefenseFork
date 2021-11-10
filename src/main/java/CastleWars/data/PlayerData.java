@@ -10,6 +10,7 @@ import arc.Events;
 import arc.math.Mathf;
 import arc.struct.IntMap;
 import arc.util.Interval;
+import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.content.UnitTypes;
 import mindustry.game.EventType;
@@ -17,15 +18,17 @@ import mindustry.gen.*;
 
 public class PlayerData {
 
+    // Income по умолчанию
     private static final int defaultIncome = 15;
 
     public static IntMap<PlayerData> datas = new IntMap<>();
     public static float MoneyInterval = 60f;
-    public static float LabelInterval = 60f;
+    public static float LabelInterval = 3 * 60f;
 
     public final Player player;
     public boolean disabledHud = false;
     public int money = 0, income = defaultIncome;
+    private float bonus = 1f;
     private final Interval interval;
 
     public PlayerData(Player player) {
@@ -34,7 +37,8 @@ public class PlayerData {
     }
 
     public void update() {
-        if (interval.get(0, MoneyInterval)) money += income;
+        bonus = Math.max(Groups.player.count(p -> p.team() != player.team()) * 2f / Groups.player.size(), 1f);
+        if (interval.get(0, MoneyInterval)) money += income * bonus;
         if (interval.get(1, LabelInterval)) labels(player);
 
         if (player.shooting && player.unit() != null) {
@@ -51,6 +55,7 @@ public class PlayerData {
 
         if (!disabledHud) {
             StringBuilder text = new StringBuilder(format("commands.hud.display", findLocale(player), money, income));
+            if (bonus > 1) text.append(Strings.format(" [lightgray]([accent]+{0}%[lightgray])", bonus));
             if (player.unit() != null && player.unit().isFlying() && !Main.logic.placeCheck(player.team(), player.tileOn())) text.append(format("commands.hud.fly-warning", findLocale(player)));
             Call.setHudText(player.con, text.toString());
         }
@@ -74,5 +79,6 @@ public class PlayerData {
     public void reset() {
         income = defaultIncome;
         money = 0;
+        bonus = 1f;
     }
 }
