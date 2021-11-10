@@ -31,6 +31,5 @@ public class EffectRoom extends Room{
     }
 
     @Override
-    public void update() {
-    }
+    public void update() {}
 }

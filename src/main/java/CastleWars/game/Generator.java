@@ -166,28 +166,27 @@ public class Generator implements Cons<Tiles> {
     }
 
     private void turretGen(Tile tile, int yy) {
-        // ForeShadow
         if (tile.nearby(1, 1).floor().equals(Blocks.darkPanel6) && tile.nearby(-1, -1).floor().equals(Blocks.darkPanel6) && tile.nearby(-1, 1).floor().equals(Blocks.darkPanel6) && tile.nearby(1, -1).floor().equals(Blocks.darkPanel6)) {
             addTurret(Blocks.foreshadow, tile, yy, 4000, 5);
-        } // Spectre
+        }
         else if (tile.nearby(1, 1).floor().equals(Blocks.darkPanel4) && tile.nearby(-1, -1).floor().equals(Blocks.darkPanel4) && tile.nearby(-1, 1).floor().equals(Blocks.darkPanel4) && tile.nearby(1, -1).floor().equals(Blocks.darkPanel4)) {
             addTurret(Blocks.spectre, tile, yy, 3250, 5);
-        } // MeltDown 
+        }
         else if (tile.nearby(1, 1).floor().equals(Blocks.darkPanel6) && tile.nearby(-1, -1).floor().equals(Blocks.darkPanel6)) {
             addTurret(Blocks.meltdown, tile, yy, 2750, 5);
-        } // Cyclone        
+        }
         else if (tile.nearby(1, 1).floor().equals(Blocks.darkPanel4) && tile.nearby(-1, -1).floor().equals(Blocks.darkPanel4)) {
             addTurret(Blocks.cyclone, tile, yy, 1750, 4);
-        } // Ripple
+        }
         else if (tile.nearby(0, 1).floor().equals(Blocks.darkPanel4) && tile.nearby(0, -1).floor().equals(Blocks.darkPanel4)) {
             addTurret(Blocks.ripple, tile, yy, 1250, 4);
-        } // Fuse
+        }
         else if (tile.nearby(1, 0).floor().equals(Blocks.darkPanel4) && tile.nearby(-1, 0).floor().equals(Blocks.darkPanel4)) {
             addTurret(Blocks.fuse, tile, yy, 1000, 4);
-        }// Segment
+        }
         else if (tile.nearby(0, 1).floor().equals(Blocks.darkPanel4)) {
             addTurret(Blocks.segment, tile, yy, 600, 3);
-        } // Lancer
+        }
         else if (tile.nearby(-1, -1).floor().equals(Blocks.darkPanel4)) {
             addTurret(Blocks.lancer, tile, yy, 350, 3);
         }

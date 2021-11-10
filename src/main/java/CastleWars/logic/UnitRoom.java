@@ -1,17 +1,13 @@
 package CastleWars.logic;
 
-import CastleWars.Bundle;
-import CastleWars.Main;
 import CastleWars.data.Icon;
 import CastleWars.data.PlayerData;
 import arc.math.Mathf;
 import mindustry.content.Blocks;
 import mindustry.game.Team;
-import mindustry.gen.Groups;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
 import mindustry.world.Tile;
-import mindustry.world.Tiles;
 
 public class UnitRoom extends Room {
 
@@ -50,10 +46,6 @@ public class UnitRoom extends Room {
 
     @Override
     public void buy(PlayerData data) {
-        if (Groups.unit.count(u -> u.team() == data.player.team()) > Main.unitTeamLimit) {
-            Bundle.bundled(data.player, "events.unit-limit", Main.unitTeamLimit);
-            return;
-        }
         data.money -= cost;
         data.income += income;
 
@@ -69,11 +61,6 @@ public class UnitRoom extends Room {
     @Override
     public boolean canBuy(PlayerData data) {
         return super.canBuy(data) && (income > 0 || data.income - income >= 0);
-    }
-
-    @Override
-    public void spawn(Tiles t) {
-        super.spawn(t);
     }
 
     @Override

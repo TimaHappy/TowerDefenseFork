@@ -31,7 +31,5 @@ public class ResourceRoom extends Room {
     }
 
     @Override
-    public void update() {
-    }
-
+    public void update() {}
 }

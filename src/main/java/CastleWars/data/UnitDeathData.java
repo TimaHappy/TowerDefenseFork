@@ -49,7 +49,6 @@ public class UnitDeathData {
         cost.put(UnitTypes.arkyid, 750);
         cost.put(UnitTypes.toxopid, 1750);
 
-        // Block. Just a block. Anuke, what?
         cost.put(UnitTypes.block, 1);
 
         Events.on(EventType.UnitDestroyEvent.class, event -> {

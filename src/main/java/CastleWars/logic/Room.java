@@ -19,7 +19,6 @@ public abstract class Room implements RoomComp {
     public int cost;
 
     public Room(int x, int y, int cost, int size) {
-
         this.cost = cost;
         this.size = size;
         this.drawSize = size * Vars.tilesize;

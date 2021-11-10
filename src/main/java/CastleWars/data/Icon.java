@@ -43,11 +43,11 @@ public class Icon {
         icons.put(UnitTypes.cyerce, Iconc.unitCyerce);
         icons.put(UnitTypes.aegires, Iconc.unitAegires);
         icons.put(UnitTypes.navanax, Iconc.unitNavanax);
-        // Cores
+
         icons.put(Blocks.coreNucleus, Iconc.blockCoreNucleus);
         icons.put(Blocks.coreFoundation, Iconc.blockCoreFoundation);
         icons.put(Blocks.coreShard, Iconc.blockCoreShard);
-        // Turrets
+
         icons.put(Blocks.foreshadow, Iconc.blockForeshadow);
         icons.put(Blocks.meltdown, Iconc.blockMeltdown);
         icons.put(Blocks.spectre, Iconc.blockSpectre);
@@ -58,7 +58,7 @@ public class Icon {
         icons.put(Blocks.lancer, Iconc.blockLancer);
         icons.put(Blocks.swarmer, Iconc.blockSwarmer);
         icons.put(Blocks.salvo, Iconc.blockSalvo);
-        // Items
+
         icons.put(Items.surgeAlloy, Iconc.itemSurgeAlloy);
         icons.put(Items.plastanium, Iconc.itemPlastanium);
         icons.put(Items.phaseFabric, Iconc.itemPhaseFabric);
@@ -67,7 +67,7 @@ public class Icon {
         icons.put(Items.silicon, Iconc.itemSilicon);
         icons.put(Items.pyratite, Iconc.itemPyratite);
         icons.put(Items.blastCompound, Iconc.itemBlastCompound);
-        // Some stuff xd
+
         icons.put(Blocks.duo, Iconc.defense);
         icons.put(Blocks.commandCenter, Iconc.units);
         icons.put(Blocks.plastaniumCompressor, Iconc.blockPlastaniumCompressor);

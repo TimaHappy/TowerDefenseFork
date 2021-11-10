@@ -52,14 +52,12 @@ public class TurretRoom extends Room {
 
     @Override
     public boolean canBuy(PlayerData data) {
-        return super.canBuy(data) && !(bought = Vars.world.build(centrex, centrey) != null);
+        return super.canBuy(data) && !bought && Vars.world.tile(centrex, centrey).build == null;
     }
 
     @Override
     public void update() {
-        if (bought && interval.get(0, updateTime)) {
-            if (Vars.world.tile(centrex, centrey).build == null) Vars.world.tile(centrex, centrey).setNet(block, team, 0);
-        }
+        if (bought && Vars.world.tile(centrex, centrey).build == null) Vars.world.tile(centrex, centrey).setNet(block, team, 0);
     }
 
     public static Item ammo(Block block) {
