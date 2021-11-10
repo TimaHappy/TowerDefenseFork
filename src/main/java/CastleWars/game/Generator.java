@@ -201,7 +201,7 @@ public class Generator implements Cons<Tiles> {
     }
 
     private void addUnit(UnitType type, int x, int y, int cost, int income) {
-        Room.rooms.add(new UnitRoom(type, x, y, cost, income, UnitRoom.Type.Attacker));
+        Room.rooms.add(new UnitRoom(type, x, y, type == UnitTypes.crawler ? cost * 20 : cost, income, UnitRoom.Type.Attacker));
         Room.rooms.add(new UnitRoom(type, x, y + Room.ROOM_SIZE + 2, cost, -income, UnitRoom.Type.Defender));
     }
 

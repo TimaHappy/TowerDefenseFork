@@ -4,6 +4,9 @@ import CastleWars.data.Icon;
 import CastleWars.data.PlayerData;
 import arc.math.Mathf;
 import mindustry.content.Blocks;
+import mindustry.content.StatusEffects;
+import mindustry.content.UnitTypes;
+import mindustry.entities.abilities.UnitSpawnAbility;
 import mindustry.game.Team;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
@@ -51,6 +54,13 @@ public class UnitRoom extends Room {
 
         if (type == Type.Attacker) {
             Unit u = unit.spawn(data.player.team(), (data.player.team() == Team.sharded ? blueSpawn.drawx() : shardedSpawn.drawx()) + Mathf.random(-40, 40), (data.player.team() == Team.sharded ? blueSpawn.drawy() : shardedSpawn.drawy()) + Mathf.random(-40, 40));
+            if (u.type == UnitTypes.crawler) {
+                u.maxHealth = 400f;
+                u.health = u.maxHealth;
+                u.armor = 10;
+                u.abilities.add(new UnitSpawnAbility(UnitTypes.crawler, 150f, 0f, -8f));
+                u.apply(StatusEffects.boss);
+            }
             u.team(data.player.team());
         } else if (data.player.team().core() != null) {
             Unit u = unit.spawn(data.player.team(), data.player.team().core().x + 30, data.player.team().core().y + Mathf.random(-40, 40));

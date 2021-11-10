@@ -11,7 +11,9 @@ import arc.util.Log;
 import arc.util.Timer;
 import mindustry.Vars;
 import mindustry.content.Blocks;
+import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
+import mindustry.entities.abilities.EnergyFieldAbility;
 import mindustry.game.EventType;
 import mindustry.game.Rules;
 import mindustry.game.Team;
@@ -49,7 +51,17 @@ public class Main extends Plugin {
         UnitTypes.omura.abilities.clear();
         UnitTypes.corvus.abilities.clear();
         UnitTypes.arkyid.abilities.clear();
-        UnitTypes.aegires.abilities.clear();
+        UnitTypes.aegires.armor = 0f;
+        UnitTypes.aegires.abilities.each(ability -> {
+            if (ability instanceof EnergyFieldAbility fieldAbility) {
+                fieldAbility.maxTargets = 3;
+                fieldAbility.status = StatusEffects.freezing;
+                fieldAbility.statusDuration = 30f;
+            }
+        });
+        UnitTypes.aegires.speed = 0.4f;
+        UnitTypes.aegires.rotateSpeed = 0.5f;
+
         Blocks.itemSource.health = Integer.MAX_VALUE;
         Blocks.liquidSource.health = Integer.MAX_VALUE;
 

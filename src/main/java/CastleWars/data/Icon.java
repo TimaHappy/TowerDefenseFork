@@ -76,10 +76,7 @@ public class Icon {
         icons.put(StatusEffects.overdrive, Iconc.statusOverdrive);
     }
 
-    public static String get(Content item) {
-        if (icons.containsKey(item)) {
-            return icons.get(item).toString();
-        }
-        return "[scarlet]oh no";
+    public static String get(Content content) {
+        return icons.containsKey(content) ? icons.get(content).toString() : "";
     }
 }
