@@ -43,7 +43,7 @@ public class Logic {
             Groups.unit.each(Flyingc::isFlying, u -> {
                 if (!Main.logic.placeCheck(u.team(), u.tileOn())) u.damagePierce(u.maxHealth / 1000);
 
-                if (u.x > world.width() || u.x < 0 || u.y > world.height() || u.y < 0) killUnit(u);
+                if ((u.x / 8f - 5) > world.width() || u.x / 8f < -5 || (u.y / 8f - 5) > world.height() || u.y / 8f < -5) killUnit(u);
             });
         }
     }
