@@ -18,7 +18,6 @@ import mindustry.gen.*;
 
 public class PlayerData {
 
-    // Income по умолчанию
     private static final int defaultIncome = 15;
 
     public static IntMap<PlayerData> datas = new IntMap<>();
@@ -37,7 +36,7 @@ public class PlayerData {
     }
 
     public void update() {
-        bonus = Math.round(Math.max(Groups.player.count(p -> p.team() != player.team()) * 2f / Groups.player.size(), 1f) * 100) / 100f;
+        bonus = Math.max((float) Groups.player.size() / Groups.player.count(p -> p.team() == player.team()) / 2f, 1f);
         if (interval.get(0, MoneyInterval)) money += income * bonus;
         if (interval.get(1, LabelInterval)) labels(player);
 
@@ -54,10 +53,10 @@ public class PlayerData {
         }
 
         if (!disabledHud) {
-            StringBuilder text = new StringBuilder(format("commands.hud.display", findLocale(player), money, income));
-            if (bonus > 1) text.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", (int) (bonus - 1) * 100));
-            if (player.unit() != null && player.unit().isFlying() && !Main.logic.placeCheck(player.team(), player.tileOn())) text.append(format("commands.hud.fly-warning", findLocale(player)));
-            Call.setHudText(player.con, text.toString());
+            StringBuilder hud = new StringBuilder(format("commands.hud.display", findLocale(player), money, income));
+            if (bonus > 1f) hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", (int) (bonus - 1) * 100));
+            if (player.unit() != null && player.unit().isFlying() && !Main.logic.placeCheck(player)) hud.append(format("commands.hud.fly-warning", findLocale(player)));
+            Call.setHudText(player.con, hud.toString());
         }
     }
 

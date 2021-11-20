@@ -18,6 +18,7 @@ import static mindustry.Vars.state;
 import static mindustry.Vars.tilesize;
 import static mindustry.Vars.logic;
 import static mindustry.Vars.netServer;
+import static mindustry.Vars.world;
 
 public class Logic {
 
@@ -37,13 +38,12 @@ public class Logic {
             PlayerData.datas.values().forEach(PlayerData::update);
             Room.rooms.each(RoomComp::update);
 
-            Groups.unit.intersect(x, y, endx, endy, u -> {
-                if (u.isPlayer()) u.getPlayer().unit(Nulls.unit);
-                u.kill();
-            });
+            Groups.unit.intersect(x, y, endx, endy, this::killUnit);
 
-            Groups.unit.each(Flyingc::isFlying, unit -> {
-                if (!Main.logic.placeCheck(unit.team(), unit.tileOn())) unit.damagePierce(unit.maxHealth / 1000);
+            Groups.unit.each(Flyingc::isFlying, u -> {
+                if (!Main.logic.placeCheck(u.team(), u.tileOn())) u.damagePierce(u.maxHealth / 1000);
+
+                if (u.x > world.width() || u.x < 0 || u.y > world.height() || u.y < 0) killUnit(u);
             });
         }
     }
@@ -92,5 +92,14 @@ public class Logic {
             }
         }
         return true;
+    }
+
+    public boolean placeCheck(Player player) {
+        return placeCheck(player.team(), player.tileOn());
+    }
+
+    public void killUnit(Unit unit) {
+        if (unit.isPlayer()) unit.getPlayer().unit(Nulls.unit);
+        unit.kill();
     }
 }
