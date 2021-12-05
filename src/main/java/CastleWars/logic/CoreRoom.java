@@ -6,8 +6,8 @@ import mindustry.game.Team;
 
 public class CoreRoom extends TurretRoom{
 
-    public CoreRoom(Team team, int x, int y) {
-        super(team, Blocks.coreNucleus, x, y, 5000, 4);
+    public CoreRoom(Team team, int x, int y, int cost) {
+        super(team, Blocks.coreNucleus, x, y, cost, 4);
     }
     
     @Override

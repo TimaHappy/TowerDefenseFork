@@ -93,7 +93,7 @@ public class Generator implements Cons<Tiles> {
                 }
                 // Command room
                 if (saved.getn(x, y).floor().equals(Blocks.metalFloor4)) {
-                    addCommandRoom(t.getn(x, y), yy);
+                    addTurret(Blocks.commandCenter, t.getn(x, y), yy, 750, 3);
                 }
                 // Spawners place
                 if (saved.getn(x, y).floor().equals(Blocks.darkPanel2)) {
@@ -162,7 +162,7 @@ public class Generator implements Cons<Tiles> {
         addEffectRoom(StatusEffects.boss, cx + Padding * 13, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 3000, "Boss\neffect");
 
         addResources(Items.surgeAlloy, cx + Padding * 14, cy + 2 + Padding * 2, 500);
-        addEffectRoom(StatusEffects.shielded, cx + Padding * 14, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2, 4000, "Shield\neffect");
+        addShieldRoom(cx + Padding * 14, cy + 2 + Padding * 2 + Room.ROOM_SIZE + 2);
     }
 
     private void turretGen(Tile tile, int yy) {
@@ -206,18 +206,13 @@ public class Generator implements Cons<Tiles> {
     }
 
     private void addCoreRoom(Tile tile, int yy) {
-        Room.rooms.add(new CoreRoom(Team.sharded, tile.x - 2, tile.y - 2));
-        Room.rooms.add(new CoreRoom(Team.blue, tile.x - 2, yy - 2));
+        Room.rooms.add(new CoreRoom(Team.sharded, tile.x - 2, tile.y - 2, 5000));
+        Room.rooms.add(new CoreRoom(Team.blue, tile.x - 2, yy - 2, 5000));
     }
 
     private void addDrillRoom(Tile tile, int yy) {
         Room.rooms.add(new DrillRoom(Team.sharded, tile.x - 2, tile.y - 2));
         Room.rooms.add(new DrillRoom(Team.blue, tile.x - 2, yy - 2));
-    }
-
-    private void addCommandRoom(Tile tile, int yy) {
-        Room.rooms.add(new CommandCentreRoom(Team.sharded, tile.x - 2, tile.y - 2));
-        Room.rooms.add(new CommandCentreRoom(Team.blue, tile.x - 2, yy - 2));
     }
 
     private void addResources(Item item, int x, int y, int cost) {
@@ -226,5 +221,9 @@ public class Generator implements Cons<Tiles> {
 
     private void addEffectRoom(StatusEffect effect, int x, int y, int cost, String name) {
         Room.rooms.add(new EffectRoom(effect, x, y, cost, name));
+    }
+
+    private void addShieldRoom(int x, int y) {
+        Room.rooms.add(new ShieldRoom(x, y, 5000, "Shield\neffect"));
     }
 }

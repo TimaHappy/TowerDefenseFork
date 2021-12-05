@@ -3,7 +3,6 @@ package CastleWars.logic;
 import CastleWars.Bundle;
 import CastleWars.data.Icon;
 import CastleWars.data.PlayerData;
-import arc.util.Interval;
 import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
@@ -19,11 +18,8 @@ import mindustry.world.blocks.defense.turrets.LaserTurret;
 import static mindustry.content.Blocks.*;
 
 public class TurretRoom extends Room {
-
     public boolean bought = false;
     public Team team;
-    Interval interval = new Interval(1);
-    float updateTime = 60f * 10f;
     Block block;
 
     public TurretRoom(Team team, Block block, int x, int y, int cost, int size) {

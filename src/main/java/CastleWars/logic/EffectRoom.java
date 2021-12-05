@@ -7,7 +7,6 @@ import mindustry.gen.Groups;
 import mindustry.type.StatusEffect;
 
 public class EffectRoom extends Room{
-
     StatusEffect effect;
     String name;
     Interval interval = new Interval();
