@@ -1,5 +1,6 @@
 package CastleWars.logic;
 
+import arc.util.Interval;
 import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
@@ -9,6 +10,7 @@ public class DrillRoom extends TurretRoom {
 
     float updateTime = 60 * 4f;
     int amount = 24;
+    Interval interval = new Interval();
 
     public DrillRoom(Team team, int x, int y) { super(team, Blocks.laserDrill, x, y, 1000, 4); }
 
