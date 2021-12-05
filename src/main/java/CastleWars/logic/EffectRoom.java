@@ -22,7 +22,7 @@ public class EffectRoom extends Room{
     @Override
     public void buy(PlayerData data) {
         data.money -= cost;
-        Groups.unit.each(u -> u.team == data.player.team(), unit -> unit.apply(effect));
+        Groups.unit.each(u -> u.team == data.player.team(), unit -> unit.apply(effect, Float.POSITIVE_INFINITY));
     }
 
     @Override

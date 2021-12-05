@@ -66,17 +66,17 @@ public class Icon {
         icons.put(Items.titanium, Iconc.itemTitanium);
         icons.put(Items.silicon, Iconc.itemSilicon);
         icons.put(Items.pyratite, Iconc.itemPyratite);
-        icons.put(Items.blastCompound, Iconc.itemBlastCompound);
 
         icons.put(Blocks.duo, Iconc.defense);
         icons.put(Blocks.commandCenter, Iconc.units);
         icons.put(Blocks.plastaniumCompressor, Iconc.blockPlastaniumCompressor);
         icons.put(Blocks.laserDrill, Iconc.blockLaserDrill);
+        icons.put(StatusEffects.shielded, Iconc.statusShielded);
         icons.put(StatusEffects.boss, Iconc.statusBoss);
         icons.put(StatusEffects.overdrive, Iconc.statusOverdrive);
     }
 
     public static String get(Content content) {
-        return icons.containsKey(content) ? icons.get(content).toString() : "";
+        return String.valueOf(icons.get(content));
     }
 }
