@@ -9,7 +9,6 @@ import arc.math.geom.Geometry;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Timer;
-import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
@@ -21,11 +20,10 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration;
-import mindustry.world.Tile;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static mindustry.Vars.netServer;
+import static mindustry.Vars.*;
 
 public class Main extends Plugin {
     public static Rules rules;
@@ -42,7 +40,7 @@ public class Main extends Plugin {
         rules.waveTimer = false;
         rules.revealedBlocks.addAll(Blocks.duct, Blocks.ductRouter, Blocks.ductBridge, Blocks.thruster, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic);
 
-        Vars.content.blocks().each(block -> !(block instanceof Wall), block -> {
+        content.blocks().each(block -> !(block instanceof Wall), block -> {
             rules.bannedBlocks.add(block);
             if (block instanceof CoreBlock) block.unitCapModifier = 999999;
             else block.health *= 100;
@@ -65,18 +63,18 @@ public class Main extends Plugin {
         Blocks.liquidSource.health = Integer.MAX_VALUE;
 
         netServer.admins.addActionFilter(action -> {
-            if ((action.type != Administration.ActionType.placeBlock && action.type != Administration.ActionType.breakBlock) || action.tile == null) return true;
-            if (action.tile.floor() == Blocks.metalFloor.asFloor() || action.tile.floor() == Blocks.metalFloor5.asFloor() || action.tile.floor() == Blocks.darkPanel2.asFloor()) return false;
+            if ((action.type == Administration.ActionType.placeBlock || action.type == Administration.ActionType.breakBlock) && action.tile != null) {
+                if (action.tile.floor() == Blocks.metalFloor.asFloor() || action.tile.floor() == Blocks.metalFloor5.asFloor() || !logic.placeCheck(action.player.team(), action.tile)) return false;
 
-            if (!logic.placeCheck(action.player.team(), action.tile)) return false;
+                boolean[] nearbyPanels = {true};
+                Geometry.circle(action.tile.x, action.tile.y, 10, (x, y) -> {
+                    if (world.tile(x, y) != null && world.tile(x, y).floor() == Blocks.darkPanel2.asFloor()) nearbyPanels[0] = false;
+                });
 
-            boolean[] nearbyPanels = {true};
-            Geometry.circle(action.tile.x, action.tile.y, 10, (x, y) -> {
-                Tile t = Vars.world.tile(x, y);
-                if (t != null && t.floor() == Blocks.darkPanel2.asFloor()) nearbyPanels[0] = false;
-            });
+                return nearbyPanels[0];
+            }
 
-            return nearbyPanels[0];
+            return true;
         });
 
         UnitDeathData.init();
@@ -96,7 +94,7 @@ public class Main extends Plugin {
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        handler.<Player>register("hud", "Disable/Enable hud.", (args, player) -> {
+        handler.<Player>register("hud", "commands.hud.description", (args, player) -> {
             PlayerData data = PlayerData.datas.get(player.id);
             data.disabledHud = !data.disabledHud;
             Bundle.bundled(player, data.disabledHud ? "commands.hud.off" : "commands.hud.on");
@@ -107,7 +105,6 @@ public class Main extends Plugin {
     @Override
     public void registerServerCommands(CommandHandler handler) {
         handler.removeCommand("gameover");
-        handler.removeCommand("rules");
-        handler.register("gameover", "End the game.", args -> logic.endGame(Team.sharded));
+        handler.register("gameover", "Force a game over.", args -> logic.endGame(Team.sharded));
     }
 }
