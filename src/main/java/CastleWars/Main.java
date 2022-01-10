@@ -39,6 +39,7 @@ public class Main extends Plugin {
         rules.waves = false;
         rules.waveTimer = false;
         rules.revealedBlocks.addAll(Blocks.duct, Blocks.ductRouter, Blocks.ductBridge, Blocks.thruster, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic);
+        rules.modeName = "Castle";
 
         content.blocks().each(block -> !(block instanceof Wall), block -> {
             rules.bannedBlocks.add(block);
