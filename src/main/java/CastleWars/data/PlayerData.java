@@ -18,17 +18,17 @@ import mindustry.gen.*;
 
 public class PlayerData {
 
-    private static final int defaultIncome = 15;
+    public int defaultIncome = 15;
 
     public static IntMap<PlayerData> datas = new IntMap<>();
     public static float MoneyInterval = 60f;
     public static float LabelInterval = 3 * 60f;
 
-    public final Player player;
+    public Player player;
+    public Interval interval;
     public boolean disabledHud = false;
     public int money = 0, income = defaultIncome;
-    private float bonus = 1f;
-    private final Interval interval;
+    public float bonus = 1f;
 
     public PlayerData(Player player) {
         this.player = player;
@@ -54,7 +54,7 @@ public class PlayerData {
 
         if (!disabledHud) {
             StringBuilder hud = new StringBuilder(format("commands.hud.display", findLocale(player), money, income));
-            if (bonus > 1f) hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", (bonus - 1) * 100));
+            if (bonus > 1f) hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100)).length() > 5 ? String.valueOf((bonus - 1) * 100)).substring(0, 6) : (bonus - 1) * 100);
             if (player.unit() != null && player.unit().isFlying() && !Main.logic.placeCheck(player)) hud.append(format("commands.hud.fly-warning", findLocale(player)));
             Call.setHudText(player.con, hud.toString());
         }
