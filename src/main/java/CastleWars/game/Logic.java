@@ -41,7 +41,7 @@ public class Logic {
             Groups.unit.intersect(x, y, endx, endy, this::killUnit);
 
             Groups.unit.each(Flyingc::isFlying, u -> {
-                if (!Main.logic.placeCheck(u.team(), u.tileOn())) u.damagePierce(u.maxHealth / 1000);
+                if (!Main.logic.placeCheck(u.team(), u.tileOn())) u.damagePierce(u.maxHealth / 1000f);
 
                 if (u.tileX() > world.width() || u.tileX() < 0 || u.tileY() > world.height() || u.tileY() < 0) killUnit(u);
             });
@@ -84,13 +84,7 @@ public class Logic {
     }
 
     public boolean placeCheck(Team team, Tile tile) {
-        if (tile != null) {
-            if (team == Team.blue) {
-                return (tile.y * tilesize) > (y + endy);
-            } else if (team == Team.sharded) {
-                return (tile.y * tilesize) < y;
-            }
-        }
+        if (tile != null) return team == Team.blue ? tile.worldy() > y + endy : tile.worldy() < y
         return true;
     }
 
@@ -99,7 +93,7 @@ public class Logic {
     }
 
     public void killUnit(Unit unit) {
-        if (unit.isPlayer()) unit.getPlayer().unit(Nulls.unit);
+        if (unit.isPlayer()) unit.getPlayer().clearUnit();
         unit.kill();
     }
 }
