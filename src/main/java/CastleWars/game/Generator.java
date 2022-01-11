@@ -5,7 +5,6 @@ import CastleWars.logic.*;
 import arc.func.Cons;
 import arc.struct.Seq;
 import arc.util.Timer;
-import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
@@ -21,6 +20,8 @@ import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.blocks.storage.CoreBlock;
 
+import static mindustry.Vars.*;
+
 public class Generator implements Cons<Tiles> {
 
     Tiles saved;
@@ -30,15 +31,15 @@ public class Generator implements Cons<Tiles> {
     public Generator() {
         cores = new Seq<>();
 
-        Vars.world.loadMap(Vars.maps.getNextMap(Gamemode.pvp, Vars.state.map), Main.rules.copy());
+        world.loadMap(maps.getNextMap(Gamemode.pvp, state.map), Main.rules.copy());
         saved = Vars.world.tiles;
         width = saved.width;
         height = saved.height * 2 + (Room.ROOM_SIZE * 6);
     }
 
     public void run() {
-        Vars.world.loadGenerator(width, height, this);
-        for (Teams.TeamData teamData : Vars.state.teams.active) {
+        world.loadGenerator(width, height, this);
+        for (Teams.TeamData teamData : state.teams.active) {
             for (CoreBlock.CoreBuild core : teamData.cores) {
                 core.kill();
             }
@@ -76,7 +77,7 @@ public class Generator implements Cons<Tiles> {
                     Timer.schedule(() -> {
                         t.getn(cx, cy).setNet(Blocks.coreShard, Team.sharded, 0);
                         t.getn(cx, cyy).setNet(Blocks.coreShard, Team.blue, 0);
-                    }, 1);
+                    }, 1f);
 
                     cores.add(t.getn(x, y));
                     cores.add(t.getn(x, yy));
@@ -131,14 +132,14 @@ public class Generator implements Cons<Tiles> {
         addUnit(UnitTypes.retusa, cx + Padding * 10, cy + 2, 200, 1);
         addUnit(UnitTypes.oxynoe, cx + Padding * 11, cy + 2, 525, 3);
         addUnit(UnitTypes.cyerce, cx + Padding * 12, cy + 2, 1450, 9);
-        addUnit(UnitTypes.aegires, cx + Padding * 13, cy + 2, 4500, 25);
+        addUnit(UnitTypes.aegires, cx + Padding * 13, cy + 2, 5000, 25);
         addUnit(UnitTypes.navanax, cx + Padding * 14, cy + 2, 10000, 65);
         // Spiders
         cx -= 2;
         addUnit(UnitTypes.crawler, cx, cy + 2 + Padding * 2, 70, 0);
         addUnit(UnitTypes.atrax, cx + Padding, cy + 2 + Padding * 2, 175, 1);
         addUnit(UnitTypes.spiroct, cx + Padding * 2, cy + 2 + Padding * 2, 500, 4);
-        addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 4000, 24);
+        addUnit(UnitTypes.arkyid, cx + Padding * 3, cy + 2 + Padding * 2, 5000, 24);
         addUnit(UnitTypes.toxopid, cx + Padding * 4, cy + 2 + Padding * 2, 9000, 60);
         // Naval 
         cx += 1;
@@ -224,6 +225,6 @@ public class Generator implements Cons<Tiles> {
     }
 
     private void addShieldRoom(int x, int y) {
-        Room.rooms.add(new ShieldRoom(x, y, 5000, "Shield\neffect"));
+        Room.rooms.add(new ShieldRoom(x, y, 7500, "Shield\neffect"));
     }
 }
