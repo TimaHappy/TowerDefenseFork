@@ -11,10 +11,11 @@ import arc.math.Mathf;
 import arc.struct.IntMap;
 import arc.util.Interval;
 import arc.util.Strings;
-import mindustry.Vars;
 import mindustry.content.UnitTypes;
 import mindustry.game.EventType;
 import mindustry.gen.*;
+
+import static mindustry.Vars.netServer;
 
 public class PlayerData {
 
@@ -48,14 +49,14 @@ public class PlayerData {
 
         if (player.unit().spawnedByCore && !(player.unit() instanceof WaterMovec) && player.team().core() != null) {
             Unit unit = UnitTypes.risso.spawn(player.team(), player.team().core().x + 30, player.team().core().y + Mathf.random(-40, 40));
-            unit.spawnedByCore = true;
             player.unit(unit);
+            unit.spawnedByCore = true;
         }
 
         if (!disabledHud) {
             StringBuilder hud = new StringBuilder(format("commands.hud.display", findLocale(player), money, income));
-            if (bonus > 1f) hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100)).length() > 5 ? String.valueOf((bonus - 1) * 100)).substring(0, 6) : (bonus - 1) * 100);
-            if (player.unit() != null && player.unit().isFlying() && !Main.logic.placeCheck(player)) hud.append(format("commands.hud.fly-warning", findLocale(player)));
+            if (bonus > 1f) hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100).length() > 5 ? String.valueOf((bonus - 1) * 100).substring(0, 6) : (bonus - 1) * 100);
+            if (!player.dead() && player.unit().isFlying() && !Main.logic.placeCheck(player)) hud.append(format("commands.hud.fly-warning", findLocale(player)));
             Call.setHudText(player.con, hud.toString());
         }
     }
@@ -63,7 +64,7 @@ public class PlayerData {
     public static void init() {
         Events.on(EventType.PlayerJoin.class, event -> {
             datas.put(event.player.id, new PlayerData(event.player));
-            Vars.netServer.assignTeam(event.player, Groups.player);
+            netServer.assignTeam(event.player);
         });
 
         Events.on(EventType.PlayerLeave.class, event -> datas.remove(event.player.id));
