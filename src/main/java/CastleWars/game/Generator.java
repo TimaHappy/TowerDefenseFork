@@ -11,6 +11,7 @@ import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.game.Gamemode;
 import mindustry.game.Team;
+import mindustry.gen.Building;
 import mindustry.type.Item;
 import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
