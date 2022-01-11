@@ -84,7 +84,7 @@ public class Logic {
     }
 
     public boolean placeCheck(Team team, Tile tile) {
-        if (tile != null) return team == Team.blue ? tile.worldy() > y + endy : tile.worldy() < y
+        if (tile != null) return team == Team.blue ? tile.worldy() > y + endy : tile.worldy() < y;
         return true;
     }
 
