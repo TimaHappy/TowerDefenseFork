@@ -11,14 +11,12 @@ import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.game.Gamemode;
 import mindustry.game.Team;
-import mindustry.game.Teams;
 import mindustry.type.Item;
 import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
-import mindustry.world.blocks.storage.CoreBlock;
 
 import static mindustry.Vars.*;
 
@@ -32,18 +30,14 @@ public class Generator implements Cons<Tiles> {
         cores = new Seq<>();
 
         world.loadMap(maps.getNextMap(Gamemode.pvp, state.map), Main.rules.copy());
-        saved = Vars.world.tiles;
+        saved = world.tiles;
         width = saved.width;
         height = saved.height * 2 + (Room.ROOM_SIZE * 6);
     }
 
     public void run() {
         world.loadGenerator(width, height, this);
-        for (Teams.TeamData teamData : state.teams.active) {
-            for (CoreBlock.CoreBuild core : teamData.cores) {
-                core.kill();
-            }
-        }
+        state.teams.active.each(team -> team.cores.each(Building::kill));
     }
 
     @Override
