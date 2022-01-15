@@ -78,6 +78,8 @@ public class Logic {
     }
 
     public void endGame(Team team) {
+        Events.fire("CastleGameOver");
+
         Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.blue ? "events.win.blue" : "events.win.sharded", Bundle.findLocale(p))));
         Timer.schedule(this::restart, 6f);
         worldLoaded = false;
