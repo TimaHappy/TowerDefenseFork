@@ -19,7 +19,7 @@ import static mindustry.Vars.netServer;
 
 public class PlayerData {
 
-    public int defaultIncome = 15;
+    public static int defaultIncome = 15;
 
     public static IntMap<PlayerData> datas = new IntMap<>();
     public static float MoneyInterval = 60f;
