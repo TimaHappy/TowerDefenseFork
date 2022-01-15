@@ -1,4 +1,4 @@
-package CastleWars.logic;
+package CastleWars.rooms;
 
 import CastleWars.data.Icon;
 import CastleWars.data.PlayerData;
@@ -9,8 +9,8 @@ import mindustry.content.Items;
 
 public class ResourceRoom extends Room {
 
-    Item item;
-    int amount;
+    public Item item;
+    public int amount;
 
     public ResourceRoom(Item item, int x, int y, int cost, int amount) {
         super(x, y, cost, 4);

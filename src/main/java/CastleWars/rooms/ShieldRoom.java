@@ -1,4 +1,4 @@
-package CastleWars.logic;
+package CastleWars.rooms;
 
 import CastleWars.data.PlayerData;
 import mindustry.content.StatusEffects;

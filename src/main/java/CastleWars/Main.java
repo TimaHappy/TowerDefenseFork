@@ -13,7 +13,7 @@ import mindustry.content.Blocks;
 import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.entities.abilities.EnergyFieldAbility;
-import mindustry.game.EventType;
+import mindustry.game.EventType.*;
 import mindustry.game.Rules;
 import mindustry.game.Team;
 import mindustry.gen.Call;
@@ -26,8 +26,8 @@ import mindustry.world.blocks.storage.CoreBlock;
 import static mindustry.Vars.*;
 
 public class Main extends Plugin {
+
     public static Rules rules;
-    public static Logic logic;
 
     @Override
     public void init() {
@@ -47,6 +47,9 @@ public class Main extends Plugin {
             else block.health *= 100;
         });
 
+        Blocks.itemSource.health = Integer.MAX_VALUE;
+        Blocks.liquidSource.health = Integer.MAX_VALUE;
+
         UnitTypes.omura.abilities.clear();
         UnitTypes.corvus.abilities.clear();
         UnitTypes.arkyid.abilities.clear();
@@ -60,12 +63,9 @@ public class Main extends Plugin {
             }
         });
 
-        Blocks.itemSource.health = Integer.MAX_VALUE;
-        Blocks.liquidSource.health = Integer.MAX_VALUE;
-
         netServer.admins.addActionFilter(action -> {
             if ((action.type == Administration.ActionType.placeBlock || action.type == Administration.ActionType.breakBlock) && action.tile != null) {
-                if (action.tile.floor() == Blocks.metalFloor.asFloor() || action.tile.floor() == Blocks.metalFloor5.asFloor() || !logic.placeCheck(action.player.team(), action.tile)) return false;
+                if (action.tile.floor() == Blocks.metalFloor.asFloor() || action.tile.floor() == Blocks.metalFloor5.asFloor() || !Logic.placeCheck(action.player.team(), action.tile)) return false;
 
                 boolean[] nearbyPanels = {true};
                 Geometry.circle(action.tile.x, action.tile.y, 10, (x, y) -> {
@@ -78,24 +78,44 @@ public class Main extends Plugin {
             return true;
         });
 
-        UnitDeathData.init();
-        PlayerData.init();
+        UnitDeathData.load();
         Icon.load();
 
-        logic = new Logic();
+        Events.on(PlayerJoin.class, event -> {
+            PlayerData.datas.put(event.player.id, new PlayerData(event.player));
+            netServer.assignTeam(event.player);
+        });
 
-        Events.on(EventType.ServerLoadEvent.class, e -> {
-            logic.restart();
+        Events.on(PlayerLeave.class, event -> PlayerData.datas.remove(event.player.id));
+
+        Events.on(BlockDestroyEvent.class, event -> {
+            if (event.tile.block() instanceof CoreBlock && event.tile.team() != Team.derelict && event.tile.team().cores().size <= 1 && Logic.worldLoaded) {
+                Logic.endGame(event.tile.team() == Team.sharded ? Team.blue : Team.sharded);
+            }
+        });
+
+        Events.on(UnitDestroyEvent.class, event -> {
+            int income = UnitDeathData.get(event.unit.type);
+            if (income > 0 && !event.unit.spawnedByCore) {
+                PlayerData.allDatas().each(data -> data.player.team() != event.unit.team, data -> {
+                    data.money += income;
+                    Call.label(data.player.con, "[lime] + [accent]" + income, 0.4f, event.unit.x, event.unit.y);
+                });
+            }
+        });
+
+        Events.on(ServerLoadEvent.class, event -> {
             Log.info("[Darkdustry] Castle Wars loaded. Hosting a server...");
+            Logic.restart();
             netServer.openServer();
         });
 
-        Timer.schedule(() -> logic.update(), 0f, 0.01f);
+        Timer.schedule(Logic::update, 0f, 0.01f);
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        handler.<Player>register("hud", "commands.hud.description", (args, player) -> {
+        handler.<Player>register("hud", "Toggle HUD.", (args, player) -> {
             PlayerData data = PlayerData.datas.get(player.id);
             data.disabledHud = !data.disabledHud;
             Bundle.bundled(player, data.disabledHud ? "commands.hud.off" : "commands.hud.on");
@@ -106,6 +126,6 @@ public class Main extends Plugin {
     @Override
     public void registerServerCommands(CommandHandler handler) {
         handler.removeCommand("gameover");
-        handler.register("gameover", "Force a game over.", args -> logic.endGame(Team.sharded));
+        handler.register("gameover", "End the CastleWars round.", args -> Logic.endGame(Team.sharded));
     }
 }

@@ -1,60 +1,49 @@
 package CastleWars.game;
 
+import CastleWars.Bundle;
 import CastleWars.Main;
 import CastleWars.data.PlayerData;
-import CastleWars.logic.Room;
-import CastleWars.Bundle;
-import CastleWars.logic.RoomComp;
+import CastleWars.rooms.Room;
+import CastleWars.rooms.RoomComp;
 import arc.Events;
 import arc.struct.Seq;
 import arc.util.Timer;
-import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.world.Tile;
-import mindustry.world.blocks.storage.CoreBlock;
 
-import static mindustry.Vars.state;
-import static mindustry.Vars.tilesize;
-import static mindustry.Vars.logic;
-import static mindustry.Vars.netServer;
-import static mindustry.Vars.world;
+import static mindustry.Vars.*;
 
 public class Logic {
 
-    public boolean worldLoaded = false;
-    public float x = 0, y = 0, endx = 0, endy = 0;
+    public static boolean worldLoaded = false;
+    public static float x = 0, y = 0, endx = 0, endy = 0;
 
-    public Logic() {
-        Events.on(EventType.BlockDestroyEvent.class, event -> {
-            if (event.tile.build instanceof CoreBlock.CoreBuild && event.tile.build.team.cores().size <= 1 && worldLoaded) {
-                endGame(event.tile.build.team() == Team.sharded ? Team.blue : Team.sharded);
-            }
-        });
-    }
-
-    public void update() {
+    public static void update() {
         if (worldLoaded) {
-            PlayerData.datas.values().forEach(PlayerData::update);
+            PlayerData.allDatas().each(PlayerData::update);
             Room.rooms.each(RoomComp::update);
 
-            Groups.unit.intersect(x, y, endx, endy, this::killUnit);
+            Groups.unit.intersect(x, y, endx, endy, Logic::killUnit);
 
             Groups.unit.each(Flyingc::isFlying, u -> {
-                if (!Main.logic.placeCheck(u.team(), u.tileOn())) u.damagePierce(u.maxHealth / 1000f);
+                if (!placeCheck(u.team(), u.tileOn())) u.damagePierce(u.maxHealth / 500f);
 
                 if (u.tileX() > world.width() || u.tileX() < 0 || u.tileY() > world.height() || u.tileY() < 0) killUnit(u);
             });
         }
     }
 
-    public void restart() {
+    public static void restart() {
         Seq<Player> players = new Seq<>();
-        Groups.player.copy(players);
+        Groups.player.each(player -> {
+            players.add(player);
+            player.clearUnit();
+        });
 
         logic.reset();
         Room.rooms.clear();
-        PlayerData.datas.values().forEach(PlayerData::reset);
+        PlayerData.allDatas().each(PlayerData::reset);
 
         Generator gen = new Generator();
         gen.run();
@@ -62,39 +51,43 @@ public class Logic {
 
         int half = (gen.height - (Room.ROOM_SIZE * 6)) / 2;
         y = half * tilesize;
-        endy = (Room.ROOM_SIZE * 6) * tilesize;
+        endy = Room.ROOM_SIZE * 6 * tilesize;
         x = -5 * tilesize;
         endx = (5 + gen.width) * tilesize;
 
+        state.rules = Main.rules.copy();
+        logic.play();
+
         players.each(player -> {
+            boolean admin = player.admin;
+            player.reset();
+            player.admin = admin;
+
             netServer.assignTeam(player, players);
             netServer.sendWorldData(player);
         });
 
-        logic.play();
-        state.rules = Main.rules;
-        Call.setRules(state.rules);
         Timer.schedule(() -> worldLoaded = true, 6f);
     }
 
-    public void endGame(Team team) {
+    public static void endGame(Team team) {
         Events.fire("CastleGameOver");
 
         Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.blue ? "events.win.blue" : "events.win.sharded", Bundle.findLocale(p))));
-        Timer.schedule(this::restart, 6f);
+        Timer.schedule(Logic::restart, 6f);
         worldLoaded = false;
     }
 
-    public boolean placeCheck(Team team, Tile tile) {
+    public static boolean placeCheck(Team team, Tile tile) {
         if (tile != null) return team == Team.blue ? tile.worldy() > y + endy : tile.worldy() < y;
         return true;
     }
 
-    public boolean placeCheck(Player player) {
+    public static boolean placeCheck(Player player) {
         return placeCheck(player.team(), player.tileOn());
     }
 
-    public void killUnit(Unit unit) {
+    public static void killUnit(Unit unit) {
         if (unit.isPlayer()) unit.getPlayer().clearUnit();
         unit.kill();
     }

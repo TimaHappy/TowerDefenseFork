@@ -1,4 +1,4 @@
-package CastleWars.logic;
+package CastleWars.rooms;
 
 import CastleWars.data.Icon;
 import CastleWars.data.PlayerData;
@@ -6,10 +6,11 @@ import arc.util.Interval;
 import mindustry.gen.Groups;
 import mindustry.type.StatusEffect;
 
-public class EffectRoom extends Room{
-    StatusEffect effect;
-    String name;
-    Interval interval = new Interval();
+public class EffectRoom extends Room {
+
+    public StatusEffect effect;
+    public String name;
+    public Interval interval = new Interval();
 
     public EffectRoom(StatusEffect effect, int x, int y, int cost, String name) {
         super(x, y, cost, 4);

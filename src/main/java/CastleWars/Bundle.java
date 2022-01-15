@@ -65,9 +65,9 @@ public class Bundle {
 
     private static StringMap getOrLoad(Locale locale) {
         StringMap bundle = bundles.get(locale);
-        if (bundle == null && locale.getDisplayName().equals("router")) { // router
+        if (bundle == null && locale.getDisplayName().equals("router")) {
             StringMap router = new StringMap();
-            getOrLoad(defaultLocale()).each((k, v) -> router.put(k, Strings.stripColors(v).replaceAll("[\\d\\D]", Character.toString(Iconc.blockRouter))));
+            getOrLoad(defaultLocale()).each((k, v) -> router.put(k, Strings.stripColors(v).replaceAll("[\\d\\D]", String.valueOf(Iconc.blockRouter))));
             bundles.put(locale, bundle = router);
         } else if (bundle == null && Structs.contains(supportedLocales, locale)) {
             bundles.put(locale, bundle = load(locale));

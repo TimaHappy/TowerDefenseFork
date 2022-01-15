@@ -1,9 +1,8 @@
 package CastleWars.game;
 
 import CastleWars.Main;
-import CastleWars.logic.*;
+import CastleWars.rooms.*;
 import arc.func.Cons;
-import arc.struct.Seq;
 import arc.util.Timer;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
@@ -23,13 +22,10 @@ import static mindustry.Vars.*;
 
 public class Generator implements Cons<Tiles> {
 
-    Tiles saved;
-    int width, height;
-    Seq<Tile> cores;
+    public Tiles saved;
+    public int width, height;
 
     public Generator() {
-        cores = new Seq<>();
-
         world.loadMap(maps.getNextMap(Gamemode.pvp, state.map), Main.rules.copy());
         saved = world.tiles;
         width = saved.width;
@@ -74,9 +70,6 @@ public class Generator implements Cons<Tiles> {
                         t.getn(cx, cyy).setNet(Blocks.coreShard, Team.blue, 0);
                     }, 1f);
 
-                    cores.add(t.getn(x, y));
-                    cores.add(t.getn(x, yy));
-
                     addCoreRoom(t.getn(x, y), yy);
                 }
                 // Turret Build
@@ -101,9 +94,7 @@ public class Generator implements Cons<Tiles> {
         // UnitShop in centre
         shopInit();
 
-        for (Room room : Room.rooms) {
-            room.spawn(t);
-        }
+        Room.rooms.each(room -> room.spawn(t));
     }
 
     private void shopInit() {

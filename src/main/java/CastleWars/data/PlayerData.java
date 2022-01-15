@@ -1,29 +1,26 @@
 package CastleWars.data;
 
-import static CastleWars.Bundle.findLocale;
-import static CastleWars.Bundle.format;
-
-import CastleWars.Main;
-import CastleWars.logic.Room;
-import CastleWars.logic.TurretRoom;
-import arc.Events;
+import CastleWars.game.Logic;
+import CastleWars.rooms.Room;
+import CastleWars.rooms.TurretRoom;
 import arc.math.Mathf;
 import arc.struct.IntMap;
+import arc.struct.Seq;
 import arc.util.Interval;
 import arc.util.Strings;
 import mindustry.content.UnitTypes;
-import mindustry.game.EventType;
 import mindustry.gen.*;
 
-import static mindustry.Vars.netServer;
+import static CastleWars.Bundle.findLocale;
+import static CastleWars.Bundle.format;
 
 public class PlayerData {
 
-    public static int defaultIncome = 15;
+    public static final int defaultIncome = 15;
 
-    public static IntMap<PlayerData> datas = new IntMap<>();
-    public static float MoneyInterval = 60f;
-    public static float LabelInterval = 3 * 60f;
+    public static final IntMap<PlayerData> datas = new IntMap<>();
+    public static final float MoneyInterval = 60f;
+    public static final float LabelInterval = 3 * 60f;
 
     public Player player;
     public Interval interval;
@@ -39,7 +36,7 @@ public class PlayerData {
     public void update() {
         bonus = Math.max((float) Groups.player.size() / Groups.player.count(p -> p.team() == player.team()) / 2f, 1f);
         if (interval.get(0, MoneyInterval)) money += income * bonus;
-        if (interval.get(1, LabelInterval)) labels(player);
+        if (interval.get(1, LabelInterval)) labels();
 
         if (player.shooting && player.unit() != null) {
             Room.rooms.each(room -> !(room instanceof TurretRoom turretRoom && turretRoom.team != player.team()), room -> {
@@ -56,29 +53,22 @@ public class PlayerData {
         if (!disabledHud) {
             StringBuilder hud = new StringBuilder(format("commands.hud.display", findLocale(player), money, income));
             if (bonus > 1f) hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100).length() > 5 ? String.valueOf((bonus - 1) * 100).substring(0, 6) : (bonus - 1) * 100));
-            if (!player.dead() && player.unit().isFlying() && !Main.logic.placeCheck(player)) hud.append(format("commands.hud.fly-warning", findLocale(player)));
+            if (!player.dead() && player.unit().isFlying() && !Logic.placeCheck(player)) hud.append(format("commands.hud.fly-warning", findLocale(player)));
             Call.setHudText(player.con, hud.toString());
         }
     }
 
-    public static void init() {
-        Events.on(EventType.PlayerJoin.class, event -> {
-            datas.put(event.player.id, new PlayerData(event.player));
-            netServer.assignTeam(event.player);
-        });
-
-        Events.on(EventType.PlayerLeave.class, event -> datas.remove(event.player.id));
-    }
-
-    public static void labels(Player player) {
-        Room.rooms.each(room -> !(room instanceof TurretRoom turretRoom && turretRoom.team != player.team()), room -> {
-            if (room.labelVisible) Call.label(player.con, room.label, LabelInterval / 60f, room.centreDrawx, room.centreDrawy - room.size * 2);
-        });
+    public void labels() {
+        Room.rooms.each(room -> !(room instanceof TurretRoom turretRoom && turretRoom.team != player.team()) && room.labelVisible, room -> Call.label(player.con, room.label, LabelInterval / 60f, room.centreDrawx, room.centreDrawy - room.size * 2));
     }
 
     public void reset() {
         income = defaultIncome;
         money = 0;
         bonus = 1f;
+    }
+
+    public static Seq<PlayerData> allDatas() {
+        return datas.values().toArray();
     }
 }

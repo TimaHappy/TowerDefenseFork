@@ -1,4 +1,4 @@
-package CastleWars.logic;
+package CastleWars.rooms;
 
 import arc.struct.Seq;
 import mindustry.Vars;

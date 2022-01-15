@@ -10,7 +10,7 @@ import mindustry.gen.Iconc;
 
 public class Icon {
 
-    public static ObjectMap<Content, Character> icons = new ObjectMap<>();
+    public static final ObjectMap<Content, Character> icons = new ObjectMap<>();
 
     public static void load() {
         // Ground

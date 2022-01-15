@@ -1,4 +1,4 @@
-package CastleWars.logic;
+package CastleWars.rooms;
 
 import CastleWars.Bundle;
 import CastleWars.data.Icon;
@@ -20,7 +20,7 @@ import static mindustry.content.Blocks.*;
 public class TurretRoom extends Room {
     public boolean bought = false;
     public Team team;
-    Block block;
+    public Block block;
 
     public TurretRoom(Team team, Block block, int x, int y, int cost, int size) {
         super(x, y, cost, size);
