@@ -27,7 +27,7 @@ public class Logic {
             Groups.unit.intersect(x, y, endx, endy, Logic::killUnit);
 
             Groups.unit.each(Flyingc::isFlying, u -> {
-                if (!placeCheck(u.team(), u.tileOn())) u.damagePierce(u.maxHealth / 500f);
+                if (!placeCheck(u.team, u.tileOn())) u.damagePierce(u.maxHealth / 500f);
 
                 if (u.tileX() > world.width() || u.tileX() < 0 || u.tileY() > world.height() || u.tileY() < 0) killUnit(u);
             });
@@ -49,8 +49,7 @@ public class Logic {
         gen.run();
         Call.worldDataBegin();
 
-        int half = (gen.height - (Room.ROOM_SIZE * 6)) / 2;
-        y = half * tilesize;
+        y = (gen.height - (Room.ROOM_SIZE * 6)) / 2 * tilesize;
         endy = Room.ROOM_SIZE * 6 * tilesize;
         x = -5 * tilesize;
         endx = (5 + gen.width) * tilesize;
