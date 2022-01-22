@@ -58,14 +58,7 @@ public class Logic {
         state.rules = Main.rules.copy();
         logic.play();
 
-        players.each(player -> {
-            boolean admin = player.admin;
-            player.reset();
-            player.admin = admin;
-
-            netServer.assignTeam(player, players);
-            netServer.sendWorldData(player);
-        });
+        players.each(netServer::sendWorldData);
 
         Timer.schedule(() -> worldLoaded = true, 6f);
     }
