@@ -1,6 +1,6 @@
 package CastleWars.rooms;
 
-import CastleWars.data.Icon;
+import CastleWars.data.Icons;
 import CastleWars.data.PlayerData;
 import arc.util.Interval;
 import mindustry.gen.Groups;
@@ -16,7 +16,7 @@ public class EffectRoom extends Room {
         super(x, y, cost, 4);
         this.effect = effect;
         this.name = name;
-        label = "[accent]" + name + "[white]\n" + Icon.get(effect) + " [white]: [gray]" + cost;
+        label = "[accent]" + name + "[white]\n" + Icons.get(effect) + " [white]: [gray]" + cost;
     }
 
     @Override

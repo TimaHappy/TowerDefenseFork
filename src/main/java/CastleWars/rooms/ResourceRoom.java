@@ -1,6 +1,6 @@
 package CastleWars.rooms;
 
-import CastleWars.data.Icon;
+import CastleWars.data.Icons;
 import CastleWars.data.PlayerData;
 import mindustry.gen.Call;
 import mindustry.gen.Nulls;
@@ -16,7 +16,7 @@ public class ResourceRoom extends Room {
         super(x, y, cost, 4);
         this.item = item;
         this.amount = amount;
-        label = "[white]" + amount + "x" + Icon.get(item) + " [white]: [gray]" + cost;
+        label = "[white]" + amount + "x" + Icons.get(item) + " [white]: [gray]" + cost;
     }
 
     @Override

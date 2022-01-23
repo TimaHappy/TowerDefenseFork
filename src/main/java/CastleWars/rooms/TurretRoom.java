@@ -1,7 +1,7 @@
 package CastleWars.rooms;
 
 import CastleWars.Bundle;
-import CastleWars.data.Icon;
+import CastleWars.data.Icons;
 import CastleWars.data.PlayerData;
 import mindustry.Vars;
 import mindustry.content.Blocks;
@@ -27,7 +27,7 @@ public class TurretRoom extends Room {
         this.team = team;
         this.block = block;
 
-        label = Icon.get(block) + " :[white] " + cost;
+        label = Icons.get(block) + " :[white] " + cost;
     }
 
     @Override

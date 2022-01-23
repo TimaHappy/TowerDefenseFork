@@ -1,13 +1,13 @@
 package CastleWars.rooms;
 
-import CastleWars.data.Icon;
+import CastleWars.data.Icons;
 import CastleWars.data.PlayerData;
 import arc.math.Mathf;
-import mindustry.content.Blocks;
 import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.entities.abilities.UnitSpawnAbility;
 import mindustry.game.Team;
+import mindustry.gen.Iconc;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
 import mindustry.world.Tile;
@@ -29,16 +29,17 @@ public class UnitRoom extends Room {
         this.unit = unit;
         this.type = type;
         this.income = income;
+
         StringBuilder str = new StringBuilder();
-
         int len = String.valueOf(income).length() + 2 + String.valueOf(cost).length();
+
         str.append(" ".repeat(Math.max(0, len / 2)));
-        str.append(Icon.get(unit));
+        str.append(Icons.get(unit));
 
-        if (type == Type.Attacker) str.append(" [accent]").append(Icon.get(Blocks.commandCenter));
-        else str.append(" [scarlet]").append(Icon.get(Blocks.duo));
+        if (type == Type.Attacker) str.append(" [accent]").append(Iconc.modeAttack);
+        else str.append(" [scarlet]").append(Iconc.defense);
 
-        str.append("\n[gray]").append(cost).append("\n[white]").append(Icon.get(Blocks.plastaniumCompressor)).append(" : ");
+        str.append("\n[gray]").append(cost).append("\n[white]").append(Iconc.blockPlastaniumCompressor).append(" : ");
 
         if (income < 0) str.append("[crimson]");
         else if (income > 0) str.append("[lime]+");
@@ -57,7 +58,7 @@ public class UnitRoom extends Room {
             if (u.type == UnitTypes.crawler) {
                 u.maxHealth = 400f;
                 u.health = u.maxHealth;
-                u.armor = 10;
+                u.armor = 100f;
                 u.abilities.add(new UnitSpawnAbility(UnitTypes.crawler, 150f, 0f, -8f));
                 u.apply(StatusEffects.boss);
             }

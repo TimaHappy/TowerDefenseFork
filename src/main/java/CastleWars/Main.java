@@ -1,6 +1,6 @@
 package CastleWars;
 
-import CastleWars.data.Icon;
+import CastleWars.data.Icons;
 import CastleWars.data.PlayerData;
 import CastleWars.data.UnitDeathData;
 import CastleWars.game.Logic;
@@ -79,7 +79,7 @@ public class Main extends Plugin {
         });
 
         UnitDeathData.load();
-        Icon.load();
+        Icons.load();
 
         Events.on(PlayerJoin.class, event -> {
             PlayerData.datas.put(event.player.id, new PlayerData(event.player));
