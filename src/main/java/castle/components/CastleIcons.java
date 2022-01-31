@@ -1,4 +1,4 @@
-package CastleWars.data;
+package castle.components;
 
 import arc.struct.ObjectMap;
 import mindustry.content.Blocks;
@@ -8,7 +8,7 @@ import mindustry.content.UnitTypes;
 import mindustry.ctype.Content;
 import mindustry.gen.Iconc;
 
-public class Icons {
+public class CastleIcons {
 
     public static ObjectMap<Content, Character> icons;
 

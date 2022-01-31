@@ -1,10 +1,11 @@
-package CastleWars;
+package castle.components;
 
 import arc.files.Fi;
 import arc.struct.ObjectMap;
 import arc.struct.StringMap;
 import arc.util.Strings;
 import arc.util.Structs;
+import castle.Main;
 import mindustry.Vars;
 import mindustry.gen.Iconc;
 import mindustry.gen.Player;
