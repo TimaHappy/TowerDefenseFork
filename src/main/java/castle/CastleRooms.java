@@ -10,6 +10,7 @@ import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.content.Liquids;
+import mindustry.content.StatusEffects;
 import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.type.ItemStack;
@@ -64,6 +65,8 @@ public class CastleRooms {
 
             this.label = "";
             this.showLabel = true;
+
+            rooms.add(this);
         }
 
         public void update() {}
@@ -76,18 +79,24 @@ public class CastleRooms {
             return data.money >= cost;
         }
 
+        public boolean check(float x, float y) {
+            return x > this.x * tilesize && y > this.y * tilesize && x < this.endx * tilesize && y < this.endy * tilesize;
+        }
+
         public void spawn(Tiles tiles) {
             for (int x = 0; x <= size; x++) {
                 for (int y = 0; y <= size; y++) {
                     Floor floor = (x == 0 || y == 0 || x == size || y == size ? Blocks.metalFloor5 : Blocks.metalFloor).asFloor();
-                    Tile tile = tiles.getn(this.x + x, this.y + y);
+                    Tile tile = tiles.getc(this.x + x, this.y + y);
                     if (tile != null) {
-                        Time.runTask(60f, () -> tile.setFloorNet(floor));
+                        Time.runTask(10f, () -> tile.setFloorNet(floor));
                     }
                 }
             }
         }
     }
+
+
 
     public static class BlockRoom extends Room {
         public Block block;
@@ -96,7 +105,7 @@ public class CastleRooms {
         public boolean bought;
 
         public BlockRoom(Block block, Team team, int x, int y, int cost) {
-            super(x, y, cost, block.size);
+            super(x, y, cost, block.size - 1);
             this.block = block;
             this.team = team;
 
@@ -137,6 +146,48 @@ public class CastleRooms {
         }
     }
 
+
+
+    public static class MinerRoom extends BlockRoom {
+        public ItemStack stack;
+        public Interval interval;
+
+        public MinerRoom(ItemStack stack, Team team, int x, int y, int cost) {
+            super(Blocks.laserDrill, team, x, y, cost);
+
+            this.stack = stack;
+            this.interval = new Interval();
+        }
+
+        @Override
+        public void update() {
+            super.update();
+
+            if (bought && interval.get(300f) && team.core() != null) {
+                team.core().items.add(stack.item, stack.amount);
+            }
+        }
+    }
+
+
+
+    public static class CoreRoom extends BlockRoom {
+
+        public CoreRoom(Team team, int x, int y, int cost) {
+            super(Blocks.coreNucleus, team, x, y, cost);
+        }
+
+        @Override
+        public void update() {}
+
+        @Override
+        public boolean canBuy(PlayerData data) {
+            return data.money >= cost && !bought;
+        }
+    }
+
+
+
     public static class UnitRoom extends Room {
         public UnitType unitType;
         public UnitRoomType roomType;
@@ -144,7 +195,7 @@ public class CastleRooms {
         public int income;
 
         public UnitRoom(UnitType unitType, UnitRoomType roomType, int income, int x, int y, int cost) {
-            super(x, y, cost, 3);
+            super(x, y, cost, 4);
             this.unitType = unitType;
             this.roomType = roomType;
             this.income = income;
@@ -179,11 +230,13 @@ public class CastleRooms {
         }
     }
 
+
+
     public static class ItemRoom extends Room {
         public ItemStack stack;
 
         public ItemRoom(ItemStack stack, int x, int y, int cost) {
-            super(x, y, cost, 3);
+            super(x, y, cost, 4);
             this.stack = stack;
 
             this.label = "[white]" + stack.amount + "x" + CastleIcons.get(stack.item) + " [white]: [gray]" + cost;
@@ -203,21 +256,31 @@ public class CastleRooms {
             return super.canBuy(data) && data.player.team().core() != null;
         }
     }
+
+
     
     public static class EffectRoom extends Room {
         public StatusEffect effect;
         public Interval interval;
 
-        public EffectRoom(StatusEffect effect, int x, int y, int cost) {
-            super(x, y, cost, 3);
+        public EffectRoom(StatusEffect effect, String label, int x, int y, int cost) {
+            super(x, y, cost, 4);
             this.effect = effect;
             this.interval = new Interval(2);
+
+            this.label = "[accent]" + label + "[white]\n" + CastleIcons.get(effect) + " [white]: [gray]" + cost;
         }
 
         @Override
         public void buy(PlayerData data) {
             super.buy(data);
-            Groups.unit.each(unit -> unit.team == data.player.team(), unit -> unit.apply(effect, Float.POSITIVE_INFINITY));
+            Groups.unit.each(unit -> unit.team == data.player.team(), unit -> {
+                if (effect == StatusEffects.shielded) {
+                    unit.shield += Mathf.sqrt(unit.health);
+                } else {
+                    unit.apply(effect, Float.POSITIVE_INFINITY);
+                }
+            });
         }
 
         @Override
