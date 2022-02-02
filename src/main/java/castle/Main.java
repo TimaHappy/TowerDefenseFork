@@ -71,7 +71,8 @@ public class Main extends Plugin {
 
         Timer.schedule(CastleLogic::update, 10f, 0.01f);
 
-        CastleLogic.startHosting(maps.getShuffleMode().next(Gamemode.pvp, state.map));
+        netServer.openServer();
+        CastleLogic.restart(maps.getShuffleMode().next(Gamemode.pvp, state.map));
     }
 
     @Override

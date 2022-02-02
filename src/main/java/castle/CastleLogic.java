@@ -2,10 +2,8 @@ package castle;
 
 import arc.Events;
 import arc.struct.Seq;
-import arc.util.Log;
 import arc.util.Timer;
 import castle.components.Bundle;
-import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import castle.CastleRooms.Room;
 import mindustry.content.Blocks;
@@ -17,6 +15,7 @@ import mindustry.gen.Flyingc;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
+import mindustry.net.WorldReloader;
 import mindustry.world.Tile;
 
 import static mindustry.Vars.*;
@@ -51,35 +50,16 @@ public class CastleLogic {
         }
     }
 
-    public static void startHosting(Map map) {
-        logic.reset();
-
-        world.loadMap(map, map.applyRules(Gamemode.pvp));
-        CastleGenerator generator = new CastleGenerator();
-        generator.get(world.tiles);
-
-        state.rules = applyRules(state.map.applyRules(Gamemode.pvp));
-        logic.play();
-
-        netServer.openServer();
-    }
-
     public static void restart(Map map) {
-        Seq<Player> players = new Seq<>();
-        Groups.player.each(player -> {
-            players.add(player);
-            player.clearUnit();
-        });
+        WorldReloader reloader = new WorldReloader();
+        reloader.begin();
 
-        logic.reset();
         CastleRooms.rooms.clear();
         PlayerData.datas().each(PlayerData::reset);
 
         world.loadMap(map, map.applyRules(Gamemode.pvp));
         CastleGenerator generator = new CastleGenerator();
         generator.get(world.tiles);
-
-        Call.worldDataBegin();
 
         y = (world.height() - CastleRooms.size * 6) / 2f * tilesize;
         endy = CastleRooms.size * 6 * tilesize;
@@ -89,7 +69,7 @@ public class CastleLogic {
         state.rules = applyRules(map.applyRules(Gamemode.pvp));
         logic.play();
 
-        players.each(netServer::sendWorldData);
+        reloader.end();
     }
 
     public static void gameOver(Team team) {
