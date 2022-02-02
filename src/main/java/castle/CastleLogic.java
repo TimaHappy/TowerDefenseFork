@@ -5,6 +5,7 @@ import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Timer;
 import castle.components.Bundle;
+import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import castle.CastleRooms.Room;
 import mindustry.content.Blocks;
@@ -63,7 +64,7 @@ public class CastleLogic {
         netServer.openServer();
     }
 
-    public static void restart() {
+    public static void restart(Map map) {
         Seq<Player> players = new Seq<>();
         Groups.player.each(player -> {
             players.add(player);
@@ -73,8 +74,6 @@ public class CastleLogic {
         logic.reset();
         CastleRooms.rooms.clear();
         PlayerData.datas().each(PlayerData::reset);
-
-        Map map = maps.getShuffleMode().next(Gamemode.pvp, state.map);
 
         world.loadMap(map, map.applyRules(Gamemode.pvp));
         CastleGenerator generator = new CastleGenerator();
@@ -87,7 +86,7 @@ public class CastleLogic {
         x = -5 * tilesize;
         endx = (5 + world.width()) * tilesize;
 
-        state.rules = applyRules(state.map.applyRules(Gamemode.pvp));
+        state.rules = applyRules(map.applyRules(Gamemode.pvp));
         logic.play();
 
         players.each(netServer::sendWorldData);
@@ -97,9 +96,10 @@ public class CastleLogic {
         Events.fire("CastleGameOver");
         Call.updateGameOver(team);
 
-        Log.info("Игра окончена!");
-        Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.sharded ? "events.win.sharded" : "events.win.blue", Bundle.findLocale(p))));
-        Timer.schedule(CastleLogic::restart, 6f);
+        Map map = maps.getShuffleMode().next(Gamemode.pvp, state.map);
+
+        Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format("events.gameover", Bundle.findLocale(p), colorizedTeam(team), map.name())));
+        Timer.schedule(() -> restart(map), 10f);
     }
 
     public static Rules applyRules(Rules rules) {
@@ -126,5 +126,9 @@ public class CastleLogic {
 
     public static boolean placeCheck(Player player) {
         return placeCheck(player.team(), player.tileOn());
+    }
+
+    public static String colorizedTeam(Team team) {
+        return "[#" + team.color + "]" + team.name;
     }
 }

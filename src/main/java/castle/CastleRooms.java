@@ -21,6 +21,7 @@ import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.LaserTurret;
+import mindustry.world.blocks.defense.turrets.LiquidTurret;
 import mindustry.world.blocks.environment.Floor;
 
 import static mindustry.Vars.tilesize;
@@ -104,14 +105,18 @@ public class CastleRooms {
 
         public boolean bought;
 
-        public BlockRoom(Block block, Team team, int x, int y, int cost) {
-            super(x, y, cost, block.size - 1);
+        public BlockRoom(Block block, Team team, int x, int y, int cost, int size) {
+            super(x, y, cost, size);
             this.block = block;
             this.team = team;
 
             this.bought = false;
 
             this.label = CastleIcons.get(block) + " :[white] " + cost;
+        }
+
+        public BlockRoom(Block block, Team team, int x, int y, int cost) {
+            this(block, team, x, y, cost, block.size + 1);
         }
 
         @Override
@@ -122,14 +127,14 @@ public class CastleRooms {
             if (block instanceof ItemTurret turret) {
                 world.tile(x, centrey).setNet(Blocks.itemSource, team, 0);
                 world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().first());
-            } else if (block instanceof LaserTurret) {
+            } else if (block instanceof LaserTurret || block instanceof LiquidTurret) {
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
                 world.build(x, centrey).configure(Liquids.cryofluid);
             }
 
             bought = true;
             showLabel = false;
-            Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, centrex * tilesize, centrey * tilesize));
+            Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, centrex * tilesize, y * tilesize));
         }
 
         @Override
@@ -157,6 +162,8 @@ public class CastleRooms {
 
             this.stack = stack;
             this.interval = new Interval();
+
+            this.label = CastleIcons.get(block) + " (" + CastleIcons.get(stack.item) + ") :[white] " + cost;
         }
 
         @Override
@@ -164,6 +171,7 @@ public class CastleRooms {
             super.update();
 
             if (bought && interval.get(300f) && team.core() != null) {
+                // TODO добавлять ресурсы с красивым эффектом
                 team.core().items.add(stack.item, stack.amount);
             }
         }
@@ -174,7 +182,7 @@ public class CastleRooms {
     public static class CoreRoom extends BlockRoom {
 
         public CoreRoom(Team team, int x, int y, int cost) {
-            super(Blocks.coreNucleus, team, x, y, cost);
+            super(Blocks.coreNucleus, team, x, y, cost, Blocks.coreShard.size + 1);
         }
 
         @Override

@@ -70,6 +70,9 @@ public class CastleIcons {
                 Blocks.spectre, Iconc.blockSpectre,
                 Blocks.meltdown, Iconc.blockMeltdown,
 
+                Blocks.repairPoint, Iconc.blockRepairPoint,
+                Blocks.repairTurret, Iconc.blockRepairTurret,
+
                 Items.copper, Iconc.itemCopper,
                 Items.lead, Iconc.itemLead,
                 Items.metaglass, Iconc.itemMetaglass,

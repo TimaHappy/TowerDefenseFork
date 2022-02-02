@@ -16,10 +16,13 @@ import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.environment.OreBlock;
+import mindustry.world.blocks.environment.Prop;
+import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.RepairPoint;
 
+import static mindustry.Vars.maxBlockSize;
 import static mindustry.Vars.world;
 
 public class CastleGenerator implements Cons<Tiles> {
@@ -54,7 +57,7 @@ public class CastleGenerator implements Cons<Tiles> {
                             first.setNet(Blocks.coreShard, Team.sharded, 0);
                             second.setNet(Blocks.coreShard, Team.blue, 0);
                         });
-                    } else {
+                    } else if (save.block() instanceof Prop) {
                         first.setBlock(save.block(), Team.sharded);
                         second.setBlock(save.block(), Team.blue);
                     }
@@ -81,24 +84,24 @@ public class CastleGenerator implements Cons<Tiles> {
                         CastleRooms.rooms.add(new CoreRoom(Team.blue, second.x - 2, second.y - 2, 5000));
                     }
 
-                    //if (save.overlay() instanceof OreBlock ore) {
-                    //    CastleRooms.rooms.add(new MinerRoom(new ItemStack(ore.itemDrop, 48 - ore.itemDrop.hardness * 8), Team.sharded, first.x - 2, first.y - 2, 1000 + ore.itemDrop.hardness * 125));
-                    //    CastleRooms.rooms.add(new MinerRoom(new ItemStack(ore.itemDrop, 48 - ore.itemDrop.hardness * 8), Team.blue, second.x - 2, second.y - 2, 1000 + ore.itemDrop.hardness * 125));
-                    //}
+                    if (save.block() == Blocks.laserDrill && (save.overlay() == Blocks.oreCopper || save.overlay() == Blocks.oreTitanium || save.overlay() == Blocks.oreThorium)) {
+                        CastleRooms.rooms.add(new MinerRoom(new ItemStack(save.overlay().itemDrop, 48 - save.overlay().itemDrop.hardness * 8), Team.sharded, first.x, first.y, 1000 + save.overlay().itemDrop.hardness * 125));
+                        CastleRooms.rooms.add(new MinerRoom(new ItemStack(save.overlay().itemDrop, 48 - save.overlay().itemDrop.hardness * 8), Team.blue, second.x, second.y, 1000 + save.overlay().itemDrop.hardness * 125));
+                    }
 
                     if (save.block() instanceof Turret turret) {
-                        CastleRooms.rooms.add(new BlockRoom(turret, Team.sharded, first.x - 2, first.y - 2, turret.health * turret.size));
-                        CastleRooms.rooms.add(new BlockRoom(turret, Team.blue, second.x - 2, second.y - 2, turret.health * turret.size));
+                        CastleRooms.rooms.add(new BlockRoom(turret, Team.sharded, first.x, first.y, turret.health / Math.max(maxBlockSize - turret.size * 4, 1)));
+                        CastleRooms.rooms.add(new BlockRoom(turret, Team.blue, second.x, second.y, turret.health / Math.max(maxBlockSize - turret.size * 4, 1)));
                     }
 
                     if (save.block() instanceof CommandCenter center) {
-                        CastleRooms.rooms.add(new BlockRoom(center, Team.sharded, first.x - 2, first.y - 2, 500));
-                        CastleRooms.rooms.add(new BlockRoom(center, Team.blue, second.x - 2, second.y - 2, 500));
+                        CastleRooms.rooms.add(new BlockRoom(center, Team.sharded, first.x, first.y, 750));
+                        CastleRooms.rooms.add(new BlockRoom(center, Team.blue, second.x, second.y, 750));
                     }
 
                     if (save.block() instanceof RepairPoint point) {
-                        CastleRooms.rooms.add(new BlockRoom(point, Team.sharded, first.x - 2, first.y - 2, point.size * point.size * 250));
-                        CastleRooms.rooms.add(new BlockRoom(point, Team.blue, second.x - 2, second.y - 2, point.size * point.size * 250));
+                        CastleRooms.rooms.add(new BlockRoom(point, Team.sharded, first.x, first.y, point.size * point.size * 250));
+                        CastleRooms.rooms.add(new BlockRoom(point, Team.blue, second.x, second.y, point.size * point.size * 250));
                     }
 
                     if (save.floor() == Blocks.darkPanel2) {
