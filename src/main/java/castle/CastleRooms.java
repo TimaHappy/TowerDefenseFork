@@ -126,8 +126,11 @@ public class CastleRooms {
             world.tile(centrex, centrey).setNet(block, team, 0);
             if (block instanceof ItemTurret turret) {
                 world.tile(x, centrey).setNet(Blocks.itemSource, team, 0);
-                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().first());
-            } else if (block instanceof LaserTurret || block instanceof LiquidTurret) {
+                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random());
+            } else if (block instanceof LiquidTurret turret) {
+                world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
+                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random(Liquids.slag));
+            } else if (block instanceof LaserTurret) {
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
                 world.build(x, centrey).configure(Liquids.cryofluid);
             }

@@ -1,6 +1,7 @@
 package castle;
 
 import arc.func.Cons;
+import arc.math.Mathf;
 import arc.util.Log;
 import arc.util.Time;
 import castle.CastleRooms.*;
@@ -14,28 +15,25 @@ import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
+import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
-import mindustry.world.blocks.environment.OreBlock;
 import mindustry.world.blocks.environment.Prop;
-import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.RepairPoint;
 
 import static mindustry.Vars.maxBlockSize;
-import static mindustry.Vars.world;
 
 public class CastleGenerator implements Cons<Tiles> {
 
     public Tiles saved;
 
+    public CastleGenerator(Tiles tiles) {
+        this.saved = tiles;
+    }
+
     @Override
     public void get(Tiles tiles) {
-        world.setGenerating(true);
-        this.saved = tiles;
-
-        tiles = world.resize(tiles.width, tiles.height * 2 + CastleRooms.size * 4 + 10);
-
         for (int x = 0; x < tiles.width; x++) {
             for (int y = 0; y < tiles.height; y++) {
                 tiles.set(x, y, new Tile(x, y, Blocks.space, Blocks.air, Blocks.air));
@@ -68,7 +66,6 @@ public class CastleGenerator implements Cons<Tiles> {
         generateRooms(tiles);
 
         Log.info("Генерация завершена.");
-        world.setGenerating(false);
     }
 
     public void generateRooms(Tiles tiles) {
@@ -90,8 +87,8 @@ public class CastleGenerator implements Cons<Tiles> {
                     }
 
                     if (save.block() instanceof Turret turret) {
-                        CastleRooms.rooms.add(new BlockRoom(turret, Team.sharded, first.x, first.y, turret.health / Math.max(maxBlockSize - turret.size * 4, 1)));
-                        CastleRooms.rooms.add(new BlockRoom(turret, Team.blue, second.x, second.y, turret.health / Math.max(maxBlockSize - turret.size * 4, 1)));
+                        CastleRooms.rooms.add(new BlockRoom(turret, Team.sharded, first.x, first.y, getTurretCost(turret)));
+                        CastleRooms.rooms.add(new BlockRoom(turret, Team.blue, second.x, second.y, getTurretCost(turret)));
                     }
 
                     if (save.block() instanceof CommandCenter center) {
@@ -100,8 +97,8 @@ public class CastleGenerator implements Cons<Tiles> {
                     }
 
                     if (save.block() instanceof RepairPoint point) {
-                        CastleRooms.rooms.add(new BlockRoom(point, Team.sharded, first.x, first.y, point.size * point.size * 250));
-                        CastleRooms.rooms.add(new BlockRoom(point, Team.blue, second.x, second.y, point.size * point.size * 250));
+                        CastleRooms.rooms.add(new BlockRoom(point, Team.sharded, first.x, first.y, point.size * point.size * 300));
+                        CastleRooms.rooms.add(new BlockRoom(point, Team.blue, second.x, second.y, point.size * point.size * 300));
                     }
 
                     if (save.floor() == Blocks.darkPanel2) {
@@ -112,12 +109,12 @@ public class CastleGenerator implements Cons<Tiles> {
             }
         }
 
-        generateShop(tiles);
+        generateShop();
 
         CastleRooms.rooms.each(room -> room.spawn(tiles));
     }
 
-    public void generateShop(Tiles tiles) {
+    public void generateShop() {
         int x = 2, y = saved.height + 2;
         int distance = CastleRooms.size + 2;
 
@@ -174,5 +171,9 @@ public class CastleGenerator implements Cons<Tiles> {
 
     private void addEffectRoom(StatusEffect effect, String label, int x, int y, int cost) {
         CastleRooms.rooms.add(new EffectRoom(effect, label, x, y, cost));
+    }
+
+    private int getTurretCost(Turret turret) {
+        return Mathf.ceil((Mathf.sqrt(turret.health) / Math.max(maxBlockSize - turret.size * 4f, 1) * turret.size * turret.size) / 50f) * 100 * (turret instanceof ItemTurret ? 2 : 1);
     }
 }

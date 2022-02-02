@@ -11,13 +11,13 @@ import mindustry.content.Blocks;
 import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.entities.abilities.EnergyFieldAbility;
-import mindustry.game.EventType.PlayerJoin;
-import mindustry.game.EventType.PlayerLeave;
-import mindustry.game.EventType.UnitDestroyEvent;
+import mindustry.game.EventType.*;
 import mindustry.game.Gamemode;
+import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
+import mindustry.world.blocks.storage.CoreBlock;
 
 import static mindustry.Vars.*;
 
@@ -58,6 +58,16 @@ public class Main extends Plugin {
         Events.on(PlayerJoin.class, event -> PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player)));
 
         Events.on(PlayerLeave.class, event -> PlayerData.datas.remove(event.player.uuid()));
+
+        Events.on(BlockDestroyEvent.class, event -> {
+            if (event.tile.block() instanceof CoreBlock && event.tile.team().cores().size <= 1) {
+                if (event.tile.team() == Team.sharded) {
+                    CastleLogic.gameOver(Team.blue);
+                } else if (event.tile.team() == Team.blue) {
+                    CastleLogic.gameOver(Team.sharded);
+                }
+            }
+        });
 
         Events.on(UnitDestroyEvent.class, event -> {
             int income = CastleUnitDrops.get(event.unit.type);

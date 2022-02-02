@@ -1,7 +1,6 @@
 package castle;
 
 import arc.Events;
-import arc.struct.Seq;
 import arc.util.Timer;
 import castle.components.Bundle;
 import castle.components.PlayerData;
@@ -26,17 +25,6 @@ public class CastleLogic {
 
     public static void update() {
         if (!world.isGenerating() && !state.serverPaused && !state.gameOver) {
-
-            if (Team.sharded.cores().isEmpty()) {
-                gameOver(Team.blue);
-                return;
-            }
-
-            if (Team.blue.cores().isEmpty()) {
-                gameOver(Team.sharded);
-                return;
-            }
-
             PlayerData.datas().each(PlayerData::update);
             CastleRooms.rooms.each(Room::update);
 
@@ -58,8 +46,8 @@ public class CastleLogic {
         PlayerData.datas().each(PlayerData::reset);
 
         world.loadMap(map, map.applyRules(Gamemode.pvp));
-        CastleGenerator generator = new CastleGenerator();
-        generator.get(world.tiles);
+        CastleGenerator generator = new CastleGenerator(world.tiles);
+        world.loadGenerator(world.width(), world.height() * 2 + CastleRooms.size * 4 + 10, generator);
 
         y = (world.height() - CastleRooms.size * 6) / 2f * tilesize;
         endy = CastleRooms.size * 6 * tilesize;
