@@ -62,7 +62,6 @@ public class CastleLogic {
 
         CastleGenerator generator = new CastleGenerator(map);
         generator.run();
-        world.loadGenerator(world.width(), world.height() * 2 + CastleRooms.size * 4 + 10, generator);
 
         y = (world.height() - CastleRooms.size * 6) / 2f * tilesize;
         endy = CastleRooms.size * 6 * tilesize;
