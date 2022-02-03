@@ -37,10 +37,6 @@ public class CastleRooms {
 
     public static Tile shardedSpawn, blueSpawn;
 
-    public enum UnitRoomType {
-        attack, defend
-    }
-
     public static class Room {
         public int x;
         public int y;
@@ -201,7 +197,7 @@ public class CastleRooms {
         public void update() {
             super.update();
 
-            if (bought && interval.get(300f) && team.core() != null) {
+            if (bought && interval.get(300f)) {
                 Call.transferItemTo(Nulls.unit, stack.item, stack.amount, centrex * tilesize, centrey * tilesize, team.core());
             }
         }
@@ -227,6 +223,11 @@ public class CastleRooms {
 
 
     public static class UnitRoom extends Room {
+
+        public enum UnitRoomType {
+            attack, defend
+        }
+
         public UnitType unitType;
         public UnitRoomType roomType;
 

@@ -1,7 +1,6 @@
 package castle;
 
 import arc.func.Cons;
-import arc.math.Mathf;
 import arc.util.Log;
 import arc.util.Time;
 import castle.CastleRooms.*;
@@ -15,7 +14,6 @@ import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
-import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.storage.CoreBlock;
@@ -159,8 +157,8 @@ public class CastleGenerator implements Cons<Tiles> {
     }
 
     private void addUnitRoom(UnitType type, int income, int x, int y, int cost) {
-        CastleRooms.rooms.add(new UnitRoom(type, UnitRoomType.attack, income, x, y, cost));
-        CastleRooms.rooms.add(new UnitRoom(type, UnitRoomType.defend, -income, x, y + CastleRooms.size + 2, cost));
+        CastleRooms.rooms.add(new UnitRoom(type, UnitRoom.UnitRoomType.attack, income, x, y, cost));
+        CastleRooms.rooms.add(new UnitRoom(type, UnitRoom.UnitRoomType.defend, -income, x, y + CastleRooms.size + 2, cost));
     }
 
     private void addItemRoom(ItemStack stack, int x, int y, int cost) {
