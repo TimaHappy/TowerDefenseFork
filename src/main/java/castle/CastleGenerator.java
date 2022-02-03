@@ -45,16 +45,9 @@ public class CastleGenerator implements Cons<Tiles> {
                 first.setFloor(save.floor());
                 second.setFloor(save.floor());
 
-                if (save.isCenter()) {
-                    if (save.block() instanceof CoreBlock) {
-                        Time.runTask(10f, () -> {
-                            first.setNet(Blocks.coreShard, Team.sharded, 0);
-                            second.setNet(Blocks.coreShard, Team.blue, 0);
-                        });
-                    } else if (save.block() instanceof Prop) {
-                        first.setBlock(save.block(), Team.sharded);
-                        second.setBlock(save.block(), Team.blue);
-                    }
+                if (save.isCenter() && save.block() instanceof Prop) {
+                    first.setBlock(save.block());
+                    second.setBlock(save.block());
                 }
             }
         }
@@ -73,8 +66,12 @@ public class CastleGenerator implements Cons<Tiles> {
 
                 if (save.isCenter()) {
                     if (save.block() == Blocks.coreShard) {
-                        CastleRooms.rooms.add(new CoreRoom(Team.sharded, first.x - 2, first.y - 2, 5000));
-                        CastleRooms.rooms.add(new CoreRoom(Team.blue, second.x - 2, second.y - 2, 5000));
+                        Time.runTask(60f, () -> {
+                            first.setNet(Blocks.coreShard, Team.sharded, 0);
+                            CastleRooms.rooms.add(new CoreRoom(Team.sharded, first.x - 2, first.y - 2, 5000));
+                            second.setNet(Blocks.coreShard, Team.blue, 0);
+                            CastleRooms.rooms.add(new CoreRoom(Team.blue, second.x - 2, second.y - 2, 5000));
+                        });
                     }
 
                     if (save.block() == Blocks.laserDrill && (save.overlay() == Blocks.oreCopper || save.overlay() == Blocks.oreTitanium || save.overlay() == Blocks.oreThorium)) {
