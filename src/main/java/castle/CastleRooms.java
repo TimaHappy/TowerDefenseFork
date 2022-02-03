@@ -150,13 +150,17 @@ public class CastleRooms {
 
             world.tile(centrex, centrey).setNet(block, team, 0);
             if (block instanceof ItemTurret turret) {
-                world.build(centrex, centrey).items.add(turret.ammoTypes.keys().toSeq().random(), turret.itemCapacity);
+                world.tile(x, centrey).setNet(Blocks.itemSource, team, 0);
+                world.build(centrex, centrey).configure(turret.ammoTypes.keys().toSeq().random());
+                Time.runTask(60f, world.tile(x, y)::removeNet);
             } else if (block instanceof LiquidTurret turret) {
-                world.build(centrex, centrey).liquids.add(turret.ammoTypes.keys().toSeq().random(), turret.liquidCapacity);
-            } else if (block instanceof LaserTurret turret) {
-                world.build(centrex, centrey).liquids.add(Liquids.cryofluid, turret.liquidCapacity);
-            } else if (block instanceof RepairPoint point) {
-                world.build(centrex, centrey).liquids.add(Liquids.cryofluid, point.liquidCapacity);
+                world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
+                world.build(centrex, centrey).configure(turret.ammoTypes.keys().toSeq().random());
+                Time.runTask(60f, world.tile(x, y)::removeNet);
+            } else if (block instanceof LaserTurret || block instanceof RepairPoint) {
+                world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
+                world.build(centrex, centrey).configure(Liquids.cryofluid);
+                Time.runTask(60f, world.tile(x, y)::removeNet);
             }
 
             bought = true;

@@ -1,6 +1,7 @@
 package castle;
 
 import arc.func.Cons;
+import arc.math.Mathf;
 import arc.util.Log;
 import arc.util.Time;
 import castle.CastleRooms.*;
@@ -17,6 +18,7 @@ import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.environment.Prop;
+import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.RepairPoint;
 
@@ -32,14 +34,11 @@ public class CastleGenerator implements Cons<Tiles> {
 
         this.saved = world.tiles;
         this.width = saved.width;
-        this.height = saved.height * 2 + CastleRooms.size * 4 + 10;
+        this.height = saved.height * 2 + CastleRooms.size * 4 + 12;
     }
 
     public void run() {
         world.loadGenerator(width, height, this);
-        world.tiles.eachTile(tile -> {
-            if (tile.build != null) tile.build.kill();
-        });
     }
 
     @Override
@@ -59,7 +58,7 @@ public class CastleGenerator implements Cons<Tiles> {
                 first.setFloor(save.floor());
                 second.setFloor(save.floor());
 
-                if (save.isCenter() && save.block() instanceof Prop) {
+                if (save.isCenter()) {
                     first.setBlock(save.block());
                     second.setBlock(save.block());
                 }
@@ -80,7 +79,7 @@ public class CastleGenerator implements Cons<Tiles> {
 
                 if (save.isCenter()) {
                     if (save.block() == Blocks.coreShard) {
-                        Time.runTask(60f, () -> {
+                        Time.runTask(6f, () -> {
                             first.setNet(Blocks.coreShard, Team.sharded, 0);
                             second.setNet(Blocks.coreShard, Team.blue, 0);
                         });
@@ -120,10 +119,16 @@ public class CastleGenerator implements Cons<Tiles> {
         generateShop();
 
         CastleRooms.rooms.each(room -> room.spawn(tiles));
+
+        Time.runTask(60f, () -> world.tiles.eachTile(tile -> {
+            if (!(tile.block() instanceof Prop || tile.block() instanceof CoreBlock)) {
+                Time.runTask(Mathf.random(60f), tile::removeNet);
+            }
+        }));
     }
 
     public void generateShop() {
-        int x = 2, y = saved.height + 2;
+        int x = 2, y = saved.height + 3;
         int distance = CastleRooms.size + 2;
 
         addUnitRoom(UnitTypes.dagger, 0, x, y + 2, 100);
