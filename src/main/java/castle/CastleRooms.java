@@ -25,6 +25,7 @@ import mindustry.world.blocks.defense.turrets.LaserTurret;
 import mindustry.world.blocks.defense.turrets.LiquidTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.environment.Floor;
+import mindustry.world.blocks.units.RepairPoint;
 
 import static mindustry.Vars.tilesize;
 import static mindustry.Vars.world;
@@ -149,14 +150,13 @@ public class CastleRooms {
 
             world.tile(centrex, centrey).setNet(block, team, 0);
             if (block instanceof ItemTurret turret) {
-                world.tile(x, centrey).setNet(Blocks.itemSource, team, 0);
-                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random());
+                world.build(centrex, centrey).items.add(turret.ammoTypes.keys().toSeq().random(), turret.itemCapacity);
             } else if (block instanceof LiquidTurret turret) {
-                world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
-                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random());
-            } else if (block instanceof LaserTurret) {
-                world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
-                world.build(x, centrey).configure(Liquids.cryofluid);
+                world.build(centrex, centrey).liquids.add(turret.ammoTypes.keys().toSeq().random(), turret.liquidCapacity);
+            } else if (block instanceof LaserTurret turret) {
+                world.build(centrex, centrey).liquids.add(Liquids.cryofluid, turret.liquidCapacity);
+            } else if (block instanceof RepairPoint point) {
+                world.build(centrex, centrey).liquids.add(Liquids.cryofluid, point.liquidCapacity);
             }
 
             bought = true;

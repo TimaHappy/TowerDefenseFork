@@ -60,8 +60,8 @@ public class CastleLogic {
         CastleRooms.rooms.clear();
         PlayerData.datas().each(PlayerData::reset);
 
-        world.loadMap(map, map.applyRules(Gamemode.pvp));
-        CastleGenerator generator = new CastleGenerator(world.tiles);
+        CastleGenerator generator = new CastleGenerator(map);
+        generator.run();
         world.loadGenerator(world.width(), world.height() * 2 + CastleRooms.size * 4 + 10, generator);
 
         y = (world.height() - CastleRooms.size * 6) / 2f * tilesize;
@@ -101,7 +101,6 @@ public class CastleLogic {
 
         content.blocks().each(block -> {
             if (block instanceof CoreBlock || block instanceof Turret || block instanceof CommandCenter || block instanceof RepairPoint || block instanceof LogicBlock || block == Blocks.airFactory) {
-                block.health *= 2;
                 rules.bannedBlocks.add(block);
             }
         });

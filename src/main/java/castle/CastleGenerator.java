@@ -9,6 +9,7 @@ import mindustry.content.Items;
 import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.game.Team;
+import mindustry.maps.Map;
 import mindustry.type.ItemStack;
 import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
@@ -16,23 +17,36 @@ import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.environment.Prop;
-import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.RepairPoint;
+
+import static mindustry.Vars.world;
 
 public class CastleGenerator implements Cons<Tiles> {
 
     public Tiles saved;
+    public int width, height;
 
-    public CastleGenerator(Tiles tiles) {
-        this.saved = tiles;
+    public CastleGenerator(Map map) {
+        world.loadMap(map);
+
+        this.saved = world.tiles;
+        this.width = saved.width;
+        this.height = saved.height * 2 + CastleRooms.size * 4 + 10;
+    }
+
+    public void run() {
+        world.loadGenerator(width, height, this);
     }
 
     @Override
     public void get(Tiles tiles) {
         for (int x = 0; x < tiles.width; x++) {
             for (int y = 0; y < tiles.height; y++) {
-                tiles.set(x, y, new Tile(x, y, Blocks.space, Blocks.air, Blocks.air));
+                Tile tile = tiles.getc(x, y);
+                tile.remove();
+                tile.setFloor(Blocks.air.asFloor());
+                tile.setBlock(Blocks.space);
             }
         }
 
