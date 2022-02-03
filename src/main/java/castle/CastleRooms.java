@@ -137,7 +137,7 @@ public class CastleRooms {
                     Blocks.swarmer, 1400,
                     Blocks.salvo, 500,
                     Blocks.segment, 750,
-                    Blocks.tsunami, 800,
+                    Blocks.tsunami, 1000,
                     Blocks.fuse, 1250,
                     Blocks.ripple, 1200,
                     Blocks.cyclone, 1700,
@@ -202,8 +202,7 @@ public class CastleRooms {
             super.update();
 
             if (bought && interval.get(300f) && team.core() != null) {
-                // TODO добавлять ресурсы с красивым эффектом
-                team.core().items.add(stack.item, stack.amount);
+                Call.transferItemTo(Nulls.unit, stack.item, stack.amount, centrex * tilesize, centrey * tilesize, team.core());
             }
         }
     }

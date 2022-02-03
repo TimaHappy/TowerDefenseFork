@@ -31,10 +31,13 @@ public class CastleLogic {
             Groups.unit.intersect(x, y, endx, endy, Call::unitDespawn);
 
             Groups.unit.each(Flyingc::isFlying, unit -> {
-                if (!placeCheck(unit.team, unit.tileOn())) unit.damagePierce(unit.maxHealth / 250f);
+                if (!placeCheck(unit.team, unit.tileOn())) {
+                    unit.damagePierce(unit.maxHealth / 250f);
+                }
 
-                if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0)
+                if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0) {
                     Call.unitDespawn(unit);
+                }
             });
         }
     }
