@@ -46,7 +46,7 @@ public class PlayerData {
     public void update() {
         if (interval.get(0, 60f)) {
             bonus = Math.max((float) Groups.player.size() / Groups.player.count(p -> p.team() == player.team()) / 2f, 1f);
-            money += income;
+            money += Mathf.floor(income * bonus);
         }
 
         if (interval.get(1, 180f)) {
