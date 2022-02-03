@@ -110,5 +110,7 @@ public class Main extends Plugin {
     @Override
     public void registerServerCommands(CommandHandler handler) {
         handler.removeCommand("host");
+        handler.removeCommand("stop");
+        handler.removeCommand("gameover");
     }
 }
