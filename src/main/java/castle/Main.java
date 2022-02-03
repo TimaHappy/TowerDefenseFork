@@ -4,6 +4,8 @@ import arc.Events;
 import arc.math.geom.Geometry;
 import arc.util.CommandHandler;
 import arc.util.Timer;
+import castle.CastleRooms.BlockRoom;
+import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.CastleUnitDrops;
 import castle.components.PlayerData;
@@ -11,10 +13,14 @@ import mindustry.content.Blocks;
 import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.entities.abilities.EnergyFieldAbility;
-import mindustry.game.EventType.*;
+import mindustry.game.EventType.BlockDestroyEvent;
+import mindustry.game.EventType.PlayerJoin;
+import mindustry.game.EventType.PlayerLeave;
+import mindustry.game.EventType.UnitDestroyEvent;
 import mindustry.game.Gamemode;
 import mindustry.game.Team;
 import mindustry.gen.Call;
+import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
 import mindustry.world.blocks.storage.CoreBlock;
@@ -39,6 +45,7 @@ public class Main extends Plugin {
 
         CastleIcons.load();
         CastleUnitDrops.load();
+        BlockRoom.load();
 
         netServer.admins.addActionFilter(action -> {
             if (action.type == ActionType.placeBlock || action.type == ActionType.breakBlock) {
@@ -79,15 +86,25 @@ public class Main extends Plugin {
             }
         });
 
-        Timer.schedule(CastleLogic::update, 10f, 0.01f);
+        Timer.schedule(CastleLogic::update, 0f, 0.01f);
 
-        netServer.openServer();
         CastleLogic.restart(maps.getShuffleMode().next(Gamemode.pvp, state.map));
+        netServer.openServer();
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-
+        handler.<Player>register("hud", "Toggle HUD.", (args, player) -> {
+            PlayerData data = PlayerData.datas.get(player.uuid());
+            if (data.showHud) {
+                data.showHud = false;
+                Call.hideHudText(player.con);
+                Bundle.bundled(player, "commands.hud.off");
+            } else {
+                data.showHud = true;
+                Bundle.bundled(player, "commands.hud.on");
+            }
+        });
     }
 
     @Override

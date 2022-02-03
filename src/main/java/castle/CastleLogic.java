@@ -1,10 +1,11 @@
 package castle;
 
 import arc.Events;
+import arc.struct.Seq;
 import arc.util.Timer;
+import castle.CastleRooms.Room;
 import castle.components.Bundle;
 import castle.components.PlayerData;
-import castle.CastleRooms.Room;
 import mindustry.content.Blocks;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
@@ -14,7 +15,6 @@ import mindustry.gen.Flyingc;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import mindustry.net.WorldReloader;
 import mindustry.world.Tile;
 
 import static mindustry.Vars.*;
@@ -33,14 +33,21 @@ public class CastleLogic {
             Groups.unit.each(Flyingc::isFlying, unit -> {
                 if (!placeCheck(unit.team, unit.tileOn())) unit.damagePierce(unit.maxHealth / 250f);
 
-                if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0) Call.unitDespawn(unit);
+                if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0)
+                    Call.unitDespawn(unit);
             });
         }
     }
 
     public static void restart(Map map) {
-        WorldReloader reloader = new WorldReloader();
-        reloader.begin();
+        Seq<Player> players = new Seq<>();
+        Groups.player.each(player -> {
+            players.add(player);
+            player.clearUnit();
+        });
+
+        logic.reset();
+        Call.worldDataBegin();
 
         CastleRooms.rooms.clear();
         PlayerData.datas().each(PlayerData::reset);
@@ -57,7 +64,7 @@ public class CastleLogic {
         state.rules = applyRules(map.applyRules(Gamemode.pvp));
         logic.play();
 
-        reloader.end();
+        players.each(player -> netServer.sendWorldData(player));
     }
 
     public static void gameOver(Team team) {

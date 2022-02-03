@@ -39,6 +39,10 @@ public class PlayerData {
         this.showHud = true;
     }
 
+    public static Seq<PlayerData> datas() {
+        return datas.values().toSeq();
+    }
+
     public void update() {
         if (interval.get(0, 60f)) {
             bonus = Math.max((float) Groups.player.size() / Groups.player.count(p -> p.team() == player.team()) / 2f, 1f);
@@ -67,13 +71,15 @@ public class PlayerData {
 
         if (showHud) {
             StringBuilder hud = new StringBuilder(Bundle.format("commands.hud.display", Bundle.findLocale(player), money, income));
-            if (bonus > 1f) hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100).length() > 5 ? String.valueOf((bonus - 1) * 100).substring(0, 6) : (bonus - 1) * 100));
-            if (!player.dead() && player.unit().isFlying() && !CastleLogic.placeCheck(player)) hud.append(Bundle.format("commands.hud.fly-warning", Bundle.findLocale(player)));
+            if (bonus > 1f)
+                hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100).length() > 5 ? String.valueOf((bonus - 1) * 100).substring(0, 6) : (bonus - 1) * 100));
+            if (!player.dead() && player.unit().isFlying() && !CastleLogic.placeCheck(player))
+                hud.append(Bundle.format("commands.hud.fly-warning", Bundle.findLocale(player)));
             Call.setHudText(player.con, hud.toString());
         }
     }
 
-    public  void updateLabels() {
+    public void updateLabels() {
         CastleRooms.rooms.each(room -> !(room instanceof BlockRoom blockRoom && blockRoom.team != player.team()) && room.showLabel, room -> Call.label(player.con, room.label, 3f, room.centrex * tilesize, room.centrey * tilesize - room.size * 2));
     }
 
@@ -83,9 +89,5 @@ public class PlayerData {
         money = 0;
         income = 15;
         bonus = 1f;
-    }
-
-    public static Seq<PlayerData> datas() {
-        return datas.values().toSeq();
     }
 }

@@ -22,8 +22,6 @@ import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.RepairPoint;
 
-import static mindustry.Vars.maxBlockSize;
-
 public class CastleGenerator implements Cons<Tiles> {
 
     public Tiles saved;
@@ -174,6 +172,6 @@ public class CastleGenerator implements Cons<Tiles> {
     }
 
     private int getTurretCost(Turret turret) {
-        return Mathf.ceil((Mathf.sqrt(turret.health) / Math.max(maxBlockSize - turret.size * 4f, 1) * turret.size * turret.size) / 50f) * 100 * (turret instanceof ItemTurret ? 2 : 1);
+        return BlockRoom.turretCosts.get(turret, 1000);
     }
 }

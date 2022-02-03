@@ -1,6 +1,7 @@
 package castle;
 
 import arc.math.Mathf;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
 import arc.util.Time;
@@ -22,6 +23,7 @@ import mindustry.world.Tiles;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.LaserTurret;
 import mindustry.world.blocks.defense.turrets.LiquidTurret;
+import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.environment.Floor;
 
 import static mindustry.Vars.tilesize;
@@ -100,6 +102,9 @@ public class CastleRooms {
 
 
     public static class BlockRoom extends Room {
+
+        public static ObjectMap<Turret, Integer> turretCosts;
+
         public Block block;
         public Team team;
 
@@ -119,6 +124,29 @@ public class CastleRooms {
             this(block, team, x, y, cost, block.size + 1);
         }
 
+        public static void load() {
+            turretCosts = ObjectMap.of(
+                    Blocks.duo, 100,
+                    Blocks.scatter, 150,
+                    Blocks.scorch, 150,
+                    Blocks.hail, 200,
+                    Blocks.wave, 250,
+                    Blocks.lancer, 350,
+                    Blocks.arc, 150,
+                    Blocks.parallax, 250,
+                    Blocks.swarmer, 1400,
+                    Blocks.salvo, 500,
+                    Blocks.segment, 750,
+                    Blocks.tsunami, 800,
+                    Blocks.fuse, 1250,
+                    Blocks.ripple, 1200,
+                    Blocks.cyclone, 1700,
+                    Blocks.foreshadow, 4000,
+                    Blocks.spectre, 3000,
+                    Blocks.meltdown, 2700
+            );
+        }
+
         @Override
         public void buy(PlayerData data) {
             super.buy(data);
@@ -129,7 +157,7 @@ public class CastleRooms {
                 world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random());
             } else if (block instanceof LiquidTurret turret) {
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
-                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random(Liquids.slag));
+                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random());
             } else if (block instanceof LaserTurret) {
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
                 world.build(x, centrey).configure(Liquids.cryofluid);
