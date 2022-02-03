@@ -43,10 +43,7 @@ public class CastleGenerator implements Cons<Tiles> {
     public void get(Tiles tiles) {
         for (int x = 0; x < tiles.width; x++) {
             for (int y = 0; y < tiles.height; y++) {
-                Tile tile = tiles.getc(x, y);
-                tile.remove();
-                tile.setFloor(Blocks.air.asFloor());
-                tile.setBlock(Blocks.space);
+                tiles.set(x, y, new Tile(x, y, Blocks.space, Blocks.air, Blocks.air));
             }
         }
 
