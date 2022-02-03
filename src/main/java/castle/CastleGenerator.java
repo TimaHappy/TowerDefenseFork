@@ -37,6 +37,9 @@ public class CastleGenerator implements Cons<Tiles> {
 
     public void run() {
         world.loadGenerator(width, height, this);
+        world.tiles.eachTile(tile -> {
+            if (tile.build != null) tile.build.kill();
+        });
     }
 
     @Override

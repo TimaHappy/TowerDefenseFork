@@ -55,13 +55,12 @@ public class CastleLogic {
         });
 
         logic.reset();
-        Call.worldDataBegin();
-
         CastleRooms.rooms.clear();
         PlayerData.datas().each(PlayerData::reset);
 
         CastleGenerator generator = new CastleGenerator(map);
         generator.run();
+        Call.worldDataBegin();
 
         y = (world.height() - CastleRooms.size * 6) / 2f * tilesize;
         endy = CastleRooms.size * 6 * tilesize;
