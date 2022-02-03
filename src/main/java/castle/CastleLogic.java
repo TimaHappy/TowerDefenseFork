@@ -16,6 +16,11 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
 import mindustry.world.Tile;
+import mindustry.world.blocks.defense.turrets.Turret;
+import mindustry.world.blocks.logic.LogicBlock;
+import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.blocks.units.CommandCenter;
+import mindustry.world.blocks.units.RepairPoint;
 
 import static mindustry.Vars.*;
 
@@ -92,8 +97,14 @@ public class CastleLogic {
 
         rules.waves = false;
         rules.waveTimer = false;
-        rules.revealedBlocks.addAll(Blocks.duct, Blocks.ductRouter, Blocks.ductBridge, Blocks.thruster, Blocks.scrapWall, Blocks.scrapWallLarge, Blocks.scrapWallHuge, Blocks.scrapWallGigantic);
         rules.modeName = "Castle";
+
+        content.blocks().each(block -> {
+            if (block instanceof CoreBlock || block instanceof Turret || block instanceof CommandCenter || block instanceof RepairPoint || block instanceof LogicBlock || block == Blocks.airFactory) {
+                block.health *= 2;
+                rules.bannedBlocks.add(block);
+            }
+        });
 
         return rules;
     }
