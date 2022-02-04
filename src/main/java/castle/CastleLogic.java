@@ -7,14 +7,12 @@ import castle.CastleRooms.Room;
 import castle.components.Bundle;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
-import mindustry.game.Gamemode;
 import mindustry.game.Rules;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Flyingc;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.maps.Map;
 import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.logic.LogicBlock;
@@ -47,7 +45,7 @@ public class CastleLogic {
         }
     }
 
-    public static void restart(Map map) {
+    public static void restart() {
         Seq<Player> players = new Seq<>();
         Groups.player.each(player -> {
             players.add(player);
@@ -58,7 +56,7 @@ public class CastleLogic {
         CastleRooms.rooms.clear();
         PlayerData.datas().each(PlayerData::reset);
 
-        CastleGenerator generator = new CastleGenerator(map);
+        CastleGenerator generator = new CastleGenerator();
         generator.run();
         Call.worldDataBegin();
 
@@ -67,7 +65,7 @@ public class CastleLogic {
         x = -5 * tilesize;
         endx = (5 + world.width()) * tilesize;
 
-        state.rules = applyRules(map.applyRules(Gamemode.pvp));
+        state.rules = getRules();
         logic.play();
 
         players.each(player -> netServer.sendWorldData(player));
@@ -77,13 +75,13 @@ public class CastleLogic {
         Events.fire("CastleGameOver");
         Call.updateGameOver(team);
 
-        Map map = maps.getShuffleMode().next(Gamemode.pvp, state.map);
-
-        Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format("events.gameover", Bundle.findLocale(p), colorizedTeam(team), map.name())));
-        Timer.schedule(() -> restart(map), 10f);
+        Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format("events.gameover", Bundle.findLocale(p), colorizedTeam(team))));
+        Timer.schedule(CastleLogic::restart, 10f);
     }
 
-    public static Rules applyRules(Rules rules) {
+    public static Rules getRules() {
+        Rules rules = new Rules();
+
         rules.teams.get(Team.sharded).cheat = true;
         rules.teams.get(Team.blue).cheat = true;
 

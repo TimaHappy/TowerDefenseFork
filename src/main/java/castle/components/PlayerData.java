@@ -62,8 +62,8 @@ public class PlayerData {
                 });
             }
 
-            if (player.unit().spawnedByCore && player.unit().type != UnitTypes.risso && player.team().core() != null) {
-                Unit unit = UnitTypes.risso.spawn(player.team(), player.team().core().x + 30, player.team().core().y + Mathf.random(-40, 40));
+            if (player.unit().spawnedByCore && player.unit().type != UnitTypes.mega && player.team().core() != null) {
+                Unit unit = UnitTypes.mega.spawn(player.team(), player.team().core().x + 30, player.team().core().y + Mathf.random(-40, 40));
                 player.unit(unit);
                 unit.spawnedByCore(true);
             }

@@ -17,14 +17,12 @@ import mindustry.game.EventType.BlockDestroyEvent;
 import mindustry.game.EventType.PlayerJoin;
 import mindustry.game.EventType.PlayerLeave;
 import mindustry.game.EventType.UnitDestroyEvent;
-import mindustry.game.Gamemode;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
 import mindustry.world.blocks.defense.turrets.Turret;
-import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.RepairPoint;
@@ -98,7 +96,7 @@ public class Main extends Plugin {
 
         Timer.schedule(CastleLogic::update, 0f, 0.01f);
 
-        CastleLogic.restart(maps.getShuffleMode().next(Gamemode.pvp, state.map));
+        CastleLogic.restart();
         netServer.openServer();
     }
 
