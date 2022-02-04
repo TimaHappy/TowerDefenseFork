@@ -92,7 +92,8 @@ public class CastleRooms {
                     Floor floor = (x == 0 || y == 0 || x == size || y == size ? Blocks.metalFloor5 : Blocks.metalFloor).asFloor();
                     Tile tile = tiles.getc(this.x + x, this.y + y);
                     if (tile != null) {
-                        Time.runTask(10f, () -> tile.setFloorNet(floor));
+                        // TODO понять нахера тут был remove()
+                        tile.setFloor(floor);
                     }
                 }
             }

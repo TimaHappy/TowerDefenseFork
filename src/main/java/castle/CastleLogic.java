@@ -13,7 +13,6 @@ import mindustry.gen.Call;
 import mindustry.gen.Flyingc;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.storage.CoreBlock;
@@ -24,20 +23,12 @@ import static mindustry.Vars.*;
 
 public class CastleLogic {
 
-    public static float x = 0, y = 0, endx = 0, endy = 0;
-
     public static void update() {
         if (!world.isGenerating() && !state.serverPaused && !state.gameOver) {
             PlayerData.datas().each(PlayerData::update);
             CastleRooms.rooms.each(Room::update);
 
-            Groups.unit.intersect(x, y, endx, endy, Call::unitDespawn);
-
             Groups.unit.each(Flyingc::isFlying, unit -> {
-                if (!placeCheck(unit.team, unit.tileOn())) {
-                    unit.damagePierce(unit.maxHealth / 250f);
-                }
-
                 if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0) {
                     Call.unitDespawn(unit);
                 }
@@ -59,11 +50,6 @@ public class CastleLogic {
         CastleGenerator generator = new CastleGenerator();
         generator.run();
         Call.worldDataBegin();
-
-        y = (world.height() - CastleRooms.size * 6) / 2f * tilesize;
-        endy = CastleRooms.size * 6 * tilesize;
-        x = -5 * tilesize;
-        endx = (5 + world.width()) * tilesize;
 
         state.rules = getRules();
         logic.play();
@@ -102,14 +88,6 @@ public class CastleLogic {
         });
 
         return rules;
-    }
-
-    public static boolean placeCheck(Team team, Tile tile) {
-        return tile == null || (team == Team.sharded ? tile.worldy() < y : tile.worldy() > y + endy);
-    }
-
-    public static boolean placeCheck(Player player) {
-        return placeCheck(player.team(), player.tileOn());
     }
 
     public static String colorizedTeam(Team team) {

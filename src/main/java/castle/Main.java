@@ -57,7 +57,7 @@ public class Main extends Plugin {
 
         netServer.admins.addActionFilter(action -> {
             if (action.type == ActionType.placeBlock || action.type == ActionType.breakBlock) {
-                if (action.tile == null || action.tile.floor() == Blocks.metalFloor.asFloor() || action.tile.floor() == Blocks.metalFloor5.asFloor() || !CastleLogic.placeCheck(action.player.team(), action.tile)) return false;
+                if (action.tile == null || action.tile.floor() == Blocks.metalFloor.asFloor() || action.tile.floor() == Blocks.metalFloor5.asFloor()) return false;
 
                 boolean[] nearbyPanels = {true};
                 Geometry.circle(action.tile.x, action.tile.y, 12, (x, y) -> {

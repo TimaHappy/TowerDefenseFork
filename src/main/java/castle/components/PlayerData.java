@@ -5,7 +5,6 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
 import arc.util.Strings;
-import castle.CastleLogic;
 import castle.CastleRooms;
 import castle.CastleRooms.BlockRoom;
 import mindustry.content.UnitTypes;
@@ -73,8 +72,6 @@ public class PlayerData {
             StringBuilder hud = new StringBuilder(Bundle.format("commands.hud.display", Bundle.findLocale(player), money, income));
             if (bonus > 1f)
                 hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100).length() > 5 ? String.valueOf((bonus - 1) * 100).substring(0, 6) : (bonus - 1) * 100));
-            if (!player.dead() && player.unit().isFlying() && !CastleLogic.placeCheck(player))
-                hud.append(Bundle.format("commands.hud.fly-warning", Bundle.findLocale(player)));
             Call.setHudText(player.con, hud.toString());
         }
     }

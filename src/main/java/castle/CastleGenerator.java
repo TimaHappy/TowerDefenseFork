@@ -2,12 +2,9 @@ package castle;
 
 import arc.func.Cons;
 import arc.math.Mathf;
+import arc.math.geom.Geometry;
 import arc.util.Log;
-import arc.util.Time;
-import castle.CastleRooms.BlockRoom;
-import castle.CastleRooms.EffectRoom;
-import castle.CastleRooms.ItemRoom;
-import castle.CastleRooms.UnitRoom;
+import castle.CastleRooms.*;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
@@ -59,7 +56,7 @@ public class CastleGenerator implements Cons<Tiles> {
                 }
 
                 tiles.set(x, y, new Tile(x, y, floor, Blocks.air, block));
-                tiles.set(x, height - y - 1, new Tile(x, y, floor, Blocks.air, block));
+                tiles.set(x, height - y - 1, new Tile(x, height - y - 1, floor, Blocks.air, block));
             }
         }
 
@@ -69,11 +66,20 @@ public class CastleGenerator implements Cons<Tiles> {
             }
         }
 
-        tiles.getc(40, 40).setBlock(Blocks.coreShard, Team.sharded);
-        //tiles.getc(40, height - 40 - 1).setBlock(Blocks.coreShard, Team.blue);
+        tiles.getc(40, halfHeight / 2).setBlock(Blocks.coreShard, Team.sharded);
+        CastleRooms.rooms.add(new CoreRoom(Team.sharded, 38, halfHeight / 2 - 2, 5000));
+        tiles.getc(40, height - halfHeight / 2 - 1).setBlock(Blocks.coreShard, Team.blue);
+        CastleRooms.rooms.add(new CoreRoom(Team.blue, 38, height - halfHeight / 2 - 3, 5000));
 
-        CastleRooms.shardedSpawn = tiles.getc(width - width / 8, height - halfHeight / 2);
-        CastleRooms.blueSpawn = tiles.getc(width - width / 8, halfHeight / 2);
+        // TODO чета тут не чисто
+        CastleRooms.shardedSpawn = tiles.getc(width - 40, halfHeight / 2);
+        CastleRooms.blueSpawn = tiles.getc(width - 40, height - halfHeight / 2 - 1);
+
+        Geometry.circle(CastleRooms.shardedSpawn.x, CastleRooms.shardedSpawn.y, 8, (x, y) -> tiles.getc(x, y).setFloor(Blocks.darksandWater.asFloor()));
+
+        Geometry.circle(CastleRooms.blueSpawn.x, CastleRooms.blueSpawn.y, 8, (x, y) -> tiles.getc(x, y).setFloor(Blocks.darksandWater.asFloor()));
+
+        // Генерируем остальные комнаты
 
         generateShop();
 
@@ -83,56 +89,40 @@ public class CastleGenerator implements Cons<Tiles> {
     }
 
     /**
-     *     public void generateRooms(Tiles tiles) {
-     *         for (int x = 0; x < tiles.width; x++) {
-     *             for (int y = 0; y < tiles.height; y++) {
-     *                 Tile save = tiles.getc(x, y);
-     *                 Tile first = tiles.getc(x, y);
-     *                 Tile second = tiles.getc(x, tiles.height - y);
+     * public void generateRooms(Tiles tiles) {
      *
-     *                 if (save.isCenter()) {
-     *                     if (save.block() == Blocks.coreShard) {
-     *                         Time.runTask(6f, () -> {
-     *                             first.setNet(Blocks.coreShard, Team.sharded, 0);
-     *                             second.setNet(Blocks.coreShard, Team.blue, 0);
-     *                         });
-     *
-     *                         CastleRooms.rooms.add(new CoreRoom(Team.sharded, first.x - 2, first.y - 2, 5000));
-     *                         CastleRooms.rooms.add(new CoreRoom(Team.blue, second.x - 2, second.y - 2, 5000));
-     *                     }
-     *
-     *                     if (save.block() == Blocks.laserDrill && (save.overlay() == Blocks.oreCopper || save.overlay() == Blocks.oreTitanium || save.overlay() == Blocks.oreThorium)) {
-     *                         CastleRooms.rooms.add(new MinerRoom(new ItemStack(save.overlay().itemDrop, 48 - save.overlay().itemDrop.hardness * 8), Team.sharded, first.x, first.y, 1000 + save.overlay().itemDrop.hardness * 125));
-     *                         CastleRooms.rooms.add(new MinerRoom(new ItemStack(save.overlay().itemDrop, 48 - save.overlay().itemDrop.hardness * 8), Team.blue, second.x, second.y, 1000 + save.overlay().itemDrop.hardness * 125));
-     *                     }
-     *
-     *                     if (save.block() instanceof Turret turret) {
-     *                         CastleRooms.rooms.add(new BlockRoom(turret, Team.sharded, first.x, first.y, getTurretCost(turret)));
-     *                         CastleRooms.rooms.add(new BlockRoom(turret, Team.blue, second.x, second.y, getTurretCost(turret)));
-     *                     }
-     *
-     *                     if (save.block() instanceof CommandCenter center) {
-     *                         CastleRooms.rooms.add(new BlockRoom(center, Team.sharded, first.x, first.y, 750));
-     *                         CastleRooms.rooms.add(new BlockRoom(center, Team.blue, second.x, second.y, 750));
-     *                     }
-     *
-     *                     if (save.block() instanceof RepairPoint point) {
-     *                         CastleRooms.rooms.add(new BlockRoom(point, Team.sharded, first.x, first.y, point.size * point.size * 300));
-     *                         CastleRooms.rooms.add(new BlockRoom(point, Team.blue, second.x, second.y, point.size * point.size * 300));
-     *                     }
-     *
-     *                     if (save.floor() == Blocks.darkPanel2) {
-     *                         CastleRooms.shardedSpawn = first;
-     *                         CastleRooms.blueSpawn = second;
-     *                     }
-     *                 }
-     *             }
-     *         }
-     *
-     *         generateShop();
-     *
-     *         CastleRooms.rooms.each(room -> room.spawn(tiles));
-     *     }
+     * if (save.block() == Blocks.laserDrill && (save.overlay() == Blocks.oreCopper || save.overlay() == Blocks.oreTitanium || save.overlay() == Blocks.oreThorium)) {
+     * CastleRooms.rooms.add(new MinerRoom(new ItemStack(save.overlay().itemDrop, 48 - save.overlay().itemDrop.hardness * 8), Team.sharded, first.x, first.y, 1000 + save.overlay().itemDrop.hardness * 125));
+     * CastleRooms.rooms.add(new MinerRoom(new ItemStack(save.overlay().itemDrop, 48 - save.overlay().itemDrop.hardness * 8), Team.blue, second.x, second.y, 1000 + save.overlay().itemDrop.hardness * 125));
+     * }
+     * <p>
+     * if (save.block() instanceof Turret turret) {
+     * CastleRooms.rooms.add(new BlockRoom(turret, Team.sharded, first.x, first.y, getTurretCost(turret)));
+     * CastleRooms.rooms.add(new BlockRoom(turret, Team.blue, second.x, second.y, getTurretCost(turret)));
+     * }
+     * <p>
+     * if (save.block() instanceof CommandCenter center) {
+     * CastleRooms.rooms.add(new BlockRoom(center, Team.sharded, first.x, first.y, 750));
+     * CastleRooms.rooms.add(new BlockRoom(center, Team.blue, second.x, second.y, 750));
+     * }
+     * <p>
+     * if (save.block() instanceof RepairPoint point) {
+     * CastleRooms.rooms.add(new BlockRoom(point, Team.sharded, first.x, first.y, point.size * point.size * 300));
+     * CastleRooms.rooms.add(new BlockRoom(point, Team.blue, second.x, second.y, point.size * point.size * 300));
+     * }
+     * <p>
+     * if (save.floor() == Blocks.darkPanel2) {
+     * CastleRooms.shardedSpawn = first;
+     * CastleRooms.blueSpawn = second;
+     * }
+     * }
+     * }
+     * }
+     * <p>
+     * generateShop();
+     * <p>
+     * CastleRooms.rooms.each(room -> room.spawn(tiles));
+     * }
      */
 
     public void generateShop() {
@@ -194,6 +184,7 @@ public class CastleGenerator implements Cons<Tiles> {
         CastleRooms.rooms.add(new EffectRoom(effect, label, x, y, cost));
     }
 
+    // ?
     private int getTurretCost(Turret turret) {
         return BlockRoom.turretCosts.get(turret, 1000);
     }
