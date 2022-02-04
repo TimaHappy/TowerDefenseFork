@@ -3,22 +3,22 @@ package castle;
 import arc.func.Cons;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
+import arc.math.geom.Point2;
+import arc.struct.StringMap;
 import arc.util.Log;
 import castle.CastleRooms.*;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
-import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.game.Team;
+import mindustry.maps.Map;
 import mindustry.type.ItemStack;
-import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
-import mindustry.world.blocks.defense.turrets.Turret;
 
-import static mindustry.Vars.world;
+import static mindustry.Vars.*;
 
 public class CastleGenerator implements Cons<Tiles> {
 
@@ -66,68 +66,89 @@ public class CastleGenerator implements Cons<Tiles> {
             }
         }
 
-        tiles.getc(40, halfHeight / 2).setBlock(Blocks.coreShard, Team.sharded);
-        CastleRooms.rooms.add(new CoreRoom(Team.sharded, 38, halfHeight / 2 - 2, 5000));
-        tiles.getc(40, height - halfHeight / 2 - 1).setBlock(Blocks.coreShard, Team.blue);
-        CastleRooms.rooms.add(new CoreRoom(Team.blue, 38, height - halfHeight / 2 - 3, 5000));
+        // Генерируем ядра и точки появления врагов
+        Tile shardedCoreTile = tiles.getc(40, halfHeight / 2);
+        shardedCoreTile.setBlock(Blocks.coreShard, Team.sharded);
+        CastleRooms.rooms.add(new CoreRoom(Team.sharded, shardedCoreTile.x - 2, shardedCoreTile.y - 2, 5000));
+        CastleRooms.shardedSpawn = tiles.getc(width - shardedCoreTile.x, shardedCoreTile.y);
 
-        // TODO чета тут не чисто
-        CastleRooms.shardedSpawn = tiles.getc(width - 40, halfHeight / 2);
-        CastleRooms.blueSpawn = tiles.getc(width - 40, height - halfHeight / 2 - 1);
+        Tile blueCoreTile = tiles.getc(40, height - halfHeight / 2 - 1);
+        blueCoreTile.setBlock(Blocks.coreShard, Team.blue);
+        CastleRooms.rooms.add(new CoreRoom(Team.blue, blueCoreTile.x - 2, blueCoreTile.y - 2, 5000));
+        CastleRooms.blueSpawn = tiles.getc(width - blueCoreTile.x, blueCoreTile.y);
 
-        Geometry.circle(CastleRooms.shardedSpawn.x, CastleRooms.shardedSpawn.y, 8, (x, y) -> tiles.getc(x, y).setFloor(Blocks.darksandWater.asFloor()));
+        // Спавним буры для добычи ресурсов
+        generateDrills();
 
-        Geometry.circle(CastleRooms.blueSpawn.x, CastleRooms.blueSpawn.y, 8, (x, y) -> tiles.getc(x, y).setFloor(Blocks.darksandWater.asFloor()));
+        // Спавним комнаты с турелями
+        generateTurrets();
 
-        // Генерируем остальные комнаты
-
+        // Генерируем магазин с юнитами
         generateShop();
 
+        // Спавним комнаты и круги вокруг точек появления
         CastleRooms.rooms.each(room -> room.spawn(tiles));
+
+        Geometry.circle(CastleRooms.shardedSpawn.x, CastleRooms.shardedSpawn.y, 8, (x, y) -> tiles.getc(x, y).setFloor(Blocks.darksandWater.asFloor()));
+        Geometry.circle(CastleRooms.blueSpawn.x, CastleRooms.blueSpawn.y, 8, (x, y) -> tiles.getc(x, y).setFloor(Blocks.darksandWater.asFloor()));
+
+        state.map = new Map(StringMap.of("name", "The Castle", "author", "[cyan]Darkness", "description", "A map for Castle Wars gamemode. Automatically generated."));
 
         Log.info("Генерация завершена.");
     }
 
+    public void generateDrills() {
+        Point2 first = new Point2(7, 26);
+        Point2 second = new Point2(15, height - 31);
+        int distance = 8;
+
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.sharded, first.x, first.y, 750 + Items.copper.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.blue, first.x, second.y, 750 + Items.copper.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.sharded, second.x, first.y, 750 + Items.copper.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.blue, second.x, second.y, 750 + Items.copper.hardness * 125));
+
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.sharded, first.x, first.y + distance, 750 + Items.lead.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.blue, first.x, second.y - distance, 750 + Items.lead.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.sharded, second.x, first.y + distance, 750 + Items.lead.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.blue, second.x, second.y - distance, 750 + Items.lead.hardness * 125));
+
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.sharded, first.x, first.y + distance * 2, 750 + Items.titanium.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.blue, first.x, second.y - distance * 2, 750 + Items.titanium.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.sharded, second.x, first.y + distance * 2, 750 + Items.titanium.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.blue, second.x, second.y - distance * 2, 750 + Items.titanium.hardness * 125));
+
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.sharded, first.x, first.y + distance * 3, 750 + Items.thorium.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.blue, first.x, second.y - distance * 3, 750 + Items.thorium.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.sharded, second.x, first.y + distance * 3, 750 + Items.thorium.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.blue, second.x, second.y - distance * 3, 750 + Items.thorium.hardness * 125));
+    }
+
+    public void generateTurrets() {
+        Point2 first = new Point2(38, 26);
+        Point2 second = new Point2(38, height - 31);
+        int horizontalDistance = 24;
+        int verticalDistance = 23;
+
+        CastleRooms.rooms.add(new BlockRoom(Blocks.commandCenter, Team.sharded, first.x, first.y, 750));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.commandCenter, Team.blue, second.x, second.y, 750));
+
+        CastleRooms.rooms.add(new BlockRoom(Blocks.repairTurret, Team.sharded, first.x, first.y + verticalDistance, 1200));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.repairTurret, Team.blue, second.x, second.y - verticalDistance, 1200));
+    }
+
+
     /**
-     * public void generateRooms(Tiles tiles) {
-     *
-     * if (save.block() == Blocks.laserDrill && (save.overlay() == Blocks.oreCopper || save.overlay() == Blocks.oreTitanium || save.overlay() == Blocks.oreThorium)) {
-     * CastleRooms.rooms.add(new MinerRoom(new ItemStack(save.overlay().itemDrop, 48 - save.overlay().itemDrop.hardness * 8), Team.sharded, first.x, first.y, 1000 + save.overlay().itemDrop.hardness * 125));
-     * CastleRooms.rooms.add(new MinerRoom(new ItemStack(save.overlay().itemDrop, 48 - save.overlay().itemDrop.hardness * 8), Team.blue, second.x, second.y, 1000 + save.overlay().itemDrop.hardness * 125));
-     * }
-     * <p>
      * if (save.block() instanceof Turret turret) {
      * CastleRooms.rooms.add(new BlockRoom(turret, Team.sharded, first.x, first.y, getTurretCost(turret)));
      * CastleRooms.rooms.add(new BlockRoom(turret, Team.blue, second.x, second.y, getTurretCost(turret)));
-     * }
-     * <p>
-     * if (save.block() instanceof CommandCenter center) {
-     * CastleRooms.rooms.add(new BlockRoom(center, Team.sharded, first.x, first.y, 750));
-     * CastleRooms.rooms.add(new BlockRoom(center, Team.blue, second.x, second.y, 750));
-     * }
-     * <p>
-     * if (save.block() instanceof RepairPoint point) {
-     * CastleRooms.rooms.add(new BlockRoom(point, Team.sharded, first.x, first.y, point.size * point.size * 300));
-     * CastleRooms.rooms.add(new BlockRoom(point, Team.blue, second.x, second.y, point.size * point.size * 300));
-     * }
-     * <p>
-     * if (save.floor() == Blocks.darkPanel2) {
-     * CastleRooms.shardedSpawn = first;
-     * CastleRooms.blueSpawn = second;
-     * }
-     * }
-     * }
-     * }
-     * <p>
-     * generateShop();
-     * <p>
-     * CastleRooms.rooms.each(room -> room.spawn(tiles));
-     * }
+     *
+     * addEffectRoom(StatusEffects.overdrive, "Overdrive\neffect", x + distance * 12, y + 2 + distance * 2 + CastleRooms.size + 2, 2500);
+     * addEffectRoom(StatusEffects.boss, "Boss\neffect", x + distance * 13, y + 2 + distance * 2 + CastleRooms.size + 2, 5000);
+     * addEffectRoom(StatusEffects.shielded, "Shield\neffect", x + distance * 14, y + 2 + distance * 2 + CastleRooms.size + 2, 7500);
      */
 
     public void generateShop() {
-        int x = 7, y = halfHeight + 2;
-        int distance = CastleRooms.size + 2;
+        int x = 7, y = halfHeight + 2, distance = CastleRooms.size + 2;
 
         addUnitRoom(UnitTypes.dagger, 0, x, y + 2, 100);
         addUnitRoom(UnitTypes.mace, 1, x + distance, y + 2, 150);
@@ -154,21 +175,16 @@ public class CastleGenerator implements Cons<Tiles> {
         addUnitRoom(UnitTypes.omura, 65, x + distance * 9, y + 2 + distance * 2, 10000);
 
         addUnitRoom(UnitTypes.retusa, 1, x + distance * 10, y + 2, 200);
-        addUnitRoom(UnitTypes.oxynoe, 3, x + distance * 11, y + 2, 525);
-        addUnitRoom(UnitTypes.cyerce, 9, x + distance * 12, y + 2, 1450);
+        addUnitRoom(UnitTypes.oxynoe, 3, x + distance * 11, y + 2, 500);
+        addUnitRoom(UnitTypes.cyerce, 9, x + distance * 12, y + 2, 1400);
         addUnitRoom(UnitTypes.aegires, 25, x + distance * 13, y + 2, 5000);
         addUnitRoom(UnitTypes.navanax, 65, x + distance * 14, y + 2, 10000);
 
-        addItemRoom(new ItemStack(Items.copper, 240), x + distance * 10, y + 2 + distance * 2, 100);
-        addItemRoom(new ItemStack(Items.silicon, 240), x + distance * 10, y + 2 + distance * 2 + CastleRooms.size + 2, 150);
-        addItemRoom(new ItemStack(Items.titanium, 240), x + distance * 11, y + 2 + distance * 2, 200);
-        addItemRoom(new ItemStack(Items.pyratite, 120), x + distance * 11, y + 2 + distance * 2 + CastleRooms.size + 2, 200);
-        addItemRoom(new ItemStack(Items.plastanium, 120), x + distance * 12, y + 2 + distance * 2, 300);
-        addEffectRoom(StatusEffects.overdrive, "Overdrive\neffect", x + distance * 12, y + 2 + distance * 2 + CastleRooms.size + 2, 2500);
-        addItemRoom(new ItemStack(Items.phaseFabric, 120), x + distance * 13, y + 2 + distance * 2, 400);
-        addEffectRoom(StatusEffects.boss, "Boss\neffect", x + distance * 13, y + 2 + distance * 2 + CastleRooms.size + 2, 5000);
-        addItemRoom(new ItemStack(Items.surgeAlloy, 240), x + distance * 14, y + 2 + distance * 2, 500);
-        addEffectRoom(StatusEffects.shielded, "Shield\neffect", x + distance * 14, y + 2 + distance * 2 + CastleRooms.size + 2, 7500);
+        addUnitRoom(UnitTypes.flare, 0, x + distance * 10, y + 2 + distance * 2, 100);
+        addUnitRoom(UnitTypes.horizon, 1, x + distance * 11, y + 2 + distance * 2, 250);
+        addUnitRoom(UnitTypes.zenith, 5, x + distance * 12, y + 2 + distance * 2, 1000);
+        addUnitRoom(UnitTypes.antumbra, 25, x + distance * 13, y + 2 + distance * 2, 4000);
+        addUnitRoom(UnitTypes.eclipse, 55, x + distance * 14, y + 2 + distance * 2, 10000);
     }
 
     private void addUnitRoom(UnitType type, int income, int x, int y, int cost) {
@@ -176,16 +192,11 @@ public class CastleGenerator implements Cons<Tiles> {
         CastleRooms.rooms.add(new UnitRoom(type, UnitRoom.UnitRoomType.defend, -income, x, y + CastleRooms.size + 2, cost));
     }
 
-    private void addItemRoom(ItemStack stack, int x, int y, int cost) {
-        CastleRooms.rooms.add(new ItemRoom(stack, x, y, cost));
-    }
+    //private void addEffectRoom(StatusEffect effect, String label, int x, int y, int cost) {
+    //    CastleRooms.rooms.add(new EffectRoom(effect, label, x, y, cost));
+    //}
 
-    private void addEffectRoom(StatusEffect effect, String label, int x, int y, int cost) {
-        CastleRooms.rooms.add(new EffectRoom(effect, label, x, y, cost));
-    }
-
-    // ?
-    private int getTurretCost(Turret turret) {
-        return BlockRoom.turretCosts.get(turret, 1000);
-    }
+    //private int getTurretCost(Turret turret) {
+    //    return BlockRoom.turretCosts.get(turret, 1000);
+    //}
 }

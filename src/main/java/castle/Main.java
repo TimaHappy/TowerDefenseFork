@@ -9,6 +9,7 @@ import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.CastleUnitDrops;
 import castle.components.PlayerData;
+import mindustry.ai.types.GroundAI;
 import mindustry.content.Blocks;
 import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
@@ -22,17 +23,20 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
-import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.storage.CoreBlock;
-import mindustry.world.blocks.units.CommandCenter;
-import mindustry.world.blocks.units.RepairPoint;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.netServer;
+import static mindustry.Vars.world;
 
 public class Main extends Plugin {
 
     @Override
     public void init() {
+        UnitTypes.flare.defaultController = GroundAI::new;
+        UnitTypes.horizon.defaultController = GroundAI::new;
+        UnitTypes.zenith.defaultController = GroundAI::new;
+        UnitTypes.antumbra.defaultController = GroundAI::new;
+        UnitTypes.eclipse.defaultController = GroundAI::new;
         UnitTypes.omura.abilities.clear();
         UnitTypes.corvus.abilities.clear();
         UnitTypes.arkyid.abilities.clear();
@@ -42,12 +46,6 @@ public class Main extends Plugin {
                 fieldAbility.status = StatusEffects.freezing;
                 fieldAbility.statusDuration = 24f;
                 fieldAbility.damage = 12f;
-            }
-        });
-
-        content.blocks().each(block -> {
-            if (block instanceof Turret || block instanceof CommandCenter || block instanceof RepairPoint) {
-                block.health *= 4;
             }
         });
 

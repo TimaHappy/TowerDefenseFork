@@ -4,7 +4,6 @@ import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
-import arc.util.Time;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
@@ -155,16 +154,13 @@ public class CastleRooms {
             world.tile(centrex, centrey).setNet(block, team, 0);
             if (block instanceof ItemTurret turret) {
                 world.tile(x, centrey).setNet(Blocks.itemSource, team, 0);
-                world.build(centrex, centrey).configure(turret.ammoTypes.keys().toSeq().random());
-                Time.runTask(60f, world.tile(x, y)::removeNet);
+                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random());
             } else if (block instanceof LiquidTurret turret) {
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
-                world.build(centrex, centrey).configure(turret.ammoTypes.keys().toSeq().random());
-                Time.runTask(60f, world.tile(x, y)::removeNet);
+                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random());
             } else if (block instanceof LaserTurret || block instanceof RepairPoint) {
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
-                world.build(centrex, centrey).configure(Liquids.cryofluid);
-                Time.runTask(60f, world.tile(x, y)::removeNet);
+                world.build(x, centrey).configure(Liquids.cryofluid);
             }
 
             bought = true;

@@ -2,6 +2,7 @@ package castle;
 
 import arc.Events;
 import arc.struct.Seq;
+import arc.util.Log;
 import arc.util.Timer;
 import castle.CastleRooms.Room;
 import castle.components.Bundle;
@@ -61,6 +62,7 @@ public class CastleLogic {
         Events.fire("CastleGameOver");
         Call.updateGameOver(team);
 
+        Log.info("Игра окончена. Генерирую карту заново...");
         Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format("events.gameover", Bundle.findLocale(p), colorizedTeam(team))));
         Timer.schedule(CastleLogic::restart, 10f);
     }
@@ -79,7 +81,7 @@ public class CastleLogic {
 
         rules.waves = false;
         rules.waveTimer = false;
-        rules.modeName = "Castle";
+        rules.modeName = "Wars";
 
         content.blocks().each(block -> {
             if (block instanceof CoreBlock || block instanceof Turret || block instanceof CommandCenter || block instanceof RepairPoint || block instanceof LogicBlock || block == Blocks.airFactory) {

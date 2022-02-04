@@ -44,6 +44,12 @@ public class CastleIcons {
                 UnitTypes.aegires, Iconc.unitAegires,
                 UnitTypes.navanax, Iconc.unitNavanax,
 
+                UnitTypes.flare, Iconc.unitFlare,
+                UnitTypes.horizon, Iconc.unitHorizon,
+                UnitTypes.zenith, Iconc.unitZenith,
+                UnitTypes.antumbra, Iconc.unitAntumbra,
+                UnitTypes.eclipse, Iconc.unitEclipse,
+
                 Blocks.coreNucleus, Iconc.blockCoreNucleus,
                 Blocks.coreFoundation, Iconc.blockCoreFoundation,
                 Blocks.coreShard, Iconc.blockCoreShard,
