@@ -1,6 +1,7 @@
 package castle;
 
 import arc.Events;
+import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Timer;
 import castle.components.Bundle;
@@ -49,7 +50,10 @@ public class Main extends Plugin {
         CastleIcons.load();
         CastleUnitDrops.load();
 
-        netServer.admins.addActionFilter(action -> (action.type != ActionType.placeBlock && action.type != ActionType.breakBlock) || (action.tile != null && action.tile.floor() != Blocks.metalFloor && action.tile.floor() != Blocks.darkPanel4 && action.tile.floor() != Blocks.darksandWater));
+        netServer.admins.addActionFilter(action -> {
+            if ((action.type != ActionType.placeBlock && action.type != ActionType.breakBlock) || action.tile == null) return true;
+            return !action.tile.getLinkedTilesAs(action.block, new Seq<>()).contains(tile -> tile.floor() == Blocks.metalFloor || tile.floor() == Blocks.darkPanel1 || tile.floor() == Blocks.darksandWater);
+        });
 
         Events.on(PlayerJoin.class, event -> PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player)));
 

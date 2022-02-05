@@ -197,7 +197,7 @@ public class CastleRooms {
                 for (int y = 0; y <= size; y++) {
                     Tile tile = tiles.getc(this.x + x, this.y + y);
                     if (tile != null) {
-                        tile.setFloor(Blocks.darkPanel4.asFloor());
+                        tile.setFloor(Blocks.darkPanel1.asFloor());
                     }
                 }
             }

@@ -130,32 +130,31 @@ public class CastleGenerator implements Cons<Tiles> {
     }
 
     public void generateTurrets() {
-        int horizontalDistance = 24;
-        int verticalDistance = 23;
+        int distance = 23;
 
         CastleRooms.rooms.add(new BlockRoom(Blocks.commandCenter, Team.sharded, turretX, shardedTurretY, 750));
         CastleRooms.rooms.add(new BlockRoom(Blocks.commandCenter, Team.blue, turretX, blueTurretY, 750));
 
-        CastleRooms.rooms.add(new BlockRoom(Blocks.repairTurret, Team.sharded, turretX, shardedTurretY + verticalDistance, 1200));
-        CastleRooms.rooms.add(new BlockRoom(Blocks.repairTurret, Team.blue, turretX, blueTurretY - verticalDistance, 1200));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.repairTurret, Team.sharded, turretX, shardedTurretY + distance, 1200));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.repairTurret, Team.blue, turretX, blueTurretY - distance, 1200));
 
-        CastleRooms.rooms.add(new BlockRoom(Blocks.foreshadow, Team.sharded, turretX + horizontalDistance, shardedTurretY - 8, 4000));
-        CastleRooms.rooms.add(new BlockRoom(Blocks.foreshadow, Team.blue, turretX + horizontalDistance, blueTurretY + 6, 4000));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.foreshadow, Team.sharded, turretX, shardedTurretY - 8, 4000));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.foreshadow, Team.blue, turretX, blueTurretY + 6, 4000));
 
-        CastleRooms.rooms.add(new BlockRoom(Blocks.spectre, Team.sharded, turretX + horizontalDistance, shardedTurretY + verticalDistance + 6, 3000));
-        CastleRooms.rooms.add(new BlockRoom(Blocks.spectre, Team.blue, turretX + horizontalDistance, blueTurretY - verticalDistance - 8, 3000));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.spectre, Team.sharded, turretX, shardedTurretY + distance + 6, 3000));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.spectre, Team.blue, turretX, blueTurretY - distance - 8, 3000));
 
-        // cyclone
+        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.sharded, turretX + 24, shardedTurretY, 350));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.blue, turretX + 24, blueTurretY, 350));
 
-        // ripple
+        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.sharded, turretX + 24, shardedTurretY + distance, 350));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.blue, turretX + 24, blueTurretY - distance, 350));
 
-        // swarmer
+        CastleRooms.rooms.add(new BlockRoom(Blocks.ripple, Team.sharded, turretX + 24, shardedTurretY - 7, 1500));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.ripple, Team.blue, turretX + 24, blueTurretY + 6, 1500));
 
-        // salvo
-
-        // lancer
-
-        // hail
+        CastleRooms.rooms.add(new BlockRoom(Blocks.cyclone, Team.sharded, turretX + 24, shardedTurretY + distance + 6, 1750));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.cyclone, Team.blue, turretX + 24, blueTurretY - distance - 7, 1750));
     }
 
     public void generateShop() {
@@ -202,24 +201,4 @@ public class CastleGenerator implements Cons<Tiles> {
         CastleRooms.rooms.add(new UnitRoom(type, UnitRoom.UnitRoomType.attack, income, x, y, cost));
         CastleRooms.rooms.add(new UnitRoom(type, UnitRoom.UnitRoomType.defend, -income, x, y + CastleRooms.size + 2, cost));
     }
-
-    //                    Blocks.duo, 100,
-    //                    Blocks.scatter, 150,
-    //                    Blocks.scorch, 150,
-    //                    Blocks.hail, 200,
-    //                    Blocks.wave, 250,
-    //                    Blocks.lancer, 350,
-    //                    Blocks.arc, 150,
-    //                    Blocks.parallax, 250,
-    //                    Blocks.swarmer, 1400,
-    //                    Blocks.salvo, 500,
-    //                    Blocks.segment, 750,
-    //                    Blocks.tsunami, 1000,
-    //                    Blocks.fuse, 1250,
-    //                    Blocks.ripple, 1200,
-    //                    Blocks.cyclone, 1700,
-    //                    Blocks.foreshadow, 4000,
-    //                    Blocks.spectre, 3000,
-    //                    Blocks.meltdown, 2700
-
 }
