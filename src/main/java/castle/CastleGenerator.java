@@ -3,7 +3,6 @@ package castle;
 import arc.func.Cons;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
-import arc.math.geom.Point2;
 import arc.struct.StringMap;
 import arc.util.Log;
 import castle.CastleRooms.*;
@@ -22,46 +21,53 @@ import static mindustry.Vars.*;
 
 public class CastleGenerator implements Cons<Tiles> {
 
-    public static final int width = 360;
+    // Все переменные для генерации
+    public static final int worldWidth = 360;
     public static final int halfHeight = 80;
-    public static final int height = halfHeight * 2 + CastleRooms.size * 4 + 11;
+    public static final int worldHeight = halfHeight * 2 + CastleRooms.size * 4 + 11;
 
-    public static final int borderLength = 3;
+    public static final int border = 3, waterIndent = 25;
+
+    public static final int drillX = 7, shardedDrillY = 26, blueDrillY = worldHeight - 31;
+
+    public static final int turretX = 38, shardedTurretY = 27, blueTurretY = worldHeight - 31;
+
+    public static final float pineChance = 0.01f;
 
     public void run() {
-        world.loadGenerator(width, height, this);
+        world.loadGenerator(worldWidth, worldHeight, this);
     }
 
     @Override
     public void get(Tiles tiles) {
-        for (int x = 0; x < width; x++) {
+        for (int x = 0; x < worldWidth; x++) {
             for (int y = 0; y < halfHeight; y++) {
                 Block block = Blocks.air;
                 Block floor = Blocks.grass;
 
-                if (y < borderLength || y > halfHeight - borderLength - 1 || x < borderLength || x > width - borderLength - 1) {
+                if (y < border || y > halfHeight - border - 1 || x < border || x > worldWidth - border - 1) {
                     block = Blocks.stoneWall;
                 }
 
-                if (y > 25 && y < halfHeight - 25) {
+                if (y > waterIndent && y < halfHeight - waterIndent) {
                     floor = Blocks.sandWater;
                 }
 
-                if (y == borderLength || y == halfHeight - borderLength - 1) {
+                if (y == border || y == halfHeight - border - 1) {
                     floor = Blocks.cryofluid;
                 }
 
-                if (block == Blocks.air && floor == Blocks.grass && Mathf.chance(0.01f)) {
+                if (block == Blocks.air && floor == Blocks.grass && Mathf.chance(pineChance)) {
                     block = Blocks.pine;
                 }
 
                 tiles.set(x, y, new Tile(x, y, floor, Blocks.air, block));
-                tiles.set(x, height - y - 1, new Tile(x, height - y - 1, floor, Blocks.air, block));
+                tiles.set(x, worldHeight - y - 1, new Tile(x, worldHeight - y - 1, floor, Blocks.air, block));
             }
         }
 
-        for (int x = 0; x < width; x++) {
-            for (int y = halfHeight; y < height - halfHeight; y++) {
+        for (int x = 0; x < worldWidth; x++) {
+            for (int y = halfHeight; y < worldHeight - halfHeight; y++) {
                 tiles.set(x, y, new Tile(x, y, Blocks.space, Blocks.air, Blocks.air));
             }
         }
@@ -70,12 +76,12 @@ public class CastleGenerator implements Cons<Tiles> {
         Tile shardedCoreTile = tiles.getc(40, halfHeight / 2);
         shardedCoreTile.setBlock(Blocks.coreShard, Team.sharded);
         CastleRooms.rooms.add(new CoreRoom(Team.sharded, shardedCoreTile.x - 2, shardedCoreTile.y - 2, 5000));
-        CastleRooms.shardedSpawn = tiles.getc(width - shardedCoreTile.x, shardedCoreTile.y);
+        CastleRooms.shardedSpawn = tiles.getc(worldWidth - shardedCoreTile.x, shardedCoreTile.y);
 
-        Tile blueCoreTile = tiles.getc(40, height - halfHeight / 2 - 1);
+        Tile blueCoreTile = tiles.getc(40, worldHeight - halfHeight / 2 - 1);
         blueCoreTile.setBlock(Blocks.coreShard, Team.blue);
         CastleRooms.rooms.add(new CoreRoom(Team.blue, blueCoreTile.x - 2, blueCoreTile.y - 2, 5000));
-        CastleRooms.blueSpawn = tiles.getc(width - blueCoreTile.x, blueCoreTile.y);
+        CastleRooms.blueSpawn = tiles.getc(worldWidth - blueCoreTile.x, blueCoreTile.y);
 
         // Спавним буры для добычи ресурсов
         generateDrills();
@@ -98,47 +104,60 @@ public class CastleGenerator implements Cons<Tiles> {
     }
 
     public void generateDrills() {
-        Point2 first = new Point2(7, 26);
-        Point2 second = new Point2(15, height - 31);
         int distance = 8;
 
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.sharded, first.x, first.y, 750 + Items.copper.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.blue, first.x, second.y, 750 + Items.copper.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.sharded, second.x, first.y, 750 + Items.copper.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.blue, second.x, second.y, 750 + Items.copper.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.sharded, drillX, shardedDrillY, 250 + Items.copper.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.blue, drillX, blueDrillY, 250 + Items.copper.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.sharded, drillX + distance, shardedDrillY, 250 + Items.copper.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.copper, 48 - Items.copper.hardness * 8), Team.blue, drillX + distance, blueDrillY, 250 + Items.copper.hardness * 250));
 
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.sharded, first.x, first.y + distance, 750 + Items.lead.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.blue, first.x, second.y - distance, 750 + Items.lead.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.sharded, second.x, first.y + distance, 750 + Items.lead.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.blue, second.x, second.y - distance, 750 + Items.lead.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.sharded, drillX, shardedDrillY + distance, 250 + Items.lead.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.blue, drillX, blueDrillY - distance, 250 + Items.lead.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.sharded, drillX + distance, shardedDrillY + distance, 250 + Items.lead.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.lead, 48 - Items.lead.hardness * 8), Team.blue, drillX + distance, blueDrillY - distance, 250 + Items.lead.hardness * 250));
 
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.sharded, first.x, first.y + distance * 2, 750 + Items.titanium.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.blue, first.x, second.y - distance * 2, 750 + Items.titanium.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.sharded, second.x, first.y + distance * 2, 750 + Items.titanium.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.blue, second.x, second.y - distance * 2, 750 + Items.titanium.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.sharded, drillX, shardedDrillY + distance * 2, 250 + Items.titanium.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.blue, drillX, blueDrillY - distance * 2, 250 + Items.titanium.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.sharded, drillX + distance, shardedDrillY + distance * 2, 250 + Items.titanium.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.titanium, 48 - Items.titanium.hardness * 8), Team.blue, drillX + distance, blueDrillY - distance * 2, 250 + Items.titanium.hardness * 250));
 
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.sharded, first.x, first.y + distance * 3, 750 + Items.thorium.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.blue, first.x, second.y - distance * 3, 750 + Items.thorium.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.sharded, second.x, first.y + distance * 3, 750 + Items.thorium.hardness * 125));
-        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.blue, second.x, second.y - distance * 3, 750 + Items.thorium.hardness * 125));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.sharded, drillX, shardedDrillY + distance * 3, 250 + Items.thorium.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.blue, drillX, blueDrillY - distance * 3, 250 + Items.thorium.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.sharded, drillX + distance, shardedDrillY + distance * 3, 250 + Items.thorium.hardness * 250));
+        CastleRooms.rooms.add(new MinerRoom(new ItemStack(Items.thorium, 48 - Items.thorium.hardness * 8), Team.blue, drillX + distance, blueDrillY - distance * 3, 250 + Items.thorium.hardness * 250));
     }
 
     public void generateTurrets() {
-        Point2 first = new Point2(38, 26);
-        Point2 second = new Point2(38, height - 31);
         int horizontalDistance = 24;
         int verticalDistance = 23;
 
-        CastleRooms.rooms.add(new BlockRoom(Blocks.commandCenter, Team.sharded, first.x, first.y, 750));
-        CastleRooms.rooms.add(new BlockRoom(Blocks.commandCenter, Team.blue, second.x, second.y, 750));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.commandCenter, Team.sharded, turretX, shardedTurretY, 750));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.commandCenter, Team.blue, turretX, blueTurretY, 750));
 
-        CastleRooms.rooms.add(new BlockRoom(Blocks.repairTurret, Team.sharded, first.x, first.y + verticalDistance, 1200));
-        CastleRooms.rooms.add(new BlockRoom(Blocks.repairTurret, Team.blue, second.x, second.y - verticalDistance, 1200));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.repairTurret, Team.sharded, turretX, shardedTurretY + verticalDistance, 1200));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.repairTurret, Team.blue, turretX, blueTurretY - verticalDistance, 1200));
+
+        CastleRooms.rooms.add(new BlockRoom(Blocks.foreshadow, Team.sharded, turretX + horizontalDistance, shardedTurretY - 8, 4000));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.foreshadow, Team.blue, turretX + horizontalDistance, blueTurretY + 6, 4000));
+
+        CastleRooms.rooms.add(new BlockRoom(Blocks.spectre, Team.sharded, turretX + horizontalDistance, shardedTurretY + verticalDistance + 6, 3000));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.spectre, Team.blue, turretX + horizontalDistance, blueTurretY - verticalDistance - 8, 3000));
+
+        // cyclone
+
+        // ripple
+
+        // swarmer
+
+        // salvo
+
+        // lancer
+
+        // hail
     }
 
 
     /**
-     * if (save.block() instanceof Turret turret) {
      * CastleRooms.rooms.add(new BlockRoom(turret, Team.sharded, first.x, first.y, getTurretCost(turret)));
      * CastleRooms.rooms.add(new BlockRoom(turret, Team.blue, second.x, second.y, getTurretCost(turret)));
      *
@@ -196,7 +215,22 @@ public class CastleGenerator implements Cons<Tiles> {
     //    CastleRooms.rooms.add(new EffectRoom(effect, label, x, y, cost));
     //}
 
-    //private int getTurretCost(Turret turret) {
-    //    return BlockRoom.turretCosts.get(turret, 1000);
-    //}
+    //                    Blocks.duo, 100,
+    //                    Blocks.scatter, 150,
+    //                    Blocks.scorch, 150,
+    //                    Blocks.hail, 200,
+    //                    Blocks.wave, 250,
+    //                    Blocks.lancer, 350,
+    //                    Blocks.arc, 150,
+    //                    Blocks.parallax, 250,
+    //                    Blocks.swarmer, 1400,
+    //                    Blocks.salvo, 500,
+    //                    Blocks.segment, 750,
+    //                    Blocks.tsunami, 1000,
+    //                    Blocks.fuse, 1250,
+    //                    Blocks.ripple, 1200,
+    //                    Blocks.cyclone, 1700,
+    //                    Blocks.foreshadow, 4000,
+    //                    Blocks.spectre, 3000,
+    //                    Blocks.meltdown, 2700
 }

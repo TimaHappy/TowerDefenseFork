@@ -102,9 +102,6 @@ public class CastleRooms {
 
 
     public static class BlockRoom extends Room {
-
-        public static ObjectMap<Turret, Integer> turretCosts;
-
         public Block block;
         public Team team;
 
@@ -122,29 +119,6 @@ public class CastleRooms {
 
         public BlockRoom(Block block, Team team, int x, int y, int cost) {
             this(block, team, x, y, cost, block.size + 1);
-        }
-
-        public static void load() {
-            turretCosts = ObjectMap.of(
-                    Blocks.duo, 100,
-                    Blocks.scatter, 150,
-                    Blocks.scorch, 150,
-                    Blocks.hail, 200,
-                    Blocks.wave, 250,
-                    Blocks.lancer, 350,
-                    Blocks.arc, 150,
-                    Blocks.parallax, 250,
-                    Blocks.swarmer, 1400,
-                    Blocks.salvo, 500,
-                    Blocks.segment, 750,
-                    Blocks.tsunami, 1000,
-                    Blocks.fuse, 1250,
-                    Blocks.ripple, 1200,
-                    Blocks.cyclone, 1700,
-                    Blocks.foreshadow, 4000,
-                    Blocks.spectre, 3000,
-                    Blocks.meltdown, 2700
-            );
         }
 
         @Override
@@ -270,33 +244,6 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && (income > 0 || data.income - income >= 0);
-        }
-    }
-
-
-
-    public static class ItemRoom extends Room {
-        public ItemStack stack;
-
-        public ItemRoom(ItemStack stack, int x, int y, int cost) {
-            super(x, y, cost, 4);
-            this.stack = stack;
-
-            this.label = "[white]" + stack.amount + "x" + CastleIcons.get(stack.item) + " [white]: [gray]" + cost;
-        }
-
-        @Override
-        public void buy(PlayerData data) {
-            super.buy(data);
-            Call.transferItemTo(Nulls.unit, stack.item, stack.amount, centrex * tilesize, centrey * tilesize, data.player.team().core());
-            if (stack.item == Items.plastanium) {
-                Call.transferItemTo(Nulls.unit, Items.metaglass, Mathf.ceil(stack.amount * 0.4f), centrex * tilesize, centrey * tilesize, data.player.team().core());
-            }
-        }
-
-        @Override
-        public boolean canBuy(PlayerData data) {
-            return super.canBuy(data) && data.player.team().core() != null;
         }
     }
 
