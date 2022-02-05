@@ -1,23 +1,19 @@
 package castle;
 
 import arc.math.Mathf;
-import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
-import mindustry.content.Items;
 import mindustry.content.Liquids;
-import mindustry.content.StatusEffects;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
 import mindustry.gen.Nulls;
 import mindustry.type.ItemStack;
-import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
@@ -25,7 +21,6 @@ import mindustry.world.Tiles;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.LaserTurret;
 import mindustry.world.blocks.defense.turrets.LiquidTurret;
-import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.units.RepairPoint;
 
@@ -91,7 +86,6 @@ public class CastleRooms {
                     Floor floor = (x == 0 || y == 0 || x == size || y == size ? Blocks.metalFloor5 : Blocks.metalFloor).asFloor();
                     Tile tile = tiles.getc(this.x + x, this.y + y);
                     if (tile != null) {
-                        // TODO понять нахера тут был remove()
                         tile.setFloor(floor);
                     }
                 }
@@ -196,6 +190,18 @@ public class CastleRooms {
         public boolean canBuy(PlayerData data) {
             return data.money >= cost && !bought;
         }
+
+        @Override
+        public void spawn(Tiles tiles) {
+            for (int x = 0; x <= size; x++) {
+                for (int y = 0; y <= size; y++) {
+                    Tile tile = tiles.getc(this.x + x, this.y + y);
+                    if (tile != null) {
+                        tile.setFloor(Blocks.darkPanel4.asFloor());
+                    }
+                }
+            }
+        }
     }
 
 
@@ -244,38 +250,6 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && (income > 0 || data.income - income >= 0);
-        }
-    }
-
-
-    
-    public static class EffectRoom extends Room {
-        public StatusEffect effect;
-        public Interval interval;
-
-        public EffectRoom(StatusEffect effect, String label, int x, int y, int cost) {
-            super(x, y, cost, 4);
-            this.effect = effect;
-            this.interval = new Interval(2);
-
-            this.label = "[accent]" + label + "[white]\n" + CastleIcons.get(effect) + " [white]: [gray]" + cost;
-        }
-
-        @Override
-        public void buy(PlayerData data) {
-            super.buy(data);
-            Groups.unit.each(unit -> unit.team == data.player.team(), unit -> {
-                if (effect == StatusEffects.shielded) {
-                    unit.shield += Mathf.sqrt(unit.health);
-                } else {
-                    unit.apply(effect, Float.POSITIVE_INFINITY);
-                }
-            });
-        }
-
-        @Override
-        public boolean canBuy(PlayerData data) {
-            return super.canBuy(data) && interval.get(data.player.team() == Team.sharded ? 0 : 1, 300f);
         }
     }
 }

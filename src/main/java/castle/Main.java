@@ -1,10 +1,8 @@
 package castle;
 
 import arc.Events;
-import arc.math.geom.Geometry;
 import arc.util.CommandHandler;
 import arc.util.Timer;
-import castle.CastleRooms.BlockRoom;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.CastleUnitDrops;
@@ -26,7 +24,6 @@ import mindustry.net.Administration.ActionType;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static mindustry.Vars.netServer;
-import static mindustry.Vars.world;
 
 public class Main extends Plugin {
 
@@ -52,20 +49,7 @@ public class Main extends Plugin {
         CastleIcons.load();
         CastleUnitDrops.load();
 
-        netServer.admins.addActionFilter(action -> {
-            if (action.type == ActionType.placeBlock || action.type == ActionType.breakBlock) {
-                if (action.tile == null || action.tile.floor() == Blocks.metalFloor.asFloor() || action.tile.floor() == Blocks.metalFloor5.asFloor()) return false;
-
-                boolean[] nearbyPanels = {true};
-                Geometry.circle(action.tile.x, action.tile.y, 12, (x, y) -> {
-                    if (world.tile(x, y) != null && world.tile(x, y).floor() == Blocks.darkPanel2.asFloor()) nearbyPanels[0] = false;
-                });
-
-                return nearbyPanels[0];
-            }
-
-            return true;
-        });
+        netServer.admins.addActionFilter(action -> (action.type != ActionType.placeBlock && action.type != ActionType.breakBlock) || (action.tile != null && action.tile.floor() != Blocks.metalFloor && action.tile.floor() != Blocks.darkPanel4 && action.tile.floor() != Blocks.darksandWater));
 
         Events.on(PlayerJoin.class, event -> PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player)));
 

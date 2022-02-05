@@ -30,7 +30,7 @@ public class CastleLogic {
             CastleRooms.rooms.each(Room::update);
 
             Groups.unit.each(Flyingc::isFlying, unit -> {
-                if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0) {
+                if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0 || (unit.tileY() > CastleGenerator.halfHeight && unit.tileY() < world.height() - CastleGenerator.halfHeight - 1)) {
                     Call.unitDespawn(unit);
                 }
             });
