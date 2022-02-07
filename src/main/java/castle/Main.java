@@ -24,7 +24,8 @@ import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static mindustry.Vars.netServer;
+import static mindustry.Vars.*;
+import static mindustry.Vars.state;
 
 public class Main extends Plugin {
 
@@ -60,11 +61,13 @@ public class Main extends Plugin {
         Events.on(PlayerLeave.class, event -> PlayerData.datas.remove(event.player.uuid()));
 
         Events.on(BlockDestroyEvent.class, event -> {
-            if (event.tile.block() instanceof CoreBlock && event.tile.team().cores().size <= 1) {
-                if (event.tile.team() == Team.sharded) {
-                    CastleLogic.gameOver(Team.blue);
-                } else if (event.tile.team() == Team.blue) {
-                    CastleLogic.gameOver(Team.sharded);
+            if (!world.isGenerating() && !state.gameOver) {
+                if (event.tile.block() instanceof CoreBlock && event.tile.team().cores().size <= 1) {
+                    if (event.tile.team() == Team.sharded) {
+                        CastleLogic.gameOver(Team.blue);
+                    } else if (event.tile.team() == Team.blue) {
+                        CastleLogic.gameOver(Team.sharded);
+                    }
                 }
             }
         });
@@ -74,7 +77,7 @@ public class Main extends Plugin {
             if (income > 0 && !event.unit.spawnedByCore) {
                 PlayerData.datas().each(data -> data.player.team() != event.unit.team, data -> {
                     data.money += income;
-                    Call.label(data.player.con, "[lime]+ [accent]" + income, 0.5f, event.unit.x, event.unit.y);
+                    Call.label(data.player.con, "[lime] + [accent]" + income, 0.5f, event.unit.x, event.unit.y);
                 });
             }
         });

@@ -8,6 +8,7 @@ import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.content.Liquids;
+import mindustry.entities.Units;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
@@ -22,10 +23,10 @@ import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.LaserTurret;
 import mindustry.world.blocks.defense.turrets.LiquidTurret;
 import mindustry.world.blocks.environment.Floor;
+import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.RepairPoint;
 
-import static mindustry.Vars.tilesize;
-import static mindustry.Vars.world;
+import static mindustry.Vars.*;
 
 public class CastleRooms {
 
@@ -121,14 +122,22 @@ public class CastleRooms {
 
             world.tile(centrex, centrey).setNet(block, team, 0);
             if (block instanceof ItemTurret turret) {
+                world.build(centrex, centrey).health(Float.MAX_VALUE);
                 world.tile(x, centrey).setNet(Blocks.itemSource, team, 0);
-                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random());
+                world.build(x, centrey).health(Float.MAX_VALUE);
+                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().peek());
             } else if (block instanceof LiquidTurret turret) {
+                world.build(centrex, centrey).health(Float.MAX_VALUE);
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
-                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random());
+                world.build(x, centrey).health(Float.MAX_VALUE);
+                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().peek());
             } else if (block instanceof LaserTurret || block instanceof RepairPoint) {
+                world.build(centrex, centrey).health(Float.MAX_VALUE);
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
+                world.build(x, centrey).health(Float.MAX_VALUE);
                 world.build(x, centrey).configure(Liquids.cryofluid);
+            } else if (block instanceof CommandCenter) {
+                world.build(centrex, centrey).health(Float.MAX_VALUE);
             }
 
             bought = true;
@@ -249,7 +258,7 @@ public class CastleRooms {
 
         @Override
         public boolean canBuy(PlayerData data) {
-            return super.canBuy(data) && (income > 0 || data.income - income >= 0);
+            return super.canBuy(data) && (income > 0 || data.income - income > 0) && Units.getCap(data.player.team()) > data.player.team().data().units.size;
         }
     }
 }

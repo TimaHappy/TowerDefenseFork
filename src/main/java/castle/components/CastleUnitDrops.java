@@ -38,7 +38,13 @@ public class CastleUnitDrops {
                 UnitTypes.atrax, 60,
                 UnitTypes.spiroct, 150,
                 UnitTypes.arkyid, 750,
-                UnitTypes.toxopid, 1750
+                UnitTypes.toxopid, 1750,
+
+                UnitTypes.flare, 10,
+                UnitTypes.horizon, 50,
+                UnitTypes.zenith, 150,
+                UnitTypes.antumbra, 750,
+                UnitTypes.eclipse, 1500
         );
     }
 

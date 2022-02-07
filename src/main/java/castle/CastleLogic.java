@@ -76,7 +76,7 @@ public class CastleLogic {
         rules.pvp = true;
         rules.canGameOver = false;
 
-        rules.unitCap = 1000;
+        rules.unitCap = 500;
         rules.unitCapVariable = false;
 
         rules.waves = false;
