@@ -34,6 +34,8 @@ public class CastleGenerator implements Cons<Tiles> {
 
     public static final int shopX = 7, shopY = halfHeight + 2;
 
+    public static final int coreX = 40, shardedCoreY = halfHeight / 2, blueCoreY = worldHeight - halfHeight / 2 - 1;
+
     public static final float pineChance = 0.01f;
 
     public void run() {
@@ -75,12 +77,12 @@ public class CastleGenerator implements Cons<Tiles> {
         }
 
         // Генерируем ядра и точки появления врагов
-        Tile shardedCoreTile = tiles.getc(40, halfHeight / 2);
+        Tile shardedCoreTile = tiles.getc(coreX, shardedCoreY);
         shardedCoreTile.setBlock(Blocks.coreShard, Team.sharded);
         CastleRooms.rooms.add(new CoreRoom(Team.sharded, shardedCoreTile.x - 2, shardedCoreTile.y - 2, 5000));
         CastleRooms.shardedSpawn = tiles.getc(worldWidth - shardedCoreTile.x, shardedCoreTile.y);
 
-        Tile blueCoreTile = tiles.getc(40, worldHeight - halfHeight / 2 - 1);
+        Tile blueCoreTile = tiles.getc(coreX, blueCoreY);
         blueCoreTile.setBlock(Blocks.coreShard, Team.blue);
         CastleRooms.rooms.add(new CoreRoom(Team.blue, blueCoreTile.x - 2, blueCoreTile.y - 2, 5000));
         CastleRooms.blueSpawn = tiles.getc(worldWidth - blueCoreTile.x, blueCoreTile.y);
@@ -144,17 +146,29 @@ public class CastleGenerator implements Cons<Tiles> {
         CastleRooms.rooms.add(new BlockRoom(Blocks.spectre, Team.sharded, turretX, shardedTurretY + distance + 6, 3000));
         CastleRooms.rooms.add(new BlockRoom(Blocks.spectre, Team.blue, turretX, blueTurretY - distance - 8, 3000));
 
-        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.sharded, turretX + 24, shardedTurretY, 350));
-        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.blue, turretX + 24, blueTurretY, 350));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.scatter, Team.sharded, turretX + 18, shardedTurretY, 250));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.scatter, Team.blue, turretX + 18, blueTurretY, 250));
 
-        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.sharded, turretX + 24, shardedTurretY + distance, 350));
-        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.blue, turretX + 24, blueTurretY - distance, 350));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.salvo, Team.sharded, turretX + 18, shardedTurretY + distance, 500));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.salvo, Team.blue, turretX + 18, blueTurretY - distance, 500));
 
-        CastleRooms.rooms.add(new BlockRoom(Blocks.ripple, Team.sharded, turretX + 24, shardedTurretY - 7, 1500));
-        CastleRooms.rooms.add(new BlockRoom(Blocks.ripple, Team.blue, turretX + 24, blueTurretY + 6, 1500));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.tsunami, Team.sharded, turretX + 18, shardedTurretY - 7, 850));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.tsunami, Team.blue, turretX + 18, blueTurretY + 6, 850));
 
-        CastleRooms.rooms.add(new BlockRoom(Blocks.cyclone, Team.sharded, turretX + 24, shardedTurretY + distance + 6, 1750));
-        CastleRooms.rooms.add(new BlockRoom(Blocks.cyclone, Team.blue, turretX + 24, blueTurretY - distance - 7, 1750));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.fuse, Team.sharded, turretX + 18, shardedTurretY + distance + 6, 1500));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.fuse, Team.blue, turretX + 18, blueTurretY - distance - 7, 1500));
+
+        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.sharded, turretX + 36, shardedTurretY, 350));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.blue, turretX + 36, blueTurretY, 350));
+
+        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.sharded, turretX + 36, shardedTurretY + distance, 350));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.lancer, Team.blue, turretX + 36, blueTurretY - distance, 350));
+
+        CastleRooms.rooms.add(new BlockRoom(Blocks.ripple, Team.sharded, turretX + 36, shardedTurretY - 7, 1500));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.ripple, Team.blue, turretX + 36, blueTurretY + 6, 1500));
+
+        CastleRooms.rooms.add(new BlockRoom(Blocks.cyclone, Team.sharded, turretX + 36, shardedTurretY + distance + 6, 1750));
+        CastleRooms.rooms.add(new BlockRoom(Blocks.cyclone, Team.blue, turretX + 36, blueTurretY - distance - 7, 1750));
     }
 
     public void generateShop() {
