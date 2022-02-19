@@ -3,6 +3,7 @@ package castle;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.Interval;
+import arc.util.Strings;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
@@ -15,6 +16,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
 import mindustry.gen.Nulls;
 import mindustry.type.ItemStack;
+import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
@@ -137,12 +139,12 @@ public class CastleRooms {
 
             bought = true;
             showLabel = false;
-            Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, centrex * tilesize, y * tilesize));
+            Groups.player.each(p -> p.team() == team, p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, centrex * tilesize, y * tilesize));
         }
 
         @Override
         public boolean canBuy(PlayerData data) {
-            return super.canBuy(data) && !bought && world.build(centrex, centrey) == null;
+            return super.canBuy(data) && !bought && data.player.team() == team && world.build(centrex, centrey) == null;
         }
 
         @Override
@@ -192,7 +194,7 @@ public class CastleRooms {
 
         @Override
         public boolean canBuy(PlayerData data) {
-            return data.money >= cost && !bought;
+            return data.money >= cost && !bought && data.player.team() == team;
         }
 
         @Override
@@ -254,6 +256,32 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && (income > 0 || data.income + income > 0) && Units.getCap(data.player.team()) > data.player.team().data().units.size;
+        }
+    }
+
+    public static class EffectRoom extends Room {
+
+        public StatusEffect effect;
+        public Team team;
+        public Interval interval = new Interval(Team.baseTeams.length);
+
+        public EffectRoom(StatusEffect effect, Team team, int x, int y, int cost) {
+            super(x, y, cost, 4);
+            this.effect = effect;
+            this.team = team;
+            this.label = "[accent]" + Strings.capitalize(effect.name) + " effect[white]\n" + CastleIcons.get(effect) + " [white]: " + cost;
+        }
+
+        @Override
+        public void buy(PlayerData data) {
+            super.buy(data);
+            Groups.unit.each(u -> u.team == team, unit -> unit.apply(effect, Float.POSITIVE_INFINITY));
+            Groups.player.each(p -> p.team() == team, p -> Bundle.bundled(p, "events.effect", CastleIcons.get(effect), Strings.capitalize(effect.name)));
+        }
+
+        @Override
+        public boolean canBuy(PlayerData data) {
+            return super.canBuy(data) && data.player.team() == team && interval.get(team.id, 300f);
         }
     }
 }

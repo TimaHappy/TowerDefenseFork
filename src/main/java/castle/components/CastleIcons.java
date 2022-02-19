@@ -96,7 +96,6 @@ public class CastleIcons {
                 Items.blastCompound, Iconc.itemBlastCompound,
                 Items.pyratite, Iconc.itemPyratite,
 
-                StatusEffects.shielded, Iconc.statusShielded,
                 StatusEffects.boss, Iconc.statusBoss,
                 StatusEffects.overdrive, Iconc.statusOverdrive
         );
