@@ -7,6 +7,7 @@ import arc.util.Interval;
 import arc.util.Strings;
 import castle.CastleRooms;
 import castle.CastleRooms.BlockRoom;
+import castle.CastleRooms.EffectRoom;
 import mindustry.content.Blocks;
 import mindustry.content.UnitTypes;
 import mindustry.entities.Units;
@@ -15,6 +16,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
+import mindustry.world.blocks.storage.CoreBlock.CoreBuild;
 
 import static mindustry.Vars.tilesize;
 
@@ -52,20 +54,26 @@ public class PlayerData {
         }
 
         if (interval.get(1, 180f)) {
-            updateLabels();
+            CastleRooms.rooms.each(room -> room.showLabel, room -> {
+                if ((room instanceof BlockRoom blockRoom && blockRoom.team != player.team()) || (room instanceof EffectRoom effectRoom && effectRoom.team != player.team())) return;
+                Call.label(player.con, room.label, 3f, room.centrex * tilesize, room.centrey * tilesize - room.size * 2);
+            });
         }
 
-        if (!player.dead()) {
+        if (!player.dead() && player.team().core() != null) {
             if (player.shooting) {
-                CastleRooms.rooms.each(room -> !(room instanceof BlockRoom blockRoom && blockRoom.team != player.team()), room -> {
+                CastleRooms.rooms.each(room -> {
                     if (room.check(player.unit().aimX, player.unit().aimY) && room.canBuy(this)) {
                         room.buy(this);
                     }
                 });
             }
 
-            if (player.team().core() != null && player.unit().type != getUnitType() && player.unit().spawnedByCore) {
-                Unit unit = getUnitType().spawn(player.team(), player.team().core().x + 30, player.team().core().y + Mathf.random(-40, 40));
+            CoreBuild core = player.team().core();
+            UnitType type = core.block == Blocks.coreNucleus ? UnitTypes.cyerce : UnitTypes.retusa;
+
+            if (player.unit().type != type && player.unit().spawnedByCore) {
+                Unit unit = type.spawn(player.team(), core.x + 40, core.y + Mathf.random(-40, 40));
                 player.unit(unit);
                 unit.spawnedByCore(true);
             }
@@ -77,14 +85,6 @@ public class PlayerData {
             if (Units.getCap(player.team()) <= player.team().data().units.size) hud.append(Bundle.format("ui.hud.unit-limit", Bundle.findLocale(player), Units.getCap(player.team())));
             Call.setHudText(player.con, hud.toString());
         }
-    }
-
-    public void updateLabels() {
-        CastleRooms.rooms.each(room -> !(room instanceof BlockRoom blockRoom && blockRoom.team != player.team()) && room.showLabel, room -> Call.label(player.con, room.label, 3f, room.centrex * tilesize, room.centrey * tilesize - room.size * 2));
-    }
-
-    public UnitType getUnitType() {
-        return player.team().core() != null ? player.team().core().block == Blocks.coreNucleus ? UnitTypes.cyerce : UnitTypes.retusa : null;
     }
 
     public void reset() {

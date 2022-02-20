@@ -91,6 +91,7 @@ public class CastleRooms {
                     Floor floor = (x == 0 || y == 0 || x == size || y == size ? Blocks.metalFloor5 : Blocks.metalFloor).asFloor();
                     Tile tile = tiles.getc(this.x + x, this.y + y);
                     if (tile != null) {
+                        tile.remove();
                         tile.setFloor(floor);
                     }
                 }
@@ -249,7 +250,7 @@ public class CastleRooms {
             if (roomType == UnitRoomType.attack) {
                 unitType.spawn(data.player.team(), (data.player.team() == Team.sharded ? blueSpawn.drawx() : shardedSpawn.drawx()) + Mathf.random(-40, 40), (data.player.team() == Team.sharded ? blueSpawn.drawy() : shardedSpawn.drawy()) + Mathf.random(-40, 40));
             } else if (data.player.team().core() != null) {
-                unitType.spawn(data.player.team(), data.player.team().core().x + 30, data.player.team().core().y + Mathf.random(-40, 40));
+                unitType.spawn(data.player.team(), data.player.team().core().x + 40, data.player.team().core().y + Mathf.random(-40, 40));
             }
         }
 

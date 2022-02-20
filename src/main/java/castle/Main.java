@@ -25,12 +25,13 @@ import mindustry.net.Administration.ActionType;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static mindustry.Vars.*;
-import static mindustry.Vars.state;
 
 public class Main extends Plugin {
 
     @Override
     public void init() {
+        Blocks.grass.asFloor().decoration = Blocks.pine;
+
         UnitTypes.flare.defaultController = GroundAI::new;
         UnitTypes.horizon.defaultController = GroundAI::new;
         UnitTypes.zenith.defaultController = GroundAI::new;
@@ -108,5 +109,7 @@ public class Main extends Plugin {
         handler.removeCommand("host");
         handler.removeCommand("stop");
         handler.removeCommand("gameover");
+
+        handler.register("gameover", "End the game.", args -> CastleLogic.gameOver(Team.derelict));
     }
 }

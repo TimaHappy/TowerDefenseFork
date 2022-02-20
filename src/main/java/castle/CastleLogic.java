@@ -65,7 +65,11 @@ public class CastleLogic {
         Call.updateGameOver(team);
 
         Log.info("Игра окончена. Генерирую карту заново...");
-        Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format("events.gameover", Bundle.findLocale(p), colorizedTeam(team))));
+        if (team != Team.derelict) {
+            Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format("events.gameover", Bundle.findLocale(p), colorizedTeam(team))));
+        } else {
+            Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format("events.draw", Bundle.findLocale(p))));
+        }
         Timer.schedule(CastleLogic::restart, 10f);
     }
 

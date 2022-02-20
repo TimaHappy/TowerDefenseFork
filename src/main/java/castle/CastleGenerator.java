@@ -1,11 +1,11 @@
 package castle;
 
 import arc.func.Cons;
-import arc.math.Mathf;
 import arc.math.geom.Geometry;
+import arc.struct.Seq;
 import arc.struct.StringMap;
 import arc.util.Log;
-import arc.util.Structs;
+import arc.util.Reflect;
 import castle.CastleRooms.*;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
@@ -14,16 +14,20 @@ import mindustry.content.UnitTypes;
 import mindustry.game.Team;
 import mindustry.maps.Map;
 import mindustry.maps.filters.GenerateFilter.GenerateInput;
-import mindustry.maps.filters.RiverNoiseFilter;
+import mindustry.maps.filters.NoiseFilter;
+import mindustry.maps.filters.ScatterFilter;
 import mindustry.type.ItemStack;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.state;
+import static mindustry.Vars.world;
 
 public class CastleGenerator implements Cons<Tiles> {
+
+    public static Mode mode;
 
     // Все переменные для генерации
     public static final int worldWidth = 360;
@@ -48,7 +52,7 @@ public class CastleGenerator implements Cons<Tiles> {
 
     @Override
     public void get(Tiles tiles) {
-        Mode mode = Structs.random(Mode.values());
+        mode = Seq.with(Mode.values()).random(mode);
 
         for (int x = 0; x < worldWidth; x++) {
             for (int y = 0; y < halfHeight; y++) {
@@ -63,14 +67,6 @@ public class CastleGenerator implements Cons<Tiles> {
                     floor = mode.water;
                 }
 
-                if (y == border || y == halfHeight - border - 1) {
-                    floor = Blocks.cryofluid;
-                }
-
-                if (block == Blocks.air && floor == mode.floor && Mathf.chance(mode.propChance)) {
-                    block = mode.prop;
-                }
-
                 tiles.set(x, y, new Tile(x, y, floor, Blocks.air, block));
                 tiles.set(x, worldHeight - y - 1, new Tile(x, worldHeight - y - 1, floor, Blocks.air, block));
             }
@@ -82,8 +78,44 @@ public class CastleGenerator implements Cons<Tiles> {
             }
         }
 
-        //GenerateInput in = new GenerateInput();
-        //RiverNoiseFilter noise = new RiverNoiseFilter();
+        GenerateInput in = new GenerateInput();
+
+        NoiseFilter noise = new NoiseFilter();
+        Reflect.set(noise, "target", mode.floor);
+        Reflect.set(noise, "floor", mode.floor2);
+        Reflect.set(noise, "block", mode.wall2);
+
+        noise.randomize();
+        in.begin(worldWidth, worldHeight, tiles::getc);
+        noise.apply(tiles, in);
+
+        ScatterFilter scatter = new ScatterFilter(), scatter2 = new ScatterFilter();
+        Reflect.set(scatter, "chance", 0.02f);
+        Reflect.set(scatter, "flooronto", mode.floor);
+        Reflect.set(scatter, "floor", mode.floor);
+        Reflect.set(scatter, "block", mode.floor.asFloor().decoration);
+        Reflect.set(scatter2, "chance", 0.02f);
+        Reflect.set(scatter2, "flooronto", mode.floor2);
+        Reflect.set(scatter2, "floor", mode.floor2);
+        Reflect.set(scatter2, "block", mode.floor2.asFloor().decoration);
+
+        scatter.randomize();
+        scatter2.randomize();
+        in.begin(worldWidth, worldHeight, tiles::getc);
+        scatter.apply(tiles, in);
+        scatter2.apply(tiles, in);
+
+        if (mode == Mode.snow) {
+            ScatterFilter scatter3 = new ScatterFilter();
+            Reflect.set(scatter3, "chance", 0.002f);
+            Reflect.set(scatter3, "flooronto", mode.floor);
+            Reflect.set(scatter3, "floor", mode.floor);
+            Reflect.set(scatter3, "block", Blocks.whiteTreeDead);
+
+            scatter3.randomize();
+            in.begin(worldWidth, worldHeight, tiles::getc);
+            scatter3.apply(tiles, in);
+        }
 
         // Генерируем ядра и точки появления врагов
         Tile shardedCoreTile = tiles.getc(coreX, shardedCoreY);
@@ -110,11 +142,10 @@ public class CastleGenerator implements Cons<Tiles> {
 
         // Спавним комнаты и круги вокруг точек появления
         CastleRooms.rooms.each(room -> room.spawn(tiles));
-
         Geometry.circle(CastleRooms.shardedSpawn.x, CastleRooms.shardedSpawn.y, 8, (x, y) -> tiles.getc(x, y).setOverlay(Blocks.tendrils));
         Geometry.circle(CastleRooms.blueSpawn.x, CastleRooms.blueSpawn.y, 8, (x, y) -> tiles.getc(x, y).setOverlay(Blocks.tendrils));
 
-        state.map = new Map(StringMap.of("name", "The Castle", "author", "[cyan]Darkness", "description", "A map for Castle Wars gamemode. Automatically generated."));
+        state.map = new Map(StringMap.of("name", "The Castle", "author", "[blue]Darkness", "description", "A map for Castle Wars gamemode."));
 
         Log.info("Генерация завершена.");
     }
@@ -239,20 +270,19 @@ public class CastleGenerator implements Cons<Tiles> {
     }
 
     public enum Mode {
-        grass(Blocks.grass, Blocks.sandWater, Blocks.stoneWall, Blocks.pine, 0.01f),
-        sand(Blocks.sand, Blocks.sandWater, Blocks.stoneWall, Blocks.sandBoulder, 0.02f),
-        darksand(Blocks.darksand, Blocks.darksandWater, Blocks.stoneWall, Blocks.boulder, 0.02f),
-        snow(Blocks.snow, Blocks.water, Blocks.iceWall, Blocks.whiteTree, 0.001f);
+        grass(Blocks.grass, Blocks.dacite, Blocks.water, Blocks.shrubs, Blocks.daciteWall),
+        sand(Blocks.sand, Blocks.darksand, Blocks.sandWater, Blocks.sandWall, Blocks.duneWall),
+        darksand(Blocks.darksand, Blocks.shale, Blocks.darksandWater, Blocks.duneWall, Blocks.darkMetal),
+        snow(Blocks.snow, Blocks.ice, Blocks.sandWater, Blocks.snowPine, Blocks.iceWall);
 
-        public Block floor, water, prop, wall;
-        public float propChance;
+        public Block floor, floor2, water, wall, wall2;
 
-        Mode(Block floor, Block water, Block wall, Block prop, float propChance) {
+        Mode(Block floor, Block floor2, Block water, Block wall, Block wall2) {
             this.floor = floor;
+            this.floor2 = floor2;
             this.water = water;
-            this.prop = prop;
             this.wall = wall;
-            this.propChance = propChance;
+            this.wall2 = wall2;
         }
     }
 }
