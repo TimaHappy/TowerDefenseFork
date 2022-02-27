@@ -14,6 +14,7 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
+import mindustry.entities.Units;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.storage.CoreBlock.CoreBuild;
 
@@ -85,7 +86,7 @@ public class PlayerData {
             Locale locale = Bundle.findLocale(player);
             StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
             if (bonus > 1f) hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100).length() > 5 ? String.valueOf((bonus - 1) * 100).substring(0, 6) : (bonus - 1) * 100));
-            if (player.team().data().unitCap <= player.team().data().unitCount) hud.append(Bundle.format("ui.hud.unit-limit", locale, player.team().data().unitCap));
+            if (Units.getCap(data.player.team()) <= player.team().data().unitCount) hud.append(Bundle.format("ui.hud.unit-limit", locale, player.team().data().unitCap));
             hud.append(Bundle.format("ui.hud.timer", locale, timer));
             Call.setHudText(player.con, hud.toString());
         }
