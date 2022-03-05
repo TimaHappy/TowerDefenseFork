@@ -2,6 +2,7 @@ package castle;
 
 import arc.Events;
 import arc.struct.Seq;
+import arc.util.Interval;
 import arc.util.Log;
 import arc.util.Timer;
 import castle.CastleRooms.Room;
@@ -26,8 +27,13 @@ import static mindustry.Vars.*;
 
 public class CastleLogic {
 
+    public static Interval interval = new Interval();
+    public static int timer;
+
     public static void update() {
         if (!world.isGenerating() && !state.serverPaused && !state.gameOver) {
+            if (interval.get(60f)) timer++;
+
             PlayerData.datas().each(PlayerData::update);
             CastleRooms.rooms.each(Room::update);
 
@@ -56,6 +62,8 @@ public class CastleLogic {
 
         state.rules = getRules();
         logic.play();
+
+        timer = 0;
 
         players.each(player -> netServer.sendWorldData(player));
     }

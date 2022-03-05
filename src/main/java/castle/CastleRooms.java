@@ -9,12 +9,12 @@ import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.content.Liquids;
-import mindustry.entities.Units;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
 import mindustry.gen.Nulls;
+import mindustry.entities.Units;
 import mindustry.type.ItemStack;
 import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
@@ -256,7 +256,7 @@ public class CastleRooms {
 
         @Override
         public boolean canBuy(PlayerData data) {
-            return super.canBuy(data) && (income > 0 || data.income + income > 0) && Units.getCap(data.player.team()) > data.player.team().data().units.size;
+            return super.canBuy(data) && (income > 0 || data.income + income > 0) && Units.getCap(data.player.team()) > data.player.team().data().unitCount;
         }
     }
 
