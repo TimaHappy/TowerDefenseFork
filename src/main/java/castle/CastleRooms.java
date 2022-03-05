@@ -128,7 +128,7 @@ public class CastleRooms {
             world.tile(centrex, centrey).setNet(block, team, 0);
             if (block instanceof ItemTurret turret && world.build(centrex, centrey) instanceof ItemTurretBuild turretBuild) {
                 turretBuild.health(Float.MAX_VALUE);
-                Call.transferItemTo(Nulls.unit, turret.ammoTypes.keys().toSeq().peek(), 1000, data.player.x, data.player.y, turretBuild);
+                Call.transferItemTo(Nulls.unit, turret.ammoTypes.keys().toSeq().peek(), 100, team.core().x, team.core().y, turretBuild);
             } else if (block instanceof LiquidTurret || block instanceof LaserTurret || block instanceof RepairPoint) {
                 world.build(centrex, centrey).health(Float.MAX_VALUE);
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
