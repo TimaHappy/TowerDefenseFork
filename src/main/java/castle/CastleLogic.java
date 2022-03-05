@@ -9,6 +9,7 @@ import castle.CastleRooms.Room;
 import castle.components.Bundle;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
+import mindustry.game.Gamemode;
 import mindustry.game.Rules;
 import mindustry.game.Team;
 import mindustry.gen.Call;
@@ -30,6 +31,8 @@ public class CastleLogic {
     public static Interval interval = new Interval();
     public static int timer;
 
+    public static int halfHeight;
+
     public static void update() {
         if (!world.isGenerating() && !state.serverPaused && !state.gameOver) {
             if (interval.get(60f)) timer++;
@@ -38,7 +41,7 @@ public class CastleLogic {
             CastleRooms.rooms.each(Room::update);
 
             Groups.unit.each(Flyingc::isFlying, unit -> {
-                if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0 || (unit.tileY() > CastleGenerator.halfHeight && unit.tileY() < world.height() - CastleGenerator.halfHeight - 1)) {
+                if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0 || (unit.tileY() > halfHeight && unit.tileY() < world.height() - halfHeight - 1)) {
                     Call.unitDespawn(unit);
                 }
             });
@@ -56,11 +59,11 @@ public class CastleLogic {
         CastleRooms.rooms.clear();
         PlayerData.datas().each(PlayerData::reset);
 
-        CastleGenerator generator = new CastleGenerator();
-        generator.run();
+        CastleGenerator test = new CastleGenerator();
+        test.loadMap(maps.getNextMap(Gamemode.pvp, state.map));
         Call.worldDataBegin();
 
-        state.rules = getRules();
+        state.rules = applyRules(new Rules());
         logic.play();
 
         timer = 0;
@@ -81,9 +84,7 @@ public class CastleLogic {
         Timer.schedule(CastleLogic::restart, 10f);
     }
 
-    public static Rules getRules() {
-        Rules rules = new Rules();
-
+    public static Rules applyRules(Rules rules) {
         rules.teams.get(Team.sharded).cheat = true;
         rules.teams.get(Team.blue).cheat = true;
 

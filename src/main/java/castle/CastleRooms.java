@@ -1,25 +1,23 @@
 package castle;
 
 import arc.math.Mathf;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
-import arc.util.Strings;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.content.Liquids;
+import mindustry.entities.Units;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
-import mindustry.entities.Units;
 import mindustry.type.ItemStack;
-import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
-import mindustry.world.Tiles;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.ItemTurret.ItemTurretBuild;
 import mindustry.world.blocks.defense.turrets.LaserTurret;
@@ -35,9 +33,37 @@ public class CastleRooms {
 
     public static final Seq<Room> rooms = new Seq<>();
 
-    public static final int size = 8;
+    public static ObjectMap<Block, Integer> blockCosts;
 
+    public static final int size = 8;
     public static Tile shardedSpawn, blueSpawn;
+
+    public static void load() {
+        blockCosts = ObjectMap.of(
+                Blocks.duo, 100,
+                Blocks.scatter, 250,
+                Blocks.scorch, 200,
+                Blocks.hail, 450,
+                Blocks.wave, 300,
+                Blocks.lancer, 350,
+                Blocks.arc, 150,
+                Blocks.parallax, 500,
+                Blocks.swarmer, 1250,
+                Blocks.salvo, 500,
+                Blocks.segment, 750,
+                Blocks.tsunami, 850,
+                Blocks.fuse, 1500,
+                Blocks.ripple, 1500,
+                Blocks.cyclone, 1750,
+                Blocks.foreshadow, 4000,
+                Blocks.spectre, 3000,
+                Blocks.meltdown, 3000,
+
+                Blocks.commandCenter, 750,
+                Blocks.repairPoint, 300,
+                Blocks.repairTurret, 1200
+        );
+    }
 
     public static class Room {
         public int x;
@@ -84,18 +110,7 @@ public class CastleRooms {
             return x > this.x * tilesize && y > this.y * tilesize && x < this.endx * tilesize && y < this.endy * tilesize;
         }
 
-        public void spawn(Tiles tiles) {
-            for (int x = 0; x <= size; x++) {
-                for (int y = 0; y <= size; y++) {
-                    Floor floor = (x == 0 || y == 0 || x == size || y == size ? Blocks.metalFloor5 : Blocks.metalFloor).asFloor();
-                    Tile tile = tiles.getc(this.x + x, this.y + y);
-                    if (tile != null) {
-                        tile.remove();
-                        tile.setFloor(floor);
-                    }
-                }
-            }
-        }
+        public void spawn() {}
     }
 
 
@@ -196,18 +211,6 @@ public class CastleRooms {
         public boolean canBuy(PlayerData data) {
             return data.money >= cost && !bought && data.player.team() == team;
         }
-
-        @Override
-        public void spawn(Tiles tiles) {
-            for (int x = 0; x <= size; x++) {
-                for (int y = 0; y <= size; y++) {
-                    Tile tile = tiles.getc(this.x + x, this.y + y);
-                    if (tile != null) {
-                        tile.setFloor(Blocks.metalFloor.asFloor());
-                    }
-                }
-            }
-        }
     }
 
 
@@ -257,31 +260,19 @@ public class CastleRooms {
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && (income > 0 || data.income + income > 0) && Units.getCap(data.player.team()) > data.player.team().data().unitCount;
         }
-    }
-
-    public static class EffectRoom extends Room {
-
-        public StatusEffect effect;
-        public Team team;
-        public Interval interval = new Interval(Team.baseTeams.length);
-
-        public EffectRoom(StatusEffect effect, Team team, int x, int y, int cost) {
-            super(x, y, cost, 4);
-            this.effect = effect;
-            this.team = team;
-            this.label = "[accent]" + Strings.capitalize(effect.name) + " effect[white]\n" + CastleIcons.get(effect) + " [white]: " + cost;
-        }
 
         @Override
-        public void buy(PlayerData data) {
-            super.buy(data);
-            Groups.unit.each(u -> u.team == team, unit -> unit.apply(effect, Float.POSITIVE_INFINITY));
-            Groups.player.each(p -> p.team() == team, p -> Bundle.bundled(p, "events.effect", CastleIcons.get(effect), Strings.capitalize(effect.name)));
-        }
-
-        @Override
-        public boolean canBuy(PlayerData data) {
-            return super.canBuy(data) && data.player.team() == team && interval.get(team.id, 300f);
+        public void spawn() {
+            for (int x = 0; x <= size; x++) {
+                for (int y = 0; y <= size; y++) {
+                    Floor floor = (x == 0 || y == 0 || x == size || y == size ? Blocks.metalFloor5 : Blocks.metalFloor).asFloor();
+                    Tile tile = world.tiles.getc(this.x + x, this.y + y);
+                    if (tile != null) {
+                        tile.remove();
+                        tile.setFloor(floor);
+                    }
+                }
+            }
         }
     }
 }

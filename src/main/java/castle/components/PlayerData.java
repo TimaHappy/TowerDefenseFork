@@ -7,7 +7,6 @@ import arc.util.Interval;
 import arc.util.Strings;
 import castle.CastleRooms;
 import castle.CastleRooms.BlockRoom;
-import castle.CastleRooms.EffectRoom;
 import mindustry.content.Blocks;
 import mindustry.content.UnitTypes;
 import mindustry.gen.Call;
@@ -58,7 +57,7 @@ public class PlayerData {
 
         if (interval.get(1, 150f)) {
             CastleRooms.rooms.each(room -> room.showLabel, room -> {
-                if ((room instanceof BlockRoom blockRoom && blockRoom.team != player.team()) || (room instanceof EffectRoom effectRoom && effectRoom.team != player.team())) return;
+                if ((room instanceof BlockRoom blockRoom && blockRoom.team != player.team())) return;
                 Call.label(player.con, room.label, 2.5f, room.centrex * tilesize, room.centrey * tilesize - room.size * 2);
             });
         }

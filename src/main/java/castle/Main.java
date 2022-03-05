@@ -51,6 +51,7 @@ public class Main extends Plugin {
 
         CastleIcons.load();
         CastleUnitDrops.load();
+        CastleRooms.load();
 
         netServer.admins.addActionFilter(action -> {
             if ((action.type != ActionType.placeBlock && action.type != ActionType.breakBlock) || action.tile == null) return true;

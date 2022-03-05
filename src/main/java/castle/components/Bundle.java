@@ -23,7 +23,7 @@ public class Bundle {
     static {
         Fi[] files = Vars.mods.list().find(mod -> mod.main instanceof Main).root.child("bundles").list();
         supportedLocales = new Locale[files.length + 1];
-        supportedLocales[supportedLocales.length - 1] = new Locale("router"); // router
+        supportedLocales[supportedLocales.length - 1] = new Locale("router");
 
         for (int i = 0; i < files.length; i++) {
             String code = files[i].nameWithoutExtension();
