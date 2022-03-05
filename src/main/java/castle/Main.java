@@ -62,7 +62,7 @@ public class Main extends Plugin {
             int blue = Seq.with(players).count(p -> p != player && p.team() == Team.blue);
 
             return sharded > blue ? Team.blue : Team.sharded;
-        });
+        };
 
         Events.on(PlayerJoin.class, event -> PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player)));
 
