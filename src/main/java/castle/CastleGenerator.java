@@ -112,11 +112,15 @@ public class CastleGenerator implements Cons<Tiles> {
 
                     CastleRooms.rooms.add(new CoreRoom(Team.sharded, save.x - 2, save.y - 2, 5000));
                     CastleRooms.rooms.add(new CoreRoom(Team.blue, save.x - 2, tiles.height - save.y - 1 - 2, 5000));
-
                 } else if (save.block() instanceof Turret || save.block() instanceof TractorBeamTurret || save.block() instanceof PointDefenseTurret || save.block() instanceof CommandCenter || save.block() instanceof RepairPoint) {
                     int offset = save.block().size / 2 + save.block().size % 2;
-                    CastleRooms.rooms.add(new BlockRoom(save.block(), Team.sharded, save.x - offset, save.y - offset, CastleRooms.blockCosts.get(save.block(), 1000) / 50));
-                    CastleRooms.rooms.add(new BlockRoom(save.block(), Team.blue, save.x - offset, tiles.height - save.y - 1 - offset - (1 - save.block().size % 2), CastleRooms.blockCosts.get(save.block(), 1000) / 50));
+                    int shardedX = save.x - offset;
+                    int shardedY = save.y - offset;
+                    int blueX = save.x - offset;
+                    int blueY = tiles.height - save.y - 1 - offset - (1 - save.block().size % 2);
+
+                    CastleRooms.rooms.add(new BlockRoom(save.block(), Team.sharded, shardedX, shardedY, CastleRooms.blockCosts.get(save.block(), 1000)));
+                    CastleRooms.rooms.add(new BlockRoom(save.block(), Team.blue, blueX, blueY, CastleRooms.blockCosts.get(save.block(), 1000)));
                 } else if (save.block() instanceof Sorter && save.build instanceof SorterBuild sorterBuild) {
                     Item item = sorterBuild.config();
                     CastleRooms.rooms.add(new MinerRoom(new ItemStack(item, 48 - item.hardness * 8), Team.sharded, save.x - 2, save.y - 2, 250 + item.hardness * 250));
