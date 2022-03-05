@@ -13,7 +13,6 @@ import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
-import mindustry.gen.Nulls;
 import mindustry.entities.Units;
 import mindustry.type.ItemStack;
 import mindustry.type.StatusEffect;
@@ -128,7 +127,7 @@ public class CastleRooms {
             world.tile(centrex, centrey).setNet(block, team, 0);
             if (block instanceof ItemTurret turret && world.build(centrex, centrey) instanceof ItemTurretBuild turretBuild) {
                 turretBuild.health(Float.MAX_VALUE);
-                Call.transferItemTo(Nulls.unit, turret.ammoTypes.keys().toSeq().peek(), 100, team.core().x, team.core().y, turretBuild);
+                Call.transferItemTo(null, turret.ammoTypes.keys().toSeq().peek(), 100, team.core().x, team.core().y, turretBuild);
             } else if (block instanceof LiquidTurret || block instanceof LaserTurret || block instanceof RepairPoint) {
                 world.build(centrex, centrey).health(Float.MAX_VALUE);
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
@@ -177,7 +176,7 @@ public class CastleRooms {
             super.update();
 
             if (bought && interval.get(300f)) {
-                Call.transferItemTo(Nulls.unit, stack.item, stack.amount, centrex * tilesize, centrey * tilesize, team.core());
+                Call.transferItemTo(null, stack.item, stack.amount, centrex * tilesize, centrey * tilesize, team.core());
             }
         }
     }
