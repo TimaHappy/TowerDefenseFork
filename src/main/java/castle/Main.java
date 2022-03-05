@@ -19,6 +19,7 @@ import mindustry.game.EventType.PlayerLeave;
 import mindustry.game.EventType.UnitDestroyEvent;
 import mindustry.game.Team;
 import mindustry.gen.Call;
+import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
@@ -30,8 +31,6 @@ public class Main extends Plugin {
 
     @Override
     public void init() {
-        Blocks.grass.asFloor().decoration = Blocks.pine;
-
         UnitTypes.flare.defaultController = GroundAI::new;
         UnitTypes.horizon.defaultController = GroundAI::new;
         UnitTypes.zenith.defaultController = GroundAI::new;
@@ -56,6 +55,13 @@ public class Main extends Plugin {
         netServer.admins.addActionFilter(action -> {
             if ((action.type != ActionType.placeBlock && action.type != ActionType.breakBlock) || action.tile == null) return true;
             return !action.tile.getLinkedTilesAs(action.block, new Seq<>()).contains(tile -> tile.floor() == Blocks.metalFloor || tile.floor() == Blocks.metalFloor5 || tile.overlay() == Blocks.tendrils);
+        });
+
+        netServer.assigner = (player, players) -> {
+            int sharded = Seq.with(players).count(p -> p != player && p.team() == Team.sharded);
+            int blue = Seq.with(players).count(p -> p != player && p.team() == Team.blue);
+
+            return sharded > blue ? Team.blue : Team.sharded;
         });
 
         Events.on(PlayerJoin.class, event -> PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player)));
