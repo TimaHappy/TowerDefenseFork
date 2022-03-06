@@ -20,7 +20,6 @@ import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.blocks.defense.turrets.ItemTurret.ItemTurretBuild;
 import mindustry.world.blocks.defense.turrets.LaserTurret;
 import mindustry.world.blocks.defense.turrets.LiquidTurret;
 import mindustry.world.blocks.environment.Floor;
@@ -141,9 +140,11 @@ public class CastleRooms {
             super.buy(data);
 
             world.tile(centrex, centrey).setNet(block, team, 0);
-            if (block instanceof ItemTurret turret && world.build(centrex, centrey) instanceof ItemTurretBuild turretBuild) {
-                turretBuild.health(Float.MAX_VALUE);
-                Call.transferItemTo(null, turret.ammoTypes.keys().toSeq().random(Items.copper), 100, team.core().x, team.core().y, turretBuild);
+            if (block instanceof ItemTurret turret) {
+                world.build(centrex, centrey).health(Float.MAX_VALUE);
+                world.tile(x, centrey).setNet(Blocks.itemSource, team, 0);
+                world.build(x, centrey).health(Float.MAX_VALUE);
+                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random(Items.copper));
             } else if (block instanceof LiquidTurret || block instanceof LaserTurret || block instanceof RepairPoint) {
                 world.build(centrex, centrey).health(Float.MAX_VALUE);
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
