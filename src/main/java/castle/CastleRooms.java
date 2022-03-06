@@ -8,13 +8,13 @@ import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
-import mindustry.content.Items;
 import mindustry.content.Liquids;
 import mindustry.entities.Units;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
+import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
@@ -142,9 +142,8 @@ public class CastleRooms {
             world.tile(centrex, centrey).setNet(block, team, 0);
             if (block instanceof ItemTurret turret) {
                 world.build(centrex, centrey).health(Float.MAX_VALUE);
-                world.tile(x, centrey).setNet(Blocks.itemSource, team, 0);
-                world.build(x, centrey).health(Float.MAX_VALUE);
-                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().random(Items.copper));
+                Item item = turret.ammoTypes.keys().toSeq().peek();
+                Call.transferItemTo(null, item, 256, team.core().x, team.core().y, world.build(centrex, centrey));
             } else if (block instanceof LiquidTurret || block instanceof LaserTurret || block instanceof RepairPoint) {
                 world.build(centrex, centrey).health(Float.MAX_VALUE);
                 world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
