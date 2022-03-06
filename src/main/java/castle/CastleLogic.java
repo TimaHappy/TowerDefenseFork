@@ -21,6 +21,7 @@ import mindustry.world.blocks.defense.turrets.TractorBeamTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.blocks.storage.StorageBlock;
 import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.RepairPoint;
 
@@ -59,8 +60,8 @@ public class CastleLogic {
         CastleRooms.rooms.clear();
         PlayerData.datas().each(PlayerData::reset);
 
-        CastleGenerator test = new CastleGenerator();
-        test.loadMap(maps.getNextMap(Gamemode.pvp, state.map));
+        CastleGenerator gen = new CastleGenerator();
+        gen.loadMap(maps.getNextMap(Gamemode.pvp, state.map));
         Call.worldDataBegin();
 
         state.rules = applyRules(new Rules());
@@ -99,7 +100,7 @@ public class CastleLogic {
         rules.modeName = "Wars";
 
         content.blocks().each(block -> {
-            if (block instanceof CoreBlock || block instanceof Turret || block instanceof PointDefenseTurret || block instanceof TractorBeamTurret || block instanceof CommandCenter || block instanceof RepairPoint || block instanceof LogicBlock || block == Blocks.airFactory) {
+            if (block instanceof Turret || block instanceof PointDefenseTurret || block instanceof TractorBeamTurret || block instanceof CommandCenter || block instanceof RepairPoint || block instanceof LogicBlock || block instanceof StorageBlock || block == Blocks.airFactory) {
                 rules.bannedBlocks.add(block);
             }
         });
