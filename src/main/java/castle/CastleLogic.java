@@ -20,7 +20,6 @@ import mindustry.world.blocks.defense.turrets.PointDefenseTurret;
 import mindustry.world.blocks.defense.turrets.TractorBeamTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.logic.LogicBlock;
-import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.storage.StorageBlock;
 import mindustry.world.blocks.units.CommandCenter;
 import mindustry.world.blocks.units.RepairPoint;
