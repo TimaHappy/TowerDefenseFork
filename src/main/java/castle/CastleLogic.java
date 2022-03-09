@@ -29,13 +29,18 @@ import static mindustry.Vars.*;
 public class CastleLogic {
 
     public static Interval interval = new Interval();
-    public static int timer;
+    public static int timer = 45 * 60;
 
     public static int halfHeight;
 
     public static void update() {
         if (!world.isGenerating() && !state.serverPaused && !state.gameOver) {
-            if (interval.get(60f)) timer++;
+            if (interval.get(60f)) timer--;
+
+            if (timer <= 0) {
+                gameOver(Team.derelict);
+                return;
+            }
 
             PlayerData.datas().each(PlayerData::update);
             CastleRooms.rooms.each(Room::update);
@@ -66,7 +71,7 @@ public class CastleLogic {
         state.rules = applyRules(new Rules());
         logic.play();
 
-        timer = 0;
+        timer = 45 * 60;
 
         players.each(player -> netServer.sendWorldData(player));
     }
