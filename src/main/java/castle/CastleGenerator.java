@@ -150,7 +150,7 @@ public class CastleGenerator implements Cons<Tiles> {
 
         addUnitRoom(UnitTypes.crawler, 0, shopX, shopY + 2 + distance * 2, 70);
         addUnitRoom(UnitTypes.atrax, 1, shopX + distance, shopY + 2 + distance * 2, 175);
-        addUnitRoom(UnitTypes.spiroct, 4, shopX + distance * 2, shopY + 2 + distance * 2, 500);
+        addUnitRoom(UnitTypes.spiroct, 4, shopX + distance * 2, shopY + 2 + distance * 2, 600);
         addUnitRoom(UnitTypes.arkyid, 24, shopX + distance * 3, shopY + 2 + distance * 2, 5000);
         addUnitRoom(UnitTypes.toxopid, 60, shopX + distance * 4, shopY + 2 + distance * 2, 9000);
 
