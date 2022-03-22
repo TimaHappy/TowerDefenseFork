@@ -180,9 +180,6 @@ public class CastleRooms {
 
         @Override
         public boolean canBuy(PlayerData data) {
-            if (true) {
-                return true;
-            }
             return super.canBuy(data) && !bought && data.player.team() == team && world.build(centrex, centrey) == null;
         }
 
