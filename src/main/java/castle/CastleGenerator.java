@@ -110,10 +110,10 @@ public class CastleGenerator implements Cons<Tiles> {
                     tiles.getc(save.x, save.y).setNet(block, Team.sharded, 0);
                     tiles.getc(save.x, tiles.height - save.y - 1).setNet(block, Team.blue, 0);
 
-                    tiles.getc(save.x - 3, save.y).setNet(Blocks.powerSource, Team.sharded, 0);
-                    tiles.getc(save.x - 3, tiles.height - save.y - 1).setNet(Blocks.powerSource, Team.blue, 0);
-                    tiles.getc(save.x - 3, save.y).build.health(Float.POSITIVE_INFINITY);
-                    tiles.getc(save.x - 3, tiles.height - save.y - 1).build.health(Float.POSITIVE_INFINITY);
+                    tiles.getc(save.x - 4, save.y).setNet(Blocks.powerSource, Team.sharded, 0);
+                    tiles.getc(save.x - 4, tiles.height - save.y - 1).setNet(Blocks.powerSource, Team.blue, 0);
+                    tiles.getc(save.x - 4, save.y).build.health(Float.POSITIVE_INFINITY);
+                    tiles.getc(save.x - 4, tiles.height - save.y - 1).build.health(Float.POSITIVE_INFINITY);
 
                     CastleRooms.rooms.add(new CoreRoom(Team.sharded, save.x - 2, save.y - 2, 5000));
                     CastleRooms.rooms.add(new CoreRoom(Team.blue, save.x - 2, tiles.height - save.y - 1 - 2, 5000));
@@ -128,8 +128,9 @@ public class CastleGenerator implements Cons<Tiles> {
                     CastleRooms.rooms.add(new BlockRoom(save.block(), Team.blue, blueX, blueY, CastleRooms.blockCosts.get(save.block(), 1000)));
                 } else if (save.block() instanceof Sorter && save.build instanceof SorterBuild sorterBuild) {
                     Item item = sorterBuild.config();
-                    CastleRooms.rooms.add(new MinerRoom(new ItemStack(item, 48 - item.hardness * 8), Team.sharded, save.x - 2, save.y - 2, 250 + item.hardness * 250));
-                    CastleRooms.rooms.add(new MinerRoom(new ItemStack(item, 48 - item.hardness * 8), Team.blue, save.x - 2, tiles.height - save.y - 1 - 2, 250 + item.hardness * 250));
+                    int hardness = item.hardness == 0 ? item.cost * 2 : item.hardness;
+                    CastleRooms.rooms.add(new MinerRoom(new ItemStack(item, 48 - hardness * 8), Team.sharded, save.x - 2, save.y - 2, 250 + hardness * 250));
+                    CastleRooms.rooms.add(new MinerRoom(new ItemStack(item, 48 - hardness * 8), Team.blue, save.x - 2, tiles.height - save.y - 1 - 2, 250 + hardness * 250));
                 } else if (save.overlay() == Blocks.spawn) {
                     CastleRooms.shardedSpawn = tiles.getc(save.x, save.y);
                     CastleRooms.blueSpawn = tiles.getc(save.x, tiles.height - save.y - 1);
