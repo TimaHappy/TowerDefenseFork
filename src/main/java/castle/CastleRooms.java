@@ -14,6 +14,7 @@ import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
+import mindustry.gen.Nulls;
 import mindustry.type.ItemStack;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
@@ -22,7 +23,7 @@ import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.LaserTurret;
 import mindustry.world.blocks.defense.turrets.LiquidTurret;
 import mindustry.world.blocks.environment.Floor;
-import mindustry.world.blocks.units.CommandCenter;
+import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.RepairPoint;
 
 import static mindustry.Vars.tilesize;
@@ -75,6 +76,7 @@ public class CastleRooms {
         public int cost;
         public int size;
 
+        public Tile tile;
         public String label;
         public boolean showLabel;
 
@@ -89,6 +91,7 @@ public class CastleRooms {
             this.cost = cost;
             this.size = size;
 
+            this.tile = world.tile(centrex, centrey);
             this.label = "";
             this.showLabel = true;
 
@@ -138,19 +141,21 @@ public class CastleRooms {
         public void buy(PlayerData data) {
             super.buy(data);
 
-            world.tile(centrex, centrey).setNet(block, team, 0);
+            Tile source = world.tile(x, centrey);
+
+            tile.setNet(block, team, 0);
             if (block instanceof ItemTurret turret) {
-                world.build(centrex, centrey).health(Float.MAX_VALUE);
-                world.tile(x, centrey).setNet(Blocks.itemSource, team, 0);
-                world.build(x, centrey).health(Float.MAX_VALUE);
-                world.build(x, centrey).configure(turret.ammoTypes.keys().toSeq().peek());
+                tile.build.health(Float.MAX_VALUE);
+                source.setNet(Blocks.conveyor, team, 0);
+                source.build.health(Float.MAX_VALUE);
+                Call.transferItemTo(Nulls.unit, turret.ammoTypes.keys().toSeq().random(), 24, data.player.x, data.player.y, source.build);
             } else if (block instanceof LiquidTurret || block instanceof LaserTurret || block instanceof RepairPoint) {
-                world.build(centrex, centrey).health(Float.MAX_VALUE);
-                world.tile(x, centrey).setNet(Blocks.liquidSource, team, 0);
-                world.build(x, centrey).health(Float.MAX_VALUE);
-                world.build(x, centrey).configure(Liquids.cryofluid);
-            } else if (block instanceof CommandCenter) {
-                world.build(centrex, centrey).health(Float.MAX_VALUE);
+                tile.build.health(Float.MAX_VALUE);
+                source.setNet(Blocks.liquidSource, team, 0);
+                source.build.health(Float.MAX_VALUE);
+                source.build.configure(Liquids.cryofluid);
+            } else if (!(block instanceof CoreBlock)) {
+                tile.build.health(Float.MAX_VALUE);
             }
 
             bought = true;

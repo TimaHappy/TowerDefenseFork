@@ -8,7 +8,6 @@ import arc.util.Timer;
 import castle.CastleRooms.Room;
 import castle.components.Bundle;
 import castle.components.PlayerData;
-import mindustry.content.Blocks;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
 import mindustry.game.Team;
@@ -16,13 +15,8 @@ import mindustry.gen.Call;
 import mindustry.gen.Flyingc;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.world.blocks.defense.turrets.PointDefenseTurret;
-import mindustry.world.blocks.defense.turrets.TractorBeamTurret;
-import mindustry.world.blocks.defense.turrets.Turret;
-import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.storage.StorageBlock;
-import mindustry.world.blocks.units.CommandCenter;
-import mindustry.world.blocks.units.RepairPoint;
+import mindustry.world.meta.BlockGroup;
 
 import static mindustry.Vars.*;
 
@@ -104,7 +98,7 @@ public class CastleLogic {
         rules.modeName = "Wars";
 
         content.blocks().each(block -> {
-            if (block instanceof Turret || block instanceof PointDefenseTurret || block instanceof TractorBeamTurret || block instanceof CommandCenter || block instanceof RepairPoint || block instanceof LogicBlock || block instanceof StorageBlock || block == Blocks.airFactory) {
+            if (block.group == BlockGroup.turrets || block.group == BlockGroup.logic || block instanceof StorageBlock) {
                 rules.bannedBlocks.add(block);
             }
         });
