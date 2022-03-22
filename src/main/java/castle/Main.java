@@ -53,6 +53,8 @@ public class Main extends Plugin {
 
         netServer.admins.addActionFilter(action -> {
             if ((action.type != ActionType.placeBlock && action.type != ActionType.breakBlock) || action.tile == null) return true;
+
+            if (Seq.with(action.tile.nearby(0), action.tile.nearby(1), action.tile.nearby(2), action.tile.nearby(3)).contains(tile -> tile != null && (tile.block() == Blocks.itemSource || tile.block() == Blocks.itemSource))) return false;
             return !action.tile.getLinkedTilesAs(action.block, new Seq<>()).contains(tile -> tile.floor() == Blocks.metalFloor || tile.floor() == Blocks.metalFloor5 || tile.overlay() == Blocks.tendrils);
         });
 

@@ -110,6 +110,11 @@ public class CastleGenerator implements Cons<Tiles> {
                     tiles.getc(save.x, save.y).setNet(block, Team.sharded, 0);
                     tiles.getc(save.x, tiles.height - save.y - 1).setNet(block, Team.blue, 0);
 
+                    tiles.getc(save.x - 3, save.y).setNet(Blocks.powerSource, Team.sharded, 0);
+                    tiles.getc(save.x - 3, tiles.height - save.y - 1).setNet(Blocks.powerSource, Team.blue, 0);
+                    tiles.getc(save.x - 3, save.y).build.health(Float.POSITIVE_INFINITY);
+                    tiles.getc(save.x - 3, tiles.height - save.y - 1).build.health(Float.POSITIVE_INFINITY);
+
                     CastleRooms.rooms.add(new CoreRoom(Team.sharded, save.x - 2, save.y - 2, 5000));
                     CastleRooms.rooms.add(new CoreRoom(Team.blue, save.x - 2, tiles.height - save.y - 1 - 2, 5000));
                 } else if (save.block() instanceof Turret || save.block() instanceof TractorBeamTurret || save.block() instanceof PointDefenseTurret || save.block() instanceof CommandCenter || save.block() instanceof RepairPoint) {

@@ -4,30 +4,26 @@ import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
-import arc.util.Time;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
-import mindustry.content.Items;
 import mindustry.content.Liquids;
 import mindustry.entities.Units;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
-import mindustry.gen.Nulls;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.blocks.defense.turrets.LaserTurret;
 import mindustry.world.blocks.defense.turrets.LiquidTurret;
+import mindustry.world.blocks.defense.turrets.PowerTurret;
 import mindustry.world.blocks.environment.Floor;
-import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.RepairPoint;
 import mindustry.world.consumers.ConsumeType;
 
@@ -151,7 +147,6 @@ public class CastleRooms {
             Tile source = world.tile(x, centrey);
 
             if (block instanceof ItemTurret turret) {
-
                 Item item = Seq.with(turret.ammoTypes.keys()).random();
                 source.setNet(Blocks.itemSource, team, 0);
                 source.build.health(Float.MAX_VALUE);
@@ -162,11 +157,20 @@ public class CastleRooms {
                     source.nearby(1).build.health(Float.MAX_VALUE);
                 }
 
-            } else if (block instanceof LiquidTurret || block instanceof LaserTurret || block instanceof RepairPoint) {
-
+                source.nearby(-1, 0).setFloorNet(source.floor());
+                source.nearby(-1, 1).setFloorNet(source.floor());
+                source.nearby(-1, -1).setFloorNet(source.floor());
+            } else if (block instanceof LiquidTurret) {
                 source.setNet(Blocks.liquidSource, team, 0);
                 source.build.health(Float.MAX_VALUE);
                 source.build.configure(Liquids.cryofluid);
+
+                source.nearby(-1, 0).setFloorNet(source.floor());
+                source.nearby(-1, 1).setFloorNet(source.floor());
+                source.nearby(-1, -1).setFloorNet(source.floor());
+            } else if (block instanceof PowerTurret || block instanceof RepairPoint) {
+                source.setNet(Blocks.powerSource, team, 0);
+                source.build.health(Float.MAX_VALUE);
             }
 
             bought = true;
@@ -176,6 +180,9 @@ public class CastleRooms {
 
         @Override
         public boolean canBuy(PlayerData data) {
+            if (true) {
+                return true;
+            }
             return super.canBuy(data) && !bought && data.player.team() == team && world.build(centrex, centrey) == null;
         }
 
