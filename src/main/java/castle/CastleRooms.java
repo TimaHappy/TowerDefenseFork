@@ -4,10 +4,13 @@ import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
+import arc.util.Time;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
+import mindustry.content.Fx;
+import mindustry.content.Items;
 import mindustry.content.Liquids;
 import mindustry.entities.Units;
 import mindustry.game.Team;
@@ -15,6 +18,7 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
 import mindustry.gen.Nulls;
+import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
@@ -25,6 +29,7 @@ import mindustry.world.blocks.defense.turrets.LiquidTurret;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.RepairPoint;
+import mindustry.world.consumers.ConsumeType;
 
 import static mindustry.Vars.tilesize;
 import static mindustry.Vars.world;
@@ -140,22 +145,28 @@ public class CastleRooms {
         @Override
         public void buy(PlayerData data) {
             super.buy(data);
+            tile.setNet(block, team, 0);
+            tile.build.health(Float.MAX_VALUE);
 
             Tile source = world.tile(x, centrey);
 
-            tile.setNet(block, team, 0);
             if (block instanceof ItemTurret turret) {
-                tile.build.health(Float.MAX_VALUE);
-                source.setNet(Blocks.conveyor, team, 0);
+
+                Item item = Seq.with(turret.ammoTypes.keys()).random();
+                source.setNet(Blocks.itemSource, team, 0);
                 source.build.health(Float.MAX_VALUE);
-                Call.transferItemTo(Nulls.unit, turret.ammoTypes.keys().toSeq().random(), 24, data.player.x, data.player.y, source.build);
+                source.build.configure(item);
+
+                if (turret.consumes.has(ConsumeType.power)) {
+                    source.nearby(1).setNet(Blocks.powerSource, team, 0);
+                    source.nearby(1).build.health(Float.MAX_VALUE);
+                }
+
             } else if (block instanceof LiquidTurret || block instanceof LaserTurret || block instanceof RepairPoint) {
-                tile.build.health(Float.MAX_VALUE);
+
                 source.setNet(Blocks.liquidSource, team, 0);
                 source.build.health(Float.MAX_VALUE);
                 source.build.configure(Liquids.cryofluid);
-            } else if (!(block instanceof CoreBlock)) {
-                tile.build.health(Float.MAX_VALUE);
             }
 
             bought = true;
@@ -189,7 +200,7 @@ public class CastleRooms {
             this.stack = stack;
             this.interval = new Interval();
 
-            this.label = CastleIcons.get(block) + " (" + CastleIcons.get(stack.item) + ") :[white] " + cost;
+            this.label = "[" + CastleIcons.get(stack.item) + "] " + CastleIcons.get(block) + " :[white] " + cost;
         }
 
         @Override
@@ -197,6 +208,7 @@ public class CastleRooms {
             super.update();
 
             if (bought && interval.get(300f)) {
+                Call.effect(Fx.mineHuge, centrex * tilesize, centrey * tilesize, 0f, team.color);
                 Call.transferItemTo(null, stack.item, stack.amount, centrex * tilesize, centrey * tilesize, team.core());
             }
         }
@@ -212,6 +224,17 @@ public class CastleRooms {
 
         @Override
         public void update() {}
+
+        @Override
+        public void buy(PlayerData data) {
+            data.money -= cost;
+
+            tile.setNet(block, team, 0);
+
+            bought = true;
+            showLabel = false;
+            Groups.player.each(p -> p.team() == team, p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, centrex * tilesize, y * tilesize));
+        }
 
         @Override
         public boolean canBuy(PlayerData data) {

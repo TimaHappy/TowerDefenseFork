@@ -84,8 +84,8 @@ public class CastleLogic {
     }
 
     public static Rules applyRules(Rules rules) {
-        rules.teams.get(Team.sharded).cheat = true;
-        rules.teams.get(Team.blue).cheat = true;
+        //rules.teams.get(Team.sharded).cheat = true;
+        //rules.teams.get(Team.blue).cheat = true;
 
         rules.pvp = true;
         rules.canGameOver = false;
