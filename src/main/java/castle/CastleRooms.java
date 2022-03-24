@@ -158,8 +158,11 @@ public class CastleRooms {
                 }
 
                 source.nearby(-1, 0).setFloorNet(source.floor());
+                source.nearby(-1, 0).removeNet();
                 source.nearby(-1, 1).setFloorNet(source.floor());
+                source.nearby(-1, 1).removeNet();
                 source.nearby(-1, -1).setFloorNet(source.floor());
+                source.nearby(-1, -1).removeNet();
             } else if (block instanceof LiquidTurret) {
                 source.setNet(Blocks.liquidSource, team, 0);
                 source.build.health(Float.MAX_VALUE);
