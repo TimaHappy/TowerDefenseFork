@@ -129,8 +129,8 @@ public class CastleGenerator implements Cons<Tiles> {
                 } else if (save.block() instanceof Sorter && save.build instanceof SorterBuild sorterBuild) {
                     Item item = sorterBuild.config();
                     int hardness = (int) (item.hardness == 0 ? item.cost * 2 : item.hardness);
-                    CastleRooms.rooms.add(new MinerRoom(new ItemStack(item, 48 - hardness * 8), Team.sharded, save.x - 2, save.y - 2, 250 + hardness * 250));
-                    CastleRooms.rooms.add(new MinerRoom(new ItemStack(item, 48 - hardness * 8), Team.blue, save.x - 2, tiles.height - save.y - 1 - 2, 250 + hardness * 250));
+                    CastleRooms.rooms.add(new MinerRoom(new ItemStack(item, 96 - hardness * 16), Team.sharded, save.x - 2, save.y - 2, 250 + hardness * 250));
+                    CastleRooms.rooms.add(new MinerRoom(new ItemStack(item, 96 - hardness * 16), Team.blue, save.x - 2, tiles.height - save.y - 1 - 2, 250 + hardness * 250));
                 } else if (save.overlay() == Blocks.spawn) {
                     CastleRooms.shardedSpawn = tiles.getc(save.x, save.y);
                     CastleRooms.blueSpawn = tiles.getc(save.x, tiles.height - save.y - 1);
