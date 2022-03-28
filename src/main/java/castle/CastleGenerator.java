@@ -162,11 +162,11 @@ public class CastleGenerator implements Cons<Tiles> {
 
         addUnitRoom(UnitTypes.nova, 0, shopX + distance * 5, shopY + 2, 100);
         addUnitRoom(UnitTypes.pulsar, 1, shopX + distance * 6, shopY + 2, 175);
-        addUnitRoom(UnitTypes.quasar, 4, shopX + distance * 7, shopY + 2, 500);
+        addUnitRoom(UnitTypes.quasar, 4, shopX + distance * 7, shopY + 2, 750);
         addUnitRoom(UnitTypes.vela, 22, shopX + distance * 8, shopY + 2, 3500);
-        addUnitRoom(UnitTypes.corvus, 65, shopX + distance * 9, shopY + 2, 8500);
+        addUnitRoom(UnitTypes.corvus, 65, shopX + distance * 9, shopY + 2, 10000);
 
-        addUnitRoom(UnitTypes.risso, 1, shopX + distance * 5, shopY + 2 + distance * 2, 150);
+        addUnitRoom(UnitTypes.risso, 0, shopX + distance * 5, shopY + 2 + distance * 2, 200);
         addUnitRoom(UnitTypes.minke, 2, shopX + distance * 6, shopY + 2 + distance * 2, 350);
         addUnitRoom(UnitTypes.bryde, 8, shopX + distance * 7, shopY + 2 + distance * 2, 1200);
         addUnitRoom(UnitTypes.sei, 24, shopX + distance * 8, shopY + 2 + distance * 2, 3750);
