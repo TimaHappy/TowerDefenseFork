@@ -1,6 +1,7 @@
 package castle;
 
 import arc.Events;
+import arc.func.Boolf;
 import arc.struct.Seq;
 import arc.util.Interval;
 import arc.util.Log;
@@ -15,8 +16,11 @@ import mindustry.gen.Call;
 import mindustry.gen.Flyingc;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.world.Tile;
 import mindustry.world.blocks.storage.StorageBlock;
 import mindustry.world.meta.BlockGroup;
+
+import java.util.Objects;
 
 import static mindustry.Vars.*;
 
@@ -84,9 +88,6 @@ public class CastleLogic {
     }
 
     public static Rules applyRules(Rules rules) {
-        //rules.teams.get(Team.sharded).cheat = true;
-        //rules.teams.get(Team.blue).cheat = true;
-
         rules.pvp = true;
         rules.canGameOver = false;
 
@@ -108,5 +109,10 @@ public class CastleLogic {
 
     public static String colorizedTeam(Team team) {
         return "[#" + team.color + "]" + team.name;
+    }
+
+    public static boolean checkNearby(Tile tile, Boolf<Tile> boolf) {
+        Seq<Tile> nearby = Seq.with(tile, tile.nearby(0), tile.nearby(1), tile.nearby(2), tile.nearby(3), tile.nearby(-1, -1), tile.nearby(1, -1), tile.nearby(-1, 1), tile.nearby(1, 1)).filter(Objects::nonNull);
+        return nearby.contains(boolf);
     }
 }
