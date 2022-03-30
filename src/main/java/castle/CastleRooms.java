@@ -69,8 +69,9 @@ public class CastleRooms {
     public static class Room {
         public int x;
         public int y;
-        public int centrex;
-        public int centrey;
+
+        public int startx;
+        public int starty;
         public int endx;
         public int endy;
 
@@ -84,15 +85,16 @@ public class CastleRooms {
         public Room(int x, int y, int cost, int size) {
             this.x = x;
             this.y = y;
-            this.centrex = x + size / 2;
-            this.centrey = y + size / 2;
-            this.endx = x + size;
-            this.endy = y + size;
+
+            this.startx = x - size / 2;
+            this.starty = y - size / 2;
+            this.endx = x + size / 2;
+            this.endy = y + size / 2;
 
             this.cost = cost;
             this.size = size;
 
-            this.tile = world.tile(centrex, centrey);
+            this.tile = world.tile(x, y);
             this.label = "";
             this.showLabel = true;
 
@@ -110,10 +112,21 @@ public class CastleRooms {
         }
 
         public boolean check(float x, float y) {
-            return x > this.x * tilesize && y > this.y * tilesize && x < this.endx * tilesize && y < this.endy * tilesize;
+            return x > this.startx * tilesize && y > this.starty * tilesize && x < this.endx * tilesize && y < this.endy * tilesize;
         }
 
-        public void spawn() {}
+        public void spawn() {
+            for (int x = 0; x <= size; x++) {
+                for (int y = 0; y <= size; y++) {
+                    Floor floor = (x == 0 || y == 0 || x == size || y == size ? Blocks.metalFloor5 : Blocks.metalFloor).asFloor();
+                    Tile tile = world.tiles.getc(this.startx + x, this.starty + y);
+                    if (tile != null) {
+                        tile.remove();
+                        tile.setFloor(floor);
+                    }
+                }
+            }
+        }
     }
 
 
@@ -144,7 +157,7 @@ public class CastleRooms {
             tile.setNet(block, team, 0);
             tile.build.health(Float.MAX_VALUE);
 
-            Tile source = world.tile(x, centrey);
+            Tile source = world.tile(startx, y);
 
             if (block instanceof ItemTurret turret) {
                 Item item = Seq.with(turret.ammoTypes.keys()).random();
@@ -181,24 +194,22 @@ public class CastleRooms {
 
             bought = true;
             showLabel = false;
-            Groups.player.each(p -> p.team() == team, p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, centrex * tilesize, y * tilesize));
+            Groups.player.each(p -> p.team() == team, p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, x * tilesize, starty * tilesize));
         }
 
         @Override
         public boolean canBuy(PlayerData data) {
-            return super.canBuy(data) && !bought && data.player.team() == team && world.build(centrex, centrey) == null;
+            return super.canBuy(data) && !bought && data.player.team() == team && world.build(x, y) == null;
         }
 
         @Override
         public void update() {
-            if (bought && world.build(centrex, centrey) == null) {
+            if (bought && world.build(x, y) == null) {
                 bought = false;
                 showLabel = true;
             }
         }
     }
-
-
 
     public static class MinerRoom extends BlockRoom {
         public ItemStack stack;
@@ -218,8 +229,8 @@ public class CastleRooms {
             super.update();
 
             if (bought && interval.get(300f)) {
-                Call.effect(Fx.mineHuge, centrex * tilesize, centrey * tilesize, 0f, team.color);
-                Call.transferItemTo(null, stack.item, stack.amount, centrex * tilesize, centrey * tilesize, team.core());
+                Call.effect(Fx.mineHuge, x * tilesize, y * tilesize, 0f, team.color);
+                Call.transferItemTo(null, stack.item, stack.amount, x * tilesize, y * tilesize, team.core());
             }
         }
     }
@@ -243,12 +254,17 @@ public class CastleRooms {
 
             bought = true;
             showLabel = false;
-            Groups.player.each(p -> p.team() == team, p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, centrex * tilesize, y * tilesize));
+            Groups.player.each(p -> p.team() == team, p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, x * tilesize, starty * tilesize));
         }
 
         @Override
         public boolean canBuy(PlayerData data) {
             return data.money >= cost && !bought && data.player.team() == team;
+        }
+
+        @Override
+        public void spawn() {
+
         }
     }
 
@@ -298,20 +314,6 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && (income > 0 || data.income + income > 0) && Units.getCap(data.player.team()) > data.player.team().data().unitCount;
-        }
-
-        @Override
-        public void spawn() {
-            for (int x = 0; x <= size; x++) {
-                for (int y = 0; y <= size; y++) {
-                    Floor floor = (x == 0 || y == 0 || x == size || y == size ? Blocks.metalFloor5 : Blocks.metalFloor).asFloor();
-                    Tile tile = world.tiles.getc(this.x + x, this.y + y);
-                    if (tile != null) {
-                        tile.remove();
-                        tile.setFloor(floor);
-                    }
-                }
-            }
         }
     }
 }

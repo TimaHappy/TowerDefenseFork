@@ -58,7 +58,7 @@ public class PlayerData {
         if (interval.get(1, 150f)) {
             CastleRooms.rooms.each(room -> room.showLabel, room -> {
                 if ((room instanceof BlockRoom blockRoom && blockRoom.team != player.team())) return;
-                Call.label(player.con, room.label, 2.5f, room.centrex * tilesize, room.centrey * tilesize - room.size * 2);
+                Call.label(player.con, room.label, 2.5f, room.x * tilesize, room.y * tilesize - room.size * 2);
             });
         }
 
