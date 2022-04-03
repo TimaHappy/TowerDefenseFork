@@ -40,6 +40,8 @@ public class CastleRooms {
     public static Tile shardedSpawn, blueSpawn;
 
     public static void load() {
+        // TODO сделать формулу для высчета стоимости турели по ее урону, хп, размеру?
+
         blockCosts = ObjectMap.of(
                 Blocks.duo, 100,
                 Blocks.scatter, 250,
@@ -65,6 +67,8 @@ public class CastleRooms {
                 Blocks.repairTurret, 1200
         );
     }
+
+    // TODO прокачиваемые комнаты?
 
     public static class Room {
         public int x;
@@ -115,6 +119,7 @@ public class CastleRooms {
             return x > this.startx * tilesize && y > this.starty * tilesize && x < this.endx * tilesize && y < this.endy * tilesize;
         }
 
+        // TODO убрать этот говнокод
         public void spawn() {
             for (int x = 0; x <= size; x++) {
                 for (int y = 0; y <= size; y++) {
@@ -159,6 +164,7 @@ public class CastleRooms {
 
             Tile source = world.tile(startx, y);
 
+            // TODO внизу говнокод, поменять или убрать
             if (block instanceof ItemTurret turret) {
                 Item item = Seq.with(turret.ammoTypes.keys()).random();
                 source.setNet(Blocks.itemSource, team, 0);
@@ -228,6 +234,7 @@ public class CastleRooms {
         public void update() {
             super.update();
 
+            // TODO прокачка скорости добычи?
             if (bought && interval.get(300f)) {
                 Call.effect(Fx.mineHuge, x * tilesize, y * tilesize, 0f, team.color);
                 Call.transferItemTo(null, stack.item, stack.amount, x * tilesize, y * tilesize, team.core());
@@ -246,6 +253,7 @@ public class CastleRooms {
         @Override
         public void update() {}
 
+        // TODO очень похоже на код из BlockRoom, объединить?
         @Override
         public void buy(PlayerData data) {
             data.money -= cost;
@@ -287,6 +295,7 @@ public class CastleRooms {
             this.roomType = roomType;
             this.income = income;
 
+            // TODO упростить?
             StringBuilder str = new StringBuilder();
 
             str.append(" ".repeat(Math.max(0, (String.valueOf(income).length() + String.valueOf(cost).length() + 2) / 2))).append(CastleIcons.get(unitType));

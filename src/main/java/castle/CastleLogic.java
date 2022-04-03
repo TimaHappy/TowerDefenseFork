@@ -87,6 +87,7 @@ public class CastleLogic {
         Timer.schedule(CastleLogic::restart, 10f);
     }
 
+    // TODO нужен ли отдельный метод для этого?
     public static Rules applyRules(Rules rules) {
         rules.pvp = true;
         rules.canGameOver = false;

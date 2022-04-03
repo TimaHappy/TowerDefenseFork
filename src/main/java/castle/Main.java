@@ -31,6 +31,8 @@ public class Main extends Plugin {
 
     @Override
     public void init() {
+
+        // TODO свой ИИ юнитам, отдельный для нападающих и защитников
         UnitTypes.flare.defaultController = GroundAI::new;
         UnitTypes.horizon.defaultController = GroundAI::new;
         UnitTypes.zenith.defaultController = GroundAI::new;
@@ -39,6 +41,8 @@ public class Main extends Plugin {
         UnitTypes.omura.abilities.clear();
         UnitTypes.corvus.abilities.clear();
         UnitTypes.arkyid.abilities.clear();
+
+        // TODO че это за хуйня
         UnitTypes.aegires.abilities.each(ability -> {
             if (ability instanceof EnergyFieldAbility fieldAbility) {
                 fieldAbility.maxTargets = 3;
@@ -52,6 +56,7 @@ public class Main extends Plugin {
         CastleUnitDrops.load();
         CastleRooms.load();
 
+        // TODO это огромный костыль, упростить
         netServer.admins.addActionFilter(action -> {
             if ((action.type != ActionType.placeBlock && action.type != ActionType.breakBlock) || action.tile == null) return true;
 
@@ -59,6 +64,7 @@ public class Main extends Plugin {
             return !action.tile.getLinkedTilesAs(action.block, new Seq<>()).contains(tile -> tile.floor() == Blocks.metalFloor || tile.floor() == Blocks.metalFloor5 || tile.overlay() == Blocks.tendrils);
         });
 
+        // TODO нахуя это
         netServer.assigner = (player, players) -> {
             int sharded = Seq.with(players).count(p -> p != player && p.team() == Team.sharded);
             int blue = Seq.with(players).count(p -> p != player && p.team() == Team.blue);
@@ -101,6 +107,7 @@ public class Main extends Plugin {
     @Override
     public void registerClientCommands(CommandHandler handler) {
         handler.<Player>register("hud", "Toggle HUD.", (args, player) -> {
+            // TODO упростить?
             PlayerData data = PlayerData.datas.get(player.uuid());
             if (data.showHud) {
                 data.showHud = false;

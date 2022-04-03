@@ -29,6 +29,7 @@ public class PlayerData {
     public Player player;
     public Interval interval;
 
+    // TODO сохранение вышедших игроков до конца раунда
     public int money;
     public int income;
 
@@ -40,6 +41,8 @@ public class PlayerData {
         this.player = player;
         this.interval = new Interval(2);
         this.money = 0;
+
+        // TODO почему 15, мб сделать рандомное для каждой карты?
         this.income = 15;
         this.bonus = 1f;
         this.showHud = true;
@@ -50,11 +53,14 @@ public class PlayerData {
     }
 
     public void update() {
+
+        // TODO странная формула для бонуса, улушчить?
         if (interval.get(0, 60f)) {
             bonus = Math.max((float) Groups.player.size() / Groups.player.count(p -> p.team() == player.team()) / 2f, 1f);
             money += Mathf.floor(income * bonus);
         }
 
+        // TODO этачо за хуйня
         if (interval.get(1, 150f)) {
             CastleRooms.rooms.each(room -> room.showLabel, room -> {
                 if ((room instanceof BlockRoom blockRoom && blockRoom.team != player.team())) return;
@@ -62,6 +68,7 @@ public class PlayerData {
             });
         }
 
+        // TODO еще большая хуйня
         if (!player.dead() && player.team().core() != null) {
             if (player.shooting) {
                 CastleRooms.rooms.each(room -> {
@@ -74,6 +81,7 @@ public class PlayerData {
             CoreBuild core = player.team().core();
             UnitType type = core.block == Blocks.coreNucleus ? UnitTypes.cyerce : UnitTypes.retusa;
 
+            // TODO самая большая хуйня
             if (player.unit().type != type && player.unit().spawnedByCore) {
                 Unit unit = type.spawn(player.team(), core.x + 40, core.y + Mathf.random(-40, 40));
                 player.unit(unit);
@@ -81,6 +89,7 @@ public class PlayerData {
             }
         }
 
+        // TODO блять это что нахуй
         if (showHud) {
             Locale locale = Bundle.findLocale(player);
             StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));

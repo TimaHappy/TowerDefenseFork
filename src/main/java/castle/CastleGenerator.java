@@ -123,6 +123,8 @@ public class CastleGenerator implements Cons<Tiles> {
                     int blueX = save.x;
                     int blueY = tiles.height - save.y - 1;
 
+                    // TODO не всегда корректно спавнит блоки 3*3 и 1*1, ади, памаги
+
                     CastleRooms.rooms.add(new BlockRoom(save.block(), Team.sharded, shardedX, shardedY, CastleRooms.blockCosts.get(save.block(), 1000)));
                     CastleRooms.rooms.add(new BlockRoom(save.block(), Team.blue, blueX, blueY, CastleRooms.blockCosts.get(save.block(), 1000)));
                 } else if (save.block() instanceof Sorter && save.build instanceof SorterBuild sorterBuild) {
