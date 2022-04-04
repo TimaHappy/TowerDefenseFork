@@ -1,6 +1,10 @@
 .gradle
 /build/
 
+# I rly need this
+/bin/
+/.vscode/
+
 # Ignore Gradle GUI config
 gradle-app.setting
 

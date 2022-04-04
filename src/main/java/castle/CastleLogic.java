@@ -26,10 +26,27 @@ import static mindustry.Vars.*;
 
 public class CastleLogic {
 
+    /** creating a new one every match is masochism */
+    public static Rules rules;
+
     public static Interval interval = new Interval();
     public static int timer = 45 * 60;
 
     public static int halfHeight;
+
+    public static void init() {
+        rules.pvp = true;
+        rules.canGameOver = false;
+
+        rules.unitCap = 500;
+        rules.unitCapVariable = false;
+
+        rules.waves = false;
+        rules.waveTimer = false;
+        rules.modeName = "Wars";
+
+        rules.bannedBlocks.addAll(content.blocks().select(b -> b.group == BlockGroup.turrets || b.group == BlockGroup.logic || b instanceof StorageBlock));
+    }
 
     public static void update() {
         if (!world.isGenerating() && !state.serverPaused && !state.gameOver) {
@@ -44,9 +61,8 @@ public class CastleLogic {
             CastleRooms.rooms.each(Room::update);
 
             Groups.unit.each(Flyingc::isFlying, unit -> {
-                if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0 || (unit.tileY() > halfHeight && unit.tileY() < world.height() - halfHeight - 1)) {
+                if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0 || (unit.tileY() > halfHeight && unit.tileY() < world.height() - halfHeight - 1))
                     Call.unitDespawn(unit);
-                }
             });
         }
     }
@@ -66,7 +82,7 @@ public class CastleLogic {
         gen.loadMap(maps.getNextMap(Gamemode.pvp, state.map));
         Call.worldDataBegin();
 
-        state.rules = applyRules(new Rules());
+        state.rules = rules;
         logic.play();
 
         timer = 45 * 60;
@@ -85,27 +101,6 @@ public class CastleLogic {
             Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format("events.draw", Bundle.findLocale(p))));
         }
         Timer.schedule(CastleLogic::restart, 10f);
-    }
-
-    // TODO нужен ли отдельный метод для этого?
-    public static Rules applyRules(Rules rules) {
-        rules.pvp = true;
-        rules.canGameOver = false;
-
-        rules.unitCap = 500;
-        rules.unitCapVariable = false;
-
-        rules.waves = false;
-        rules.waveTimer = false;
-        rules.modeName = "Wars";
-
-        content.blocks().each(block -> {
-            if (block.group == BlockGroup.turrets || block.group == BlockGroup.logic || block instanceof StorageBlock) {
-                rules.bannedBlocks.add(block);
-            }
-        });
-
-        return rules;
     }
 
     public static String colorizedTeam(Team team) {

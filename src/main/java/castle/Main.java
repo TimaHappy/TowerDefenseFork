@@ -12,7 +12,6 @@ import mindustry.ai.types.GroundAI;
 import mindustry.content.Blocks;
 import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
-import mindustry.core.Logic;
 import mindustry.entities.abilities.EnergyFieldAbility;
 import mindustry.game.EventType.BlockDestroyEvent;
 import mindustry.game.EventType.PlayerJoin;
