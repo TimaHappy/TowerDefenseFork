@@ -1,6 +1,7 @@
 package castle;
 
 import arc.math.Mathf;
+import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
@@ -9,23 +10,16 @@ import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
-import mindustry.content.Liquids;
 import mindustry.entities.Units;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
-import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
-import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.blocks.defense.turrets.LiquidTurret;
-import mindustry.world.blocks.defense.turrets.PowerTurret;
-import mindustry.world.blocks.environment.Floor;
-import mindustry.world.blocks.units.RepairPoint;
-import mindustry.world.consumers.ConsumeType;
+import mindustry.world.blocks.storage.CoreBlock;
 
 import static mindustry.Vars.tilesize;
 import static mindustry.Vars.world;
@@ -33,16 +27,14 @@ import static mindustry.Vars.world;
 public class CastleRooms {
 
     public static final Seq<Room> rooms = new Seq<>();
-
-    public static ObjectMap<Block, Integer> blockCosts;
+    public static final ObjectMap<Block, Integer> blockCosts = new ObjectMap<>();
 
     public static final int size = 8;
     public static Tile shardedSpawn, blueSpawn;
 
     public static void load() {
         // TODO сделать формулу для высчета стоимости турели по ее урону, хп, размеру?
-
-        blockCosts = ObjectMap.of(
+        blockCosts.putAll(
                 Blocks.duo, 100,
                 Blocks.scatter, 250,
                 Blocks.scorch, 200,
@@ -70,7 +62,7 @@ public class CastleRooms {
 
     // TODO прокачиваемые комнаты?
 
-    public static class Room {
+    public static class Room implements Position {
         public int x;
         public int y;
 
@@ -83,8 +75,7 @@ public class CastleRooms {
         public int size;
 
         public Tile tile;
-        public String label;
-        public boolean showLabel;
+        public String label = "";
 
         public Room(int x, int y, int cost, int size) {
             this.x = x;
@@ -97,10 +88,7 @@ public class CastleRooms {
 
             this.cost = cost;
             this.size = size;
-
             this.tile = world.tile(x, y);
-            this.label = "";
-            this.showLabel = true;
 
             rooms.add(this);
         }
@@ -109,28 +97,27 @@ public class CastleRooms {
 
         public void buy(PlayerData data) {
             data.money -= cost;
+            Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, getX(), getY()));
         }
 
         public boolean canBuy(PlayerData data) {
-            return data.money >= cost;
+            return showLabel(data) && data.money >= cost;
+        }
+
+        public boolean showLabel(PlayerData data) {
+            return data.player.con.isConnected();
         }
 
         public boolean check(float x, float y) {
             return x > this.startx * tilesize && y > this.starty * tilesize && x < this.endx * tilesize && y < this.endy * tilesize;
         }
 
-        // TODO убрать этот говнокод
-        public void spawn() {
-            for (int x = 0; x <= size; x++) {
-                for (int y = 0; y <= size; y++) {
-                    Floor floor = (x == 0 || y == 0 || x == size || y == size ? Blocks.metalFloor5 : Blocks.metalFloor).asFloor();
-                    Tile tile = world.tiles.getc(this.startx + x, this.starty + y);
-                    if (tile != null) {
-                        tile.remove();
-                        tile.setFloor(floor);
-                    }
-                }
-            }
+        public float getX() {
+            return x * tilesize;
+        }
+
+        public float getY() {
+            return y * tilesize;
         }
     }
 
@@ -144,11 +131,9 @@ public class CastleRooms {
 
         public BlockRoom(Block block, Team team, int x, int y, int cost, int size) {
             super(x, y, cost, size);
+
             this.block = block;
             this.team = team;
-
-            this.bought = false;
-
             this.label = CastleIcons.get(block) + " :[white] " + cost;
         }
 
@@ -156,64 +141,32 @@ public class CastleRooms {
             this(block, team, x, y, cost, block.size + 1);
         }
 
+        /** special for cores */
+        public BlockRoom(Team team, int x, int y, int cost) {
+            this(Blocks.coreNucleus, team, x, y, cost, Blocks.coreShard.size + 1);
+        }
+
         @Override
         public void buy(PlayerData data) {
             super.buy(data);
             tile.setNet(block, team, 0);
+            if (block instanceof CoreBlock) return;
             tile.build.health(Float.MAX_VALUE);
-
-            Tile source = world.tile(startx, y);
-
-            // TODO внизу говнокод, поменять или убрать
-            if (block instanceof ItemTurret turret) {
-                Item item = Seq.with(turret.ammoTypes.keys()).random();
-                source.setNet(Blocks.itemSource, team, 0);
-                source.build.health(Float.MAX_VALUE);
-                source.build.configure(item);
-
-                if (turret.consumes.has(ConsumeType.power)) {
-                    source.nearby(1).setNet(Blocks.powerSource, team, 0);
-                    source.nearby(1).build.health(Float.MAX_VALUE);
-                }
-
-                if (turret == Blocks.meltdown) {
-                    source.nearby(3).setNet(Blocks.liquidSource, team, 0);
-                    source.nearby(3).build.configure(Liquids.cryofluid);
-                    source.nearby(3).build.health(Float.MAX_VALUE);
-                }
-
-                source.nearby(-1, 0).removeNet();
-                source.nearby(-1, 1).removeNet();
-                source.nearby(-1, -1).removeNet();
-            } else if (block instanceof LiquidTurret) {
-                source.setNet(Blocks.liquidSource, team, 0);
-                source.build.health(Float.MAX_VALUE);
-                source.build.configure(Liquids.cryofluid);
-
-                source.nearby(-1, 0).removeNet();
-                source.nearby(-1, 1).removeNet();
-                source.nearby(-1, -1).removeNet();
-            } else if (block instanceof PowerTurret || block instanceof RepairPoint) {
-                source.setNet(Blocks.powerSource, team, 0);
-                source.build.health(Float.MAX_VALUE);
-            }
-
-            bought = true;
-            showLabel = false;
-            Groups.player.each(p -> p.team() == team, p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, x * tilesize, starty * tilesize));
         }
 
         @Override
         public boolean canBuy(PlayerData data) {
-            return super.canBuy(data) && !bought && data.player.team() == team && world.build(x, y) == null;
+            return super.canBuy(data) && showLabel(data);
+        }
+
+        @Override
+        public boolean showLabel(PlayerData data) {
+            return super.showLabel(data) && data.player.team() == team && !bought;
         }
 
         @Override
         public void update() {
-            if (bought && world.build(x, y) == null) {
-                bought = false;
-                showLabel = true;
-            }
+            if (world.build(x, y) == null) bought = false;
         }
     }
 
@@ -239,40 +192,6 @@ public class CastleRooms {
                 Call.effect(Fx.mineHuge, x * tilesize, y * tilesize, 0f, team.color);
                 Call.transferItemTo(null, stack.item, stack.amount, x * tilesize, y * tilesize, team.core());
             }
-        }
-    }
-
-
-
-    public static class CoreRoom extends BlockRoom {
-
-        public CoreRoom(Team team, int x, int y, int cost) {
-            super(Blocks.coreNucleus, team, x, y, cost, Blocks.coreShard.size + 1);
-        }
-
-        @Override
-        public void update() {}
-
-        // TODO очень похоже на код из BlockRoom, объединить?
-        @Override
-        public void buy(PlayerData data) {
-            data.money -= cost;
-
-            tile.setNet(block, team, 0);
-
-            bought = true;
-            showLabel = false;
-            Groups.player.each(p -> p.team() == team, p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, x * tilesize, starty * tilesize));
-        }
-
-        @Override
-        public boolean canBuy(PlayerData data) {
-            return data.money >= cost && !bought && data.player.team() == team;
-        }
-
-        @Override
-        public void spawn() {
-
         }
     }
 
@@ -310,7 +229,7 @@ public class CastleRooms {
 
         @Override
         public void buy(PlayerData data) {
-            super.buy(data);
+            data.money -= cost;
             data.income += income;
 
             if (roomType == UnitRoomType.attack) {

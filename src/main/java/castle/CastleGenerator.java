@@ -5,7 +5,6 @@ import arc.func.Cons;
 import arc.math.geom.Geometry;
 import arc.util.Log;
 import castle.CastleRooms.BlockRoom;
-import castle.CastleRooms.CoreRoom;
 import castle.CastleRooms.MinerRoom;
 import castle.CastleRooms.UnitRoom;
 import mindustry.content.Blocks;
@@ -115,8 +114,8 @@ public class CastleGenerator implements Cons<Tiles> {
                     tiles.getc(save.x - 4, save.y).build.health(Float.POSITIVE_INFINITY);
                     tiles.getc(save.x - 4, tiles.height - save.y - 1).build.health(Float.POSITIVE_INFINITY);
 
-                    CastleRooms.rooms.add(new CoreRoom(Team.sharded, save.x, save.y, 5000));
-                    CastleRooms.rooms.add(new CoreRoom(Team.blue, save.x, tiles.height - save.y - 1, 5000));
+                    CastleRooms.rooms.add(new BlockRoom(Team.sharded, save.x, save.y, 5000));
+                    CastleRooms.rooms.add(new BlockRoom(Team.blue, save.x, tiles.height - save.y - 1, 5000));
                 } else if (save.block() instanceof Turret || save.block() instanceof TractorBeamTurret || save.block() instanceof PointDefenseTurret || save.block() instanceof CommandCenter || save.block() instanceof RepairPoint) {
                     int shardedX = save.x;
                     int shardedY = save.y;
@@ -141,7 +140,6 @@ public class CastleGenerator implements Cons<Tiles> {
 
         generateShop(9, saved.height + 4);
 
-        CastleRooms.rooms.each(CastleRooms.Room::spawn);
         Geometry.circle(CastleRooms.shardedSpawn.x, CastleRooms.shardedSpawn.y, 6, (x, y) -> world.tiles.getc(x, y).setOverlay(Blocks.tendrils));
         Geometry.circle(CastleRooms.blueSpawn.x, CastleRooms.blueSpawn.y, 6, (x, y) -> world.tiles.getc(x, y).setOverlay(Blocks.tendrils));
     }

@@ -26,7 +26,6 @@ import static mindustry.Vars.*;
 
 public class CastleLogic {
 
-    /** creating a new one every match is masochism */
     public static Rules rules = new Rules();
 
     public static Interval interval = new Interval();

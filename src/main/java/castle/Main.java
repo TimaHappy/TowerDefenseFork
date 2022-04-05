@@ -10,9 +10,7 @@ import castle.components.CastleUnitDrops;
 import castle.components.PlayerData;
 import mindustry.ai.types.GroundAI;
 import mindustry.content.Blocks;
-import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
-import mindustry.entities.abilities.EnergyFieldAbility;
 import mindustry.game.EventType.BlockDestroyEvent;
 import mindustry.game.EventType.PlayerJoin;
 import mindustry.game.EventType.PlayerLeave;
@@ -41,16 +39,6 @@ public class Main extends Plugin {
         UnitTypes.corvus.abilities.clear();
         UnitTypes.arkyid.abilities.clear();
 
-        // TODO че это за хуйня
-        UnitTypes.aegires.abilities.each(ability -> {
-            if (ability instanceof EnergyFieldAbility fieldAbility) {
-                fieldAbility.maxTargets = 3;
-                fieldAbility.status = StatusEffects.freezing;
-                fieldAbility.statusDuration = 24f;
-                fieldAbility.damage = 12f;
-            }
-        });
-
         CastleLogic.load();
         CastleIcons.load();
         CastleUnitDrops.load();
@@ -63,14 +51,6 @@ public class Main extends Plugin {
             if (CastleLogic.checkNearby(action.tile, tile -> tile.block() == Blocks.itemSource || tile.block() == Blocks.liquidSource || tile.block() == Blocks.powerSource)) return false;
             return !action.tile.getLinkedTilesAs(action.block, new Seq<>()).contains(tile -> tile.floor() == Blocks.metalFloor || tile.floor() == Blocks.metalFloor5 || tile.overlay() == Blocks.tendrils);
         });
-
-        // TODO нахуя это
-        netServer.assigner = (player, players) -> {
-            int sharded = Seq.with(players).count(p -> p != player && p.team() == Team.sharded);
-            int blue = Seq.with(players).count(p -> p != player && p.team() == Team.blue);
-
-            return sharded > blue ? Team.blue : Team.sharded;
-        };
 
         Events.on(PlayerJoin.class, event -> PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player)));
 
@@ -102,9 +82,9 @@ public class Main extends Plugin {
     public void registerClientCommands(CommandHandler handler) {
         handler.<Player>register("hud", "Toggle HUD.", (args, player) -> {
             PlayerData data = PlayerData.datas.get(player.uuid());
-            if (data.showHud) Call.hideHudText(player.con);
             data.showHud = !data.showHud;
-            Bundle.bundled(player, data.showHud ? "commands.hud.off" : "commands.hud.on");
+            if (!data.showHud) Call.hideHudText(player.con);
+            Bundle.bundled(player, data.showHud ? "commands.hud.on" : "commands.hud.off");
         });
     }
 
