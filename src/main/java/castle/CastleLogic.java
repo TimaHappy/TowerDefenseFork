@@ -34,7 +34,7 @@ public class CastleLogic {
 
     public static int halfHeight;
 
-    public static void init() {
+    public static void load() {
         rules.pvp = true;
         rules.canGameOver = false;
 
@@ -49,22 +49,20 @@ public class CastleLogic {
     }
 
     public static void update() {
-        if (!world.isGenerating() && !state.serverPaused && !state.gameOver) {
-            if (interval.get(60f)) timer--;
-
-            if (timer <= 0) {
-                gameOver(Team.derelict);
-                return;
-            }
-
-            PlayerData.datas().each(PlayerData::update);
-            CastleRooms.rooms.each(Room::update);
-
-            Groups.unit.each(Flyingc::isFlying, unit -> {
-                if (unit.tileX() > world.width() || unit.tileX() < 0 || unit.tileY() > world.height() || unit.tileY() < 0 || (unit.tileY() > halfHeight && unit.tileY() < world.height() - halfHeight - 1))
-                    Call.unitDespawn(unit);
-            });
+        if (world.isGenerating() || state.serverPaused || state.gameOver) return;
+        
+        if (interval.get(60f)) timer--;
+        if (timer <= 0) {
+            gameOver(Team.derelict);
+            return;
         }
+
+        PlayerData.datas().each(PlayerData::update);
+        CastleRooms.rooms.each(Room::update);
+
+        Groups.unit.each(Flyingc::isFlying, unit -> {
+            if (unit.tileY() > halfHeight && unit.tileY() < world.height() - halfHeight || unit.tileOn() == null) Call.unitDespawn(unit);
+        });
     }
 
     public static void restart() {
@@ -82,12 +80,11 @@ public class CastleLogic {
         gen.loadMap(maps.getNextMap(Gamemode.pvp, state.map));
         Call.worldDataBegin();
 
+        timer = 45 * 60;
         state.rules = rules;
         logic.play();
 
-        timer = 45 * 60;
-
-        players.each(player -> netServer.sendWorldData(player));
+        players.each(netServer::sendWorldData);
     }
 
     public static void gameOver(Team team) {
@@ -95,11 +92,8 @@ public class CastleLogic {
         Call.updateGameOver(team);
 
         Log.info("Игра окончена. Генерирую карту заново...");
-        if (team != Team.derelict) {
-            Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format("events.gameover", Bundle.findLocale(p), colorizedTeam(team))));
-        } else {
-            Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format("events.draw", Bundle.findLocale(p))));
-        }
+        Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.derelict ? "events.draw" : "events.gameover", Bundle.findLocale(p), colorizedTeam(team))));
+
         Timer.schedule(CastleLogic::restart, 10f);
     }
 

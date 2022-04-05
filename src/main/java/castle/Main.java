@@ -51,6 +51,7 @@ public class Main extends Plugin {
             }
         });
 
+        CastleLogic.load();
         CastleIcons.load();
         CastleUnitDrops.load();
         CastleRooms.load();
@@ -76,15 +77,9 @@ public class Main extends Plugin {
         Events.on(PlayerLeave.class, event -> PlayerData.datas.remove(event.player.uuid()));
 
         Events.on(BlockDestroyEvent.class, event -> {
-            if (!world.isGenerating() && !state.gameOver) {
-                if (event.tile.block() instanceof CoreBlock && event.tile.team().cores().size <= 1) {
-                    if (event.tile.team() == Team.sharded) {
-                        CastleLogic.gameOver(Team.blue);
-                    } else if (event.tile.team() == Team.blue) {
-                        CastleLogic.gameOver(Team.sharded);
-                    }
-                }
-            }
+            if (world.isGenerating() || state.gameOver) return;
+            if (event.tile.block() instanceof CoreBlock && event.tile.team().cores().size <= 1)
+                CastleLogic.gameOver(event.tile.team() == Team.sharded ? Team.blue : Team.sharded);
         });
 
         Events.on(UnitDestroyEvent.class, event -> {
@@ -106,16 +101,10 @@ public class Main extends Plugin {
     @Override
     public void registerClientCommands(CommandHandler handler) {
         handler.<Player>register("hud", "Toggle HUD.", (args, player) -> {
-            // TODO упростить?
             PlayerData data = PlayerData.datas.get(player.uuid());
-            if (data.showHud) {
-                data.showHud = false;
-                Call.hideHudText(player.con);
-                Bundle.bundled(player, "commands.hud.off");
-            } else {
-                data.showHud = true;
-                Bundle.bundled(player, "commands.hud.on");
-            }
+            if (data.showHud) Call.hideHudText(player.con);
+            data.showHud = !data.showHud;
+            Bundle.bundled(player, data.showHud ? "commands.hud.off" : "commands.hud.on");
         });
     }
 

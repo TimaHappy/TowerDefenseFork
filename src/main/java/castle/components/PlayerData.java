@@ -90,20 +90,20 @@ public class PlayerData {
         }
 
         // TODO блять это что нахуй
-        if (showHud) {
-            Locale locale = Bundle.findLocale(player);
-            StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
-            if (bonus > 1f) {
-                hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100).length() > 5 ? String.valueOf((bonus - 1) * 100).substring(0, 6) : (bonus - 1) * 100));
-            }
+        if (!showHud) return;
+        Locale locale = Bundle.findLocale(player);
+        StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
 
-            if (Units.getCap(player.team()) <= player.team().data().unitCount) {
-                hud.append(Bundle.format("ui.hud.unit-limit", locale, player.team().data().unitCap));
-            }
-
-            hud.append(Bundle.format("ui.hud.timer", locale, timer));
-            Call.setHudText(player.con, hud.toString());
+        if (bonus > 1f) {
+            hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100).length() > 5 ? String.valueOf((bonus - 1) * 100).substring(0, 6) : (bonus - 1) * 100));
         }
+
+        if (Units.getCap(player.team()) <= player.team().data().unitCount) {
+            hud.append(Bundle.format("ui.hud.unit-limit", locale, player.team().data().unitCap));
+        }
+
+        hud.append(Bundle.format("ui.hud.timer", locale, timer));
+        Call.setHudText(player.con, hud.toString());
     }
 
     public void reset() {

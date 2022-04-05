@@ -2,6 +2,7 @@
 /build/
 
 # I rly need this
+eclipse-formatter.xml
 /bin/
 /.vscode/
 
