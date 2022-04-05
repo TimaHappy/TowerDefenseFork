@@ -63,20 +63,14 @@ public class PlayerData {
         // TODO этачо за хуйня
         if (interval.get(1, 150f)) {
             CastleRooms.rooms.each(room -> room.showLabel(this), room -> {
-                if ((room instanceof BlockRoom blockRoom && blockRoom.team != player.team())) return;
+                if (room instanceof BlockRoom blockRoom && blockRoom.team != player.team()) return;
                 Call.label(player.con, room.label, 2.5f, room.x * tilesize, room.y * tilesize - room.size * 2);
             });
         }
 
         // TODO еще большая хуйня
         if (!player.dead() && player.team().core() != null) {
-            if (player.shooting) {
-                CastleRooms.rooms.each(room -> {
-                    if (room.check(player.unit().aimX, player.unit().aimY) && room.canBuy(this)) {
-                        room.buy(this);
-                    }
-                });
-            }
+            if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.unit().aimX, player.unit().aimY) && room.canBuy(this), room -> room.buy(this));
 
             CoreBuild core = player.team().core();
             UnitType type = core.block == Blocks.coreNucleus ? UnitTypes.cyerce : UnitTypes.retusa;
@@ -94,13 +88,9 @@ public class PlayerData {
         Locale locale = Bundle.findLocale(player);
         StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
 
-        if (bonus > 1f) {
-            hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100).length() > 5 ? String.valueOf((bonus - 1) * 100).substring(0, 6) : (bonus - 1) * 100));
-        }
+        if (bonus > 1f) hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", (int) (bonus - 1) * 100));
 
-        if (Units.getCap(player.team()) <= player.team().data().unitCount) {
-            hud.append(Bundle.format("ui.hud.unit-limit", locale, player.team().data().unitCap));
-        }
+        if (Units.getCap(player.team()) <= player.team().data().unitCount) hud.append(Bundle.format("ui.hud.unit-limit", locale, player.team().data().unitCap));
 
         hud.append(Bundle.format("ui.hud.timer", locale, timer));
         Call.setHudText(player.con, hud.toString());

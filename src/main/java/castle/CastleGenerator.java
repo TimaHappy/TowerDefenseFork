@@ -202,9 +202,7 @@ public class CastleGenerator implements Cons<Tiles> {
                 continue;
             }
 
-            if (tile.build != null) {
-                tile.build.updateProximity();
-            }
+            if (tile.build != null) tile.build.updateProximity();
         }
 
         world.addDarkness(world.tiles);

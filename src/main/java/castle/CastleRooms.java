@@ -105,7 +105,7 @@ public class CastleRooms {
         }
 
         public boolean showLabel(PlayerData data) {
-            return data.player.con.isConnected();
+            return true;
         }
 
         public boolean check(float x, float y) {
@@ -149,6 +149,8 @@ public class CastleRooms {
         @Override
         public void buy(PlayerData data) {
             super.buy(data);
+            bought = true;
+
             tile.setNet(block, team, 0);
             if (block instanceof CoreBlock) return;
             tile.build.health(Float.MAX_VALUE);
@@ -161,7 +163,7 @@ public class CastleRooms {
 
         @Override
         public boolean showLabel(PlayerData data) {
-            return super.showLabel(data) && data.player.team() == team && !bought;
+            return data.player.team() == team && !bought;
         }
 
         @Override
@@ -172,14 +174,12 @@ public class CastleRooms {
 
     public static class MinerRoom extends BlockRoom {
         public ItemStack stack;
-        public Interval interval;
+        public Interval interval = new Interval();
 
         public MinerRoom(ItemStack stack, Team team, int x, int y, int cost) {
             super(Blocks.laserDrill, team, x, y, cost);
 
             this.stack = stack;
-            this.interval = new Interval();
-
             this.label = "[" + CastleIcons.get(stack.item) + "] " + CastleIcons.get(block) + " :[white] " + cost;
         }
 
