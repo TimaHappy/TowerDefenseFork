@@ -42,7 +42,7 @@ public class CastleLogic {
 
         rules.waves = false;
         rules.waveTimer = false;
-        rules.modeName = "Wars";
+        rules.modeName = "Castle Wars";
 
         rules.bannedBlocks.addAll(content.blocks().select(b -> b.group == BlockGroup.turrets || b.group == BlockGroup.logic || b instanceof StorageBlock));
     }
@@ -73,7 +73,7 @@ public class CastleLogic {
 
         logic.reset();
         CastleRooms.rooms.clear();
-        PlayerData.datas().each(PlayerData::reset);
+        PlayerData.datas().clear();
 
         CastleGenerator gen = new CastleGenerator();
         gen.loadMap(maps.getNextMap(Gamemode.pvp, state.map));
@@ -83,7 +83,10 @@ public class CastleLogic {
         state.rules = rules;
         logic.play();
 
-        players.each(netServer::sendWorldData);
+        players.each(player -> {
+            netServer.sendWorldData(player);
+            PlayerData.datas.put(player.uuid(), new PlayerData(player));
+        });
     }
 
     public static void gameOver(Team team) {
@@ -92,6 +95,7 @@ public class CastleLogic {
 
         Log.info("Игра окончена. Генерирую карту заново...");
         Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.derelict ? "events.draw" : "events.gameover", Bundle.findLocale(p), colorizedTeam(team))));
+        Call.hideHudText();
 
         Timer.schedule(CastleLogic::restart, 10f);
     }

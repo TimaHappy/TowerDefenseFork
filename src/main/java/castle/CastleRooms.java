@@ -60,8 +60,6 @@ public class CastleRooms {
         );
     }
 
-    // TODO прокачиваемые комнаты?
-
     public static class Room implements Position {
         public int x;
         public int y;
@@ -120,8 +118,6 @@ public class CastleRooms {
             return y * tilesize;
         }
     }
-
-
 
     public static class BlockRoom extends Room {
         public Block block;
@@ -194,8 +190,6 @@ public class CastleRooms {
             }
         }
     }
-
-
 
     public static class UnitRoom extends Room {
 

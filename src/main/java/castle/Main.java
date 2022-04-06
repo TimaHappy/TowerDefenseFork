@@ -13,7 +13,6 @@ import mindustry.content.Blocks;
 import mindustry.content.UnitTypes;
 import mindustry.game.EventType.BlockDestroyEvent;
 import mindustry.game.EventType.PlayerJoin;
-import mindustry.game.EventType.PlayerLeave;
 import mindustry.game.EventType.UnitDestroyEvent;
 import mindustry.game.Team;
 import mindustry.gen.Call;
@@ -44,7 +43,7 @@ public class Main extends Plugin {
         CastleUnitDrops.load();
         CastleRooms.load();
 
-        // TODO это огромный костыль, упростить
+        // TODO упростить после добавления ии моно
         netServer.admins.addActionFilter(action -> {
             if ((action.type != ActionType.placeBlock && action.type != ActionType.breakBlock) || action.tile == null) return true;
 
@@ -52,9 +51,13 @@ public class Main extends Plugin {
             return !action.tile.getLinkedTilesAs(action.block, new Seq<>()).contains(tile -> tile.floor() == Blocks.metalFloor || tile.floor() == Blocks.metalFloor5 || tile.overlay() == Blocks.tendrils);
         });
 
-        Events.on(PlayerJoin.class, event -> PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player)));
-
-        Events.on(PlayerLeave.class, event -> PlayerData.datas.remove(event.player.uuid()));
+        Events.on(PlayerJoin.class, event -> {
+            PlayerData old = PlayerData.datas.get(event.player.uuid());
+            if (old != null) {
+                event.player.team(old.player.team());
+                old.player = event.player;
+            } else PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player));
+        });
 
         Events.on(BlockDestroyEvent.class, event -> {
             if (world.isGenerating() || state.gameOver) return;
@@ -72,7 +75,7 @@ public class Main extends Plugin {
             }
         });
 
-        Timer.schedule(CastleLogic::update, 0f, 0.01f);
+        Timer.schedule(CastleLogic::update, 0f, 0.02f);
 
         CastleLogic.restart();
         netServer.openServer();
@@ -82,9 +85,9 @@ public class Main extends Plugin {
     public void registerClientCommands(CommandHandler handler) {
         handler.<Player>register("hud", "Toggle HUD.", (args, player) -> {
             PlayerData data = PlayerData.datas.get(player.uuid());
-            data.showHud = !data.showHud;
-            if (!data.showHud) Call.hideHudText(player.con);
-            Bundle.bundled(player, data.showHud ? "commands.hud.on" : "commands.hud.off");
+            data.hideHud = !data.hideHud;
+            if (data.hideHud) Call.hideHudText(player.con);
+            Bundle.bundled(player, data.hideHud ? "commands.hud.off" : "commands.hud.on");
         });
     }
 
