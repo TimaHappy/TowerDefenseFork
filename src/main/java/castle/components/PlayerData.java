@@ -27,9 +27,9 @@ public class PlayerData {
     public Player player;
     public Interval interval;
 
-    public int money;
-    public int income;
-    public float bonus;
+    public int money = 0; // idk why but it's broken
+    public int income = 15;
+    public float bonus = 1f;
 
     public boolean hideHud;
     public Locale locale;
@@ -37,9 +37,6 @@ public class PlayerData {
     public PlayerData(Player player) {
         this.player = player;
         this.interval = new Interval(2);
-
-        this.income = 15;
-        this.bonus = 1f;
 
         this.locale = Bundle.findLocale(player);
     }
@@ -49,32 +46,23 @@ public class PlayerData {
     }
 
     public void update() {
+        if (!player.con.isConnected() || !player.team().active()) return;
 
         // TODO странная формула для бонуса, улушчить?
-        if (interval.get(0, 60f)) {
-            bonus = Math.max((float) Groups.player.size() / Groups.player.count(p -> p.team() == player.team()) / 2f, 1f);
-            money += Mathf.floor(income * bonus);
-        }
+        bonus = Math.max((float) Groups.player.size() / Groups.player.count(p -> p.team() == player.team()) / 2f, 1f);
+        money += Mathf.floor(income * bonus);
+        
+        CastleRooms.rooms.each(room -> room.showLabel(this), room -> Call.label(player.con, room.label, 1f, room.getX(), room.getY()));
+        if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
 
-        if (!player.con.isConnected()) return;
+        // TODO самая большая хуйня
+        CoreBuild core = player.team().core();
+        UnitType type = core.block == Blocks.coreNucleus ? UnitTypes.cyerce : UnitTypes.retusa;
 
-        if (interval.get(1, 150f)) {
-            CastleRooms.rooms.each(room -> room.showLabel(this), room -> Call.label(player.con, room.label, 2.5f, room.getX(), room.getY()));
-        }
-
-        // TODO еще большая хуйня
-        if (!player.dead() && player.team().core() != null) {
-            if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.unit().aimX, player.unit().aimY) && room.canBuy(this), room -> room.buy(this));
-
-            CoreBuild core = player.team().core();
-            UnitType type = core.block == Blocks.coreNucleus ? UnitTypes.cyerce : UnitTypes.retusa;
-
-            // TODO самая большая хуйня
-            if (player.unit().type != type && player.unit().spawnedByCore) {
-                Unit unit = type.spawn(player.team(), core.x + 40, core.y + Mathf.random(-40, 40));
-                player.unit(unit);
-                unit.spawnedByCore(true);
-            }
+        if (player.unit().type != type && player.unit().spawnedByCore) {
+            Unit unit = type.spawn(player.team(), core.x + 40, core.y + Mathf.random(-40, 40));
+            player.unit(unit);
+            unit.spawnedByCore(true);
         }
 
         if (hideHud) return;

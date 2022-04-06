@@ -8,14 +8,15 @@ import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.CastleUnitDrops;
 import castle.components.PlayerData;
-import mindustry.ai.types.GroundAI;
 import mindustry.content.Blocks;
-import mindustry.content.UnitTypes;
 import mindustry.game.EventType.BlockDestroyEvent;
 import mindustry.game.EventType.PlayerJoin;
+import mindustry.game.EventType.Trigger;
 import mindustry.game.EventType.UnitDestroyEvent;
 import mindustry.game.Team;
 import mindustry.gen.Call;
+import mindustry.gen.Flyingc;
+import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
@@ -28,22 +29,11 @@ public class Main extends Plugin {
     @Override
     public void init() {
 
-        // TODO свой ИИ юнитам, отдельный для нападающих и защитников
-        UnitTypes.flare.defaultController = GroundAI::new;
-        UnitTypes.horizon.defaultController = GroundAI::new;
-        UnitTypes.zenith.defaultController = GroundAI::new;
-        UnitTypes.antumbra.defaultController = GroundAI::new;
-        UnitTypes.eclipse.defaultController = GroundAI::new;
-        UnitTypes.omura.abilities.clear();
-        UnitTypes.corvus.abilities.clear();
-        UnitTypes.arkyid.abilities.clear();
-
         CastleLogic.load();
         CastleIcons.load();
         CastleUnitDrops.load();
         CastleRooms.load();
 
-        // TODO упростить после добавления ии моно
         netServer.admins.addActionFilter(action -> {
             if ((action.type != ActionType.placeBlock && action.type != ActionType.breakBlock) || action.tile == null) return true;
 
@@ -75,7 +65,11 @@ public class Main extends Plugin {
             }
         });
 
-        Timer.schedule(CastleLogic::update, 0f, 0.02f);
+        Events.run(Trigger.update, () -> Groups.unit.each(Flyingc::isFlying, unit -> {
+            if (unit.tileY() > CastleLogic.halfHeight && unit.tileY() < world.height() - CastleLogic.halfHeight || unit.tileOn() == null) Call.unitDespawn(unit);
+        }));
+
+        Timer.schedule(CastleLogic::update, 0f, 1f);
 
         CastleLogic.restart();
         netServer.openServer();

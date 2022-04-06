@@ -3,7 +3,6 @@ package castle;
 import arc.Events;
 import arc.func.Boolf;
 import arc.struct.Seq;
-import arc.util.Interval;
 import arc.util.Log;
 import arc.util.Timer;
 import castle.CastleRooms.Room;
@@ -13,7 +12,6 @@ import mindustry.game.Gamemode;
 import mindustry.game.Rules;
 import mindustry.game.Team;
 import mindustry.gen.Call;
-import mindustry.gen.Flyingc;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.world.Tile;
@@ -28,7 +26,6 @@ public class CastleLogic {
 
     public static Rules rules = new Rules();
 
-    public static Interval interval = new Interval();
     public static int timer = 45 * 60;
 
     public static int halfHeight;
@@ -49,19 +46,14 @@ public class CastleLogic {
 
     public static void update() {
         if (world.isGenerating() || state.serverPaused || state.gameOver) return;
-        
-        if (interval.get(60f)) timer--;
+
         if (timer <= 0) {
             gameOver(Team.derelict);
             return;
-        }
+        } else timer--;
 
         PlayerData.datas().each(PlayerData::update);
         CastleRooms.rooms.each(Room::update);
-
-        Groups.unit.each(Flyingc::isFlying, unit -> {
-            if (unit.tileY() > halfHeight && unit.tileY() < world.height() - halfHeight || unit.tileOn() == null) Call.unitDespawn(unit);
-        });
     }
 
     public static void restart() {

@@ -15,7 +15,7 @@ import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
-import mindustry.type.ItemStack;
+import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
@@ -169,25 +169,28 @@ public class CastleRooms {
     }
 
     public static class MinerRoom extends BlockRoom {
-        public ItemStack stack;
+        public Item item;
         public Interval interval = new Interval();
 
-        public MinerRoom(ItemStack stack, Team team, int x, int y, int cost) {
+        public MinerRoom(Item item, Team team, int x, int y, int cost) {
             super(Blocks.laserDrill, team, x, y, cost);
-
-            this.stack = stack;
-            this.label = "[" + CastleIcons.get(stack.item) + "] " + CastleIcons.get(block) + " :[white] " + cost;
+            this.label = "[" + CastleIcons.get(item) + "] " + CastleIcons.get(block) + " :[white] " + cost;
         }
 
         @Override
         public void update() {
             super.update();
 
-            // TODO прокачка скорости добычи?
             if (bought && interval.get(300f)) {
-                Call.effect(Fx.mineHuge, x * tilesize, y * tilesize, 0f, team.color);
-                Call.transferItemTo(null, stack.item, stack.amount, x * tilesize, y * tilesize, team.core());
+                Call.effect(Fx.mineHuge, getX(), getY(), 0f, team.color);
+                Call.transferItemTo(null, item, 48, getX(), getY(), team.core());
             }
+        }
+
+        @Override
+        public void buy(PlayerData data) {
+           data.money -= cost;
+           tile.setNet(block, team, 0);
         }
     }
 
@@ -204,6 +207,7 @@ public class CastleRooms {
 
         public UnitRoom(UnitType unitType, UnitRoomType roomType, int income, int x, int y, int cost) {
             super(x, y, cost, 4);
+
             this.unitType = unitType;
             this.roomType = roomType;
             this.income = income;
