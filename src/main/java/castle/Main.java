@@ -9,6 +9,7 @@ import castle.components.CastleIcons;
 import castle.components.CastleUnitDrops;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
+import mindustry.content.UnitTypes;
 import mindustry.game.EventType.BlockDestroyEvent;
 import mindustry.game.EventType.PlayerJoin;
 import mindustry.game.EventType.Trigger;
@@ -28,6 +29,8 @@ public class Main extends Plugin {
 
     @Override
     public void init() {
+        ((CoreBlock) Blocks.coreShard).unitType = UnitTypes.poly;
+        ((CoreBlock) Blocks.coreShard).unitType = UnitTypes.mega;
 
         CastleLogic.load();
         CastleIcons.load();
