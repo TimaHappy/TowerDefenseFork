@@ -4,6 +4,7 @@ import arc.Events;
 import arc.util.CommandHandler;
 import arc.util.Interval;
 import castle.CastleRooms.Room;
+import castle.ai.CastleAI;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.CastleUnitDrops;
@@ -33,7 +34,9 @@ public class Main extends Plugin {
     @Override
     public void init() {
         ((CoreBlock) Blocks.coreShard).unitType = UnitTypes.poly;
-        ((CoreBlock) Blocks.coreShard).unitType = UnitTypes.mega;
+        ((CoreBlock) Blocks.coreNucleus).unitType = UnitTypes.mega;
+
+        content.units().each(type -> type.defaultController = CastleAI::new);
 
         CastleLogic.load();
         CastleIcons.load();

@@ -23,7 +23,7 @@ public class CastleLogic {
     public static int timer = 45 * 60;
 
     public static void load() {
-        rules.pvp = true;
+        rules.pvp = false;
         rules.canGameOver = false;
 
         rules.unitCap = 500;
@@ -48,7 +48,7 @@ public class CastleLogic {
 
         logic.reset();
         CastleRooms.rooms.clear();
-        PlayerData.datas().clear();
+        PlayerData.datas.clear();
 
         CastleGenerator gen = new CastleGenerator();
         gen.loadMap(maps.getNextMap(Gamemode.pvp, state.map));

@@ -44,7 +44,9 @@ public class CastleUnitDrops {
                 UnitTypes.horizon, 50,
                 UnitTypes.zenith, 150,
                 UnitTypes.antumbra, 750,
-                UnitTypes.eclipse, 1500
+                UnitTypes.eclipse, 1500,
+
+                UnitTypes.block, -1
         );
     }
 

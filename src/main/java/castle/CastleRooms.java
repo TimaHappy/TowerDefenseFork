@@ -5,8 +5,7 @@ import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
-import castle.ai.AttackAI;
-import castle.ai.DefenseAI;
+import castle.ai.CastleAI;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
@@ -119,9 +118,7 @@ public class CastleRooms {
             return y * tilesize;
         }
 
-        public void spawn() {
-
-        }
+        public void spawn() {}
     }
 
     public static class BlockRoom extends Room {
@@ -176,10 +173,14 @@ public class CastleRooms {
 
     public static class MinerRoom extends BlockRoom {
         public Item item;
+
+        public float delay = Mathf.random(180f, 360f);
         public Interval interval = new Interval();
 
         public MinerRoom(Item item, Team team, int x, int y, int cost) {
             super(Blocks.laserDrill, team, x, y, cost);
+
+            this.item = item;
             this.label = "[" + CastleIcons.get(item) + "] " + CastleIcons.get(block) + " :[white] " + cost;
         }
 
@@ -187,7 +188,7 @@ public class CastleRooms {
         public void update() {
             super.update();
 
-            if (bought && interval.get(Mathf.random(240f, 360f))) {
+            if (bought && interval.get(delay)) {
                 Call.effect(Fx.mineHuge, getX(), getY(), 0f, team.color);
                 Call.transferItemTo(null, item, 48, getX(), getY(), team.core());
             }
@@ -211,7 +212,6 @@ public class CastleRooms {
             this.unitType = unitType;
             this.roomType = roomType;
             this.income = income;
-
             this.label = " ".repeat(Math.max(0, (String.valueOf(income).length() + String.valueOf(cost).length() + 2) / 2)) +
                     CastleIcons.get(unitType) + (roomType == UnitRoomType.attack ? " [accent]\uE865" : " [scarlet]\uE84D") +
                     "\n[gray]" + cost +
@@ -229,11 +229,11 @@ public class CastleRooms {
             if (roomType == UnitRoomType.attack) {
                 tile = data.player.team() == Team.sharded ? blueSpawn : shardedSpawn;
                 unit = unitType.spawn(data.player.team(), tile.worldx() + Mathf.random(-40, 40), tile.worldy() + Mathf.random(-40, 40));
-                unit.controller(new AttackAI());
+                unit.controller(new CastleAI());
             } else if (data.player.team().core() != null) {
                 tile = data.player.team().core().tile;
                 unit = unitType.spawn(data.player.team(), tile.worldx() + 40, tile.worldy() + Mathf.random(-40, 40));
-                unit.controller(new DefenseAI());
+                unit.controller(new CastleAI());
             }
         }
 
