@@ -23,8 +23,7 @@ import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static castle.CastleLogic.gameOver;
-import static castle.CastleLogic.timer;
+import static castle.CastleLogic.*;
 import static mindustry.Vars.*;
 
 public class Main extends Plugin {
