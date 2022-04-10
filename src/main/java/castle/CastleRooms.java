@@ -137,7 +137,7 @@ public class CastleRooms {
             this(block, team, x, y, cost, block.size + 1);
         }
 
-        /** special for cores */
+        /** Special for cores */
         public BlockRoom(Team team, int x, int y, int cost) {
             this(Blocks.coreNucleus, team, x, y, cost, Blocks.coreShard.size + 1);
         }
@@ -186,12 +186,6 @@ public class CastleRooms {
                 Call.transferItemTo(null, item, 48, getX(), getY(), team.core());
             }
         }
-
-        @Override
-        public void buy(PlayerData data) {
-           data.money -= cost;
-           tile.setNet(block, team, 0);
-        }
     }
 
     public static class UnitRoom extends Room {
@@ -212,7 +206,6 @@ public class CastleRooms {
             this.roomType = roomType;
             this.income = income;
 
-            // TODO упростить?
             StringBuilder str = new StringBuilder();
 
             str.append(" ".repeat(Math.max(0, (String.valueOf(income).length() + String.valueOf(cost).length() + 2) / 2))).append(CastleIcons.get(unitType));

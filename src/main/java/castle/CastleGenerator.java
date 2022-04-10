@@ -84,7 +84,6 @@ public class CastleGenerator implements Cons<Tiles> {
     @Override
     public void get(Tiles tiles) {
         saved = tiles;
-        CastleLogic.halfHeight = saved.height;
 
         tiles = world.resize(world.width(), world.height() * 2 + CastleRooms.size * 4 + 11);
 
