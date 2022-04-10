@@ -47,10 +47,8 @@ public class Main extends Plugin {
 
         Events.on(PlayerJoin.class, event -> {
             PlayerData old = PlayerData.datas.get(event.player.uuid());
-            if (old != null) {
-                event.player.team(old.player.team());
-                old.player = event.player;
-            } else PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player));
+            if (old != null) old.handlePlayer(event.player);
+            else PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player));
         });
 
         Events.on(BlockDestroyEvent.class, event -> {
@@ -61,12 +59,11 @@ public class Main extends Plugin {
 
         Events.on(UnitDestroyEvent.class, event -> {
             int income = CastleUnitDrops.get(event.unit.type);
-            if (income > 0 && !event.unit.spawnedByCore) {
-                PlayerData.datas().each(data -> data.player.team() != event.unit.team, data -> {
-                    data.money += income;
-                    Call.label(data.player.con, "[lime] + [accent]" + income, 0.5f, event.unit.x, event.unit.y);
-                });
-            }
+            if (income <= 0 || event.unit.spawnedByCore) return;
+            PlayerData.datas().each(data -> data.player.team() != event.unit.team, data -> {
+                data.money += income;
+                Call.label(data.player.con, "[lime] + [accent]" + income, .5f, event.unit.x, event.unit.y);
+            });
         });
 
         Events.run(Trigger.update, () -> {
@@ -77,11 +74,8 @@ public class Main extends Plugin {
             PlayerData.datas().each(PlayerData::update);
             CastleRooms.rooms.each(Room::update);
 
-            if (timer <= 0) {
-                gameOver(Team.derelict);
-            } else if (interval.get(60f)) {
-                timer--;
-            }
+            if (timer <= 0) gameOver(Team.derelict);
+            else if (interval.get(60f)) timer--;
         });
 
         CastleLogic.restart();

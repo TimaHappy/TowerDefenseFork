@@ -23,7 +23,7 @@ public class CastleLogic {
     public static int timer = 45 * 60;
 
     public static void load() {
-        rules.pvp = false;
+        rules.pvp = true;
         rules.canGameOver = false;
 
         rules.unitCap = 500;

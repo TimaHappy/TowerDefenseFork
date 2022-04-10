@@ -99,7 +99,7 @@ public class CastleRooms {
         }
 
         public boolean canBuy(PlayerData data) {
-            return showLabel(data) && data.money >= cost;
+            return data.money >= cost;
         }
 
         public boolean showLabel(PlayerData data) {
@@ -107,7 +107,7 @@ public class CastleRooms {
         }
 
         public boolean check(float x, float y) {
-            return x > this.startx * tilesize && y > this.starty * tilesize && x < this.endx * tilesize && y < this.endy * tilesize;
+            return x > startx * tilesize && y > starty * tilesize && x < endx * tilesize && y < endy * tilesize;
         }
 
         public float getX() {
@@ -164,17 +164,10 @@ public class CastleRooms {
         public boolean showLabel(PlayerData data) {
             return data.player.team() == team && !bought;
         }
-
-        @Override
-        public void update() {
-            if (world.build(x, y) == null) bought = false;
-        }
     }
 
     public static class MinerRoom extends BlockRoom {
         public Item item;
-
-        public float delay = Mathf.random(180f, 360f);
         public Interval interval = new Interval();
 
         public MinerRoom(Item item, Team team, int x, int y, int cost) {
@@ -186,9 +179,7 @@ public class CastleRooms {
 
         @Override
         public void update() {
-            super.update();
-
-            if (bought && interval.get(delay)) {
+            if (bought && interval.get(300f)) {
                 Call.effect(Fx.mineHuge, getX(), getY(), 0f, team.color);
                 Call.transferItemTo(null, item, 48, getX(), getY(), team.core());
             }
@@ -220,7 +211,7 @@ public class CastleRooms {
 
         @Override
         public void buy(PlayerData data) {
-            data.money -= cost;
+            super.buy(data);
             data.income += income;
 
             Tile tile;
@@ -240,6 +231,11 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && Units.getCap(data.player.team()) > data.player.team().data().unitCount;
+        }
+
+        @Override
+        public boolean showLabel(PlayerData data) {
+            return false;
         }
     }
 }
