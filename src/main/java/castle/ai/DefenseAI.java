@@ -6,16 +6,16 @@ public class DefenseAI extends AIController {
 
     @Override
     public void updateUnit() {
-        if (target == null) {
+        if (invalid(target)) {
             target = target(unit.x, unit.y, unit.range(), unit.type.targetAir, unit.type.targetGround);
-            if (invalid(target)) target = null;
 
             if (unit.isFlying()) circle(unit.closestCore(), 30f);
             else moveTo(unit.closestCore(), 30f);
-        } else {
-            moveTo(target, unit.range());
-            unit.aimLook(target);
-            unit.controlWeapons(unit.within(target, unit.range()));
+            return;
         }
+
+        moveTo(target, unit.range());
+        unit.aimLook(target);
+        unit.controlWeapons(unit.within(target, unit.range() * 1.5f));
     }
 }

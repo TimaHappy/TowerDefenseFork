@@ -58,7 +58,6 @@ public class PlayerData {
         if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
 
         if (hideHud) return;
-
         StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
 
         if (bonus > 1f) hud.append(Strings.format(" [lightgray]([accent]+@%[])", (int) (bonus - 1) * 100));

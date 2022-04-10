@@ -2,7 +2,7 @@ package castle;
 
 import arc.Events;
 import arc.func.Cons;
-import arc.math.geom.Geometry;
+import arc.math.Mathf;
 import arc.util.Log;
 import castle.CastleRooms.BlockRoom;
 import castle.CastleRooms.MinerRoom;
@@ -20,17 +20,11 @@ import mindustry.type.UnitType;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.WorldContext;
-import mindustry.world.blocks.defense.turrets.PointDefenseTurret;
-import mindustry.world.blocks.defense.turrets.TractorBeamTurret;
-import mindustry.world.blocks.defense.turrets.Turret;
-import mindustry.world.blocks.distribution.Sorter;
 import mindustry.world.blocks.distribution.Sorter.SorterBuild;
 import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.TreeBlock;
 import mindustry.world.blocks.legacy.LegacyBlock;
 import mindustry.world.blocks.storage.CoreBlock;
-import mindustry.world.blocks.units.CommandCenter;
-import mindustry.world.blocks.units.RepairPoint;
 
 import static mindustry.Vars.*;
 
@@ -107,28 +101,21 @@ public class CastleGenerator implements Cons<Tiles> {
                     tiles.getc(save.x, save.y).setNet(block, Team.sharded, 0);
                     tiles.getc(save.x, tiles.height - save.y - 1).setNet(block, Team.blue, 0);
 
-                    tiles.getc(save.x - 4, save.y).setNet(Blocks.powerSource, Team.sharded, 0);
-                    tiles.getc(save.x - 4, tiles.height - save.y - 1).setNet(Blocks.powerSource, Team.blue, 0);
-                    tiles.getc(save.x - 4, save.y).build.health(Float.POSITIVE_INFINITY);
-                    tiles.getc(save.x - 4, tiles.height - save.y - 1).build.health(Float.POSITIVE_INFINITY);
-
                     CastleRooms.rooms.add(new BlockRoom(Team.sharded, save.x, save.y, 5000));
                     CastleRooms.rooms.add(new BlockRoom(Team.blue, save.x, tiles.height - save.y - 1, 5000));
-                } else if (save.block() instanceof Turret || save.block() instanceof TractorBeamTurret || save.block() instanceof PointDefenseTurret || save.block() instanceof CommandCenter || save.block() instanceof RepairPoint) {
+                } else if (CastleRooms.blockCosts.containsKey(save.block())) {
                     int shardedX = save.x;
                     int shardedY = save.y;
                     int blueX = save.x;
                     int blueY = tiles.height - save.y - 1;
 
-                    // TODO не всегда корректно спавнит блоки 3*3 и 1*1, ади, памаги
-
-                    CastleRooms.rooms.add(new BlockRoom(save.block(), Team.sharded, shardedX, shardedY, CastleRooms.blockCosts.get(save.block(), 1000)));
-                    CastleRooms.rooms.add(new BlockRoom(save.block(), Team.blue, blueX, blueY, CastleRooms.blockCosts.get(save.block(), 1000)));
-                } else if (save.block() instanceof Sorter && save.build instanceof SorterBuild sorterBuild) {
+                    CastleRooms.rooms.add(new BlockRoom(save.block(), Team.sharded, shardedX, shardedY, CastleRooms.blockCosts.get(save.block())));
+                    CastleRooms.rooms.add(new BlockRoom(save.block(), Team.blue, blueX, blueY, CastleRooms.blockCosts.get(save.block())));
+                } else if (save.build instanceof SorterBuild sorterBuild) {
                     Item item = sorterBuild.config();
-                    int hardness = (int) (item.hardness == 0 ? item.cost * 2 : item.hardness);
-                    CastleRooms.rooms.add(new MinerRoom(item, Team.sharded, save.x, save.y, 250 + hardness * 250));
-                    CastleRooms.rooms.add(new MinerRoom(item, Team.blue, save.x, tiles.height - save.y - 1, 250 + hardness * 250));
+                    int cost = 250 + Mathf.ceil(item.hardness == 0 ? item.cost * 500 : item.hardness * 250);
+                    CastleRooms.rooms.add(new MinerRoom(item, Team.sharded, save.x, save.y, cost));
+                    CastleRooms.rooms.add(new MinerRoom(item, Team.blue, save.x, tiles.height - save.y - 1, cost));
                 } else if (save.overlay() == Blocks.spawn) {
                     CastleRooms.shardedSpawn = tiles.getc(save.x, save.y);
                     CastleRooms.blueSpawn = tiles.getc(save.x, tiles.height - save.y - 1);
@@ -137,9 +124,6 @@ public class CastleGenerator implements Cons<Tiles> {
         }
 
         generateShop(9, saved.height + 4);
-
-        Geometry.circle(CastleRooms.shardedSpawn.x, CastleRooms.shardedSpawn.y, 6, (x, y) -> world.tiles.getc(x, y).setOverlay(Blocks.tendrils));
-        Geometry.circle(CastleRooms.blueSpawn.x, CastleRooms.blueSpawn.y, 6, (x, y) -> world.tiles.getc(x, y).setOverlay(Blocks.tendrils));
     }
 
     public void generateShop(int shopX, int shopY) {

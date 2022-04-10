@@ -1,14 +1,13 @@
 package castle;
 
 import arc.Events;
-import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Interval;
+import castle.CastleRooms.Room;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.CastleUnitDrops;
 import castle.components.PlayerData;
-import castle.CastleRooms.Room;
 import mindustry.content.Blocks;
 import mindustry.content.UnitTypes;
 import mindustry.game.EventType.BlockDestroyEvent;
@@ -41,11 +40,7 @@ public class Main extends Plugin {
         CastleUnitDrops.load();
         CastleRooms.load();
 
-        netServer.admins.addActionFilter(action -> {
-            if ((action.type != ActionType.placeBlock && action.type != ActionType.breakBlock) || action.tile == null) return true;
-
-            return !action.tile.getLinkedTilesAs(action.block, new Seq<>()).contains(tile -> tile.floor() == Blocks.metalFloor || tile.floor() == Blocks.metalFloor5 || tile.overlay() == Blocks.tendrils);
-        });
+        netServer.admins.addActionFilter(action -> action.tile == null || action.type != ActionType.placeBlock || (action.tile.dst(CastleRooms.shardedSpawn) > 64 && action.tile.dst(CastleRooms.blueSpawn) > 64));
 
         Events.on(PlayerJoin.class, event -> {
             PlayerData old = PlayerData.datas.get(event.player.uuid());

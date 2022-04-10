@@ -5,6 +5,8 @@ import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
+import castle.ai.AttackAI;
+import castle.ai.DefenseAI;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
@@ -15,6 +17,7 @@ import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
+import mindustry.gen.Unit;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
@@ -33,7 +36,6 @@ public class CastleRooms {
     public static Tile shardedSpawn, blueSpawn;
 
     public static void load() {
-        // TODO сделать формулу для высчета стоимости турели по ее урону, хп, размеру?
         blockCosts.putAll(
                 Blocks.duo, 100,
                 Blocks.scatter, 250,
@@ -95,7 +97,6 @@ public class CastleRooms {
 
         public void buy(PlayerData data) {
             data.money -= cost;
-            Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 4f, getX(), getY()));
         }
 
         public boolean canBuy(PlayerData data) {
@@ -116,6 +117,10 @@ public class CastleRooms {
 
         public float getY() {
             return y * tilesize;
+        }
+
+        public void spawn() {
+
         }
     }
 
@@ -148,8 +153,9 @@ public class CastleRooms {
             bought = true;
 
             tile.setNet(block, team, 0);
-            if (block instanceof CoreBlock) return;
-            tile.build.health(Float.MAX_VALUE);
+            if (!(block instanceof CoreBlock)) tile.build.health(Float.MAX_VALUE);
+
+            Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 3f, getX(), getY()));
         }
 
         @Override
@@ -181,7 +187,7 @@ public class CastleRooms {
         public void update() {
             super.update();
 
-            if (bought && interval.get(300f)) {
+            if (bought && interval.get(Mathf.random(240f, 360f))) {
                 Call.effect(Fx.mineHuge, getX(), getY(), 0f, team.color);
                 Call.transferItemTo(null, item, 48, getX(), getY(), team.core());
             }
@@ -206,16 +212,10 @@ public class CastleRooms {
             this.roomType = roomType;
             this.income = income;
 
-            StringBuilder str = new StringBuilder();
-
-            str.append(" ".repeat(Math.max(0, (String.valueOf(income).length() + String.valueOf(cost).length() + 2) / 2))).append(CastleIcons.get(unitType));
-
-            if (roomType == UnitRoomType.attack) str.append(" [accent]").append(Iconc.modeAttack);
-            else str.append(" [scarlet]").append(Iconc.defense);
-
-            str.append("\n[gray]").append(cost).append("\n[white]").append(Iconc.blockPlastaniumCompressor).append(" : ");
-
-            this.label = str.append(income < 0 ? "[crimson]" : income > 0 ? "[lime]+" : "[gray]").append(income).toString();
+            this.label = " ".repeat(Math.max(0, (String.valueOf(income).length() + String.valueOf(cost).length() + 2) / 2)) +
+                    CastleIcons.get(unitType) + (roomType == UnitRoomType.attack ? " [accent]\uE865" : " [scarlet]\uE84D") +
+                    "\n[gray]" + cost +
+                    "\n[white]" + Iconc.blockPlastaniumCompressor + " : " + (income < 0 ? "[crimson]" : income > 0 ? "[lime]+" : "[gray]") + income;
         }
 
         @Override
@@ -223,16 +223,23 @@ public class CastleRooms {
             data.money -= cost;
             data.income += income;
 
+            Tile tile;
+            Unit unit;
+
             if (roomType == UnitRoomType.attack) {
-                unitType.spawn(data.player.team(), (data.player.team() == Team.sharded ? blueSpawn.drawx() : shardedSpawn.drawx()) + Mathf.random(-40, 40), (data.player.team() == Team.sharded ? blueSpawn.drawy() : shardedSpawn.drawy()) + Mathf.random(-40, 40));
+                tile = data.player.team() == Team.sharded ? blueSpawn : shardedSpawn;
+                unit = unitType.spawn(data.player.team(), tile.worldx() + Mathf.random(-40, 40), tile.worldy() + Mathf.random(-40, 40));
+                unit.controller(new AttackAI());
             } else if (data.player.team().core() != null) {
-                unitType.spawn(data.player.team(), data.player.team().core().x + 40, data.player.team().core().y + Mathf.random(-40, 40));
+                tile = data.player.team().core().tile;
+                unit = unitType.spawn(data.player.team(), tile.worldx() + 40, tile.worldy() + Mathf.random(-40, 40));
+                unit.controller(new DefenseAI());
             }
         }
 
         @Override
         public boolean canBuy(PlayerData data) {
-            return super.canBuy(data) && (income > 0 || data.income + income > 0) && Units.getCap(data.player.team()) > data.player.team().data().unitCount;
+            return super.canBuy(data) && Units.getCap(data.player.team()) > data.player.team().data().unitCount;
         }
     }
 }
