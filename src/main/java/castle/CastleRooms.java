@@ -73,6 +73,7 @@ public class CastleRooms {
         public int cost;
         public int size;
 
+        public float offset;
         public Tile tile;
         public String label = "";
 
@@ -82,13 +83,15 @@ public class CastleRooms {
 
             this.startx = x - size / 2;
             this.starty = y - size / 2;
-            this.endx = x + size / 2;
-            this.endy = y + size / 2;
+            this.endx = x + size / 2 + size % 2;
+            this.endy = y + size / 2 + size % 2;
 
             this.cost = cost;
             this.size = size;
+            this.offset = size % 2 == 0 ? 0f : 4f;
             this.tile = world.tile(x, y);
 
+            spawn();
             rooms.add(this);
         }
 
@@ -111,14 +114,20 @@ public class CastleRooms {
         }
 
         public float getX() {
-            return x * tilesize;
+            return x * tilesize + offset;
         }
 
         public float getY() {
-            return y * tilesize;
+            return y * tilesize + offset;
         }
 
-        public void spawn() {}
+        public void spawn() {
+            boolean core = tile.block() == Blocks.coreNucleus;
+            for (int x = startx; x <= endx; x++) for (int y = starty; y <= endy; y++) {
+                Block floor = core || x == startx || y == starty || x == endx || y == endy ? Blocks.metalFloor5 : Blocks.metalFloor;
+                world.tile(x, y).setFloor(floor.asFloor());
+            }
+        }
     }
 
     public static class BlockRoom extends Room {

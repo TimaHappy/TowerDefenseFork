@@ -107,7 +107,7 @@ public class CastleGenerator implements Cons<Tiles> {
                     int shardedX = save.x;
                     int shardedY = save.y;
                     int blueX = save.x;
-                    int blueY = tiles.height - save.y - 1;
+                    int blueY = tiles.height - save.y - 2 + save.block().size % 2;
 
                     new BlockRoom(save.block(), Team.sharded, shardedX, shardedY, CastleRooms.blockCosts.get(save.block()));
                     new BlockRoom(save.block(), Team.blue, blueX, blueY, CastleRooms.blockCosts.get(save.block()));

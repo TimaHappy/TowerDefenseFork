@@ -98,5 +98,6 @@ public class Main extends Plugin {
         handler.removeCommand("gameover");
 
         handler.register("gameover", "End the game.", args -> gameOver(Team.derelict));
+        handler.register("hack", "DO NOT USE THIS ONLY FOR TESTING!", args -> PlayerData.datas().each(data -> data.income = 1000));
     }
 }
