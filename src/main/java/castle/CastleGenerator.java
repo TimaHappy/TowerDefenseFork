@@ -101,21 +101,21 @@ public class CastleGenerator implements Cons<Tiles> {
                     tiles.getc(save.x, save.y).setNet(block, Team.sharded, 0);
                     tiles.getc(save.x, tiles.height - save.y - 1).setNet(block, Team.blue, 0);
 
-                    CastleRooms.rooms.add(new BlockRoom(Team.sharded, save.x, save.y, 5000));
-                    CastleRooms.rooms.add(new BlockRoom(Team.blue, save.x, tiles.height - save.y - 1, 5000));
+                    new BlockRoom(Team.sharded, save.x, save.y, 5000);
+                    new BlockRoom(Team.blue, save.x, tiles.height - save.y - 1, 5000);
                 } else if (CastleRooms.blockCosts.containsKey(save.block())) {
                     int shardedX = save.x;
                     int shardedY = save.y;
                     int blueX = save.x;
                     int blueY = tiles.height - save.y - 1;
 
-                    CastleRooms.rooms.add(new BlockRoom(save.block(), Team.sharded, shardedX, shardedY, CastleRooms.blockCosts.get(save.block())));
-                    CastleRooms.rooms.add(new BlockRoom(save.block(), Team.blue, blueX, blueY, CastleRooms.blockCosts.get(save.block())));
+                    new BlockRoom(save.block(), Team.sharded, shardedX, shardedY, CastleRooms.blockCosts.get(save.block()));
+                    new BlockRoom(save.block(), Team.blue, blueX, blueY, CastleRooms.blockCosts.get(save.block()));
                 } else if (save.build instanceof SorterBuild sorterBuild) {
                     Item item = sorterBuild.config();
                     int cost = 250 + Mathf.ceil(item.hardness == 0 ? item.cost * 500 : item.hardness * 250);
-                    CastleRooms.rooms.add(new MinerRoom(item, Team.sharded, save.x, save.y, cost));
-                    CastleRooms.rooms.add(new MinerRoom(item, Team.blue, save.x, tiles.height - save.y - 1, cost));
+                    new MinerRoom(item, Team.sharded, save.x, save.y, cost);
+                    new MinerRoom(item, Team.blue, save.x, tiles.height - save.y - 1, cost);
                 } else if (save.overlay() == Blocks.spawn) {
                     CastleRooms.shardedSpawn = tiles.getc(save.x, save.y);
                     CastleRooms.blueSpawn = tiles.getc(save.x, tiles.height - save.y - 1);
@@ -167,8 +167,8 @@ public class CastleGenerator implements Cons<Tiles> {
     }
 
     public void addUnitRoom(UnitType type, int income, int x, int y, int cost) {
-        CastleRooms.rooms.add(new UnitRoom(type, UnitRoom.UnitRoomType.attack, income, x, y, cost));
-        CastleRooms.rooms.add(new UnitRoom(type, UnitRoom.UnitRoomType.defend, -income, x, y + CastleRooms.size + 2, cost));
+        new UnitRoom(type, UnitRoom.UnitRoomType.attack, income, x, y, cost);
+        new UnitRoom(type, UnitRoom.UnitRoomType.defend, -income, x, y + CastleRooms.size + 2, cost);
     }
 
     public void beginMapLoad() {
