@@ -38,7 +38,6 @@ public class Main extends Plugin {
         CastleLogic.load();
         CastleIcons.load();
         CastleUnitDrops.load();
-        CastleRooms.load();
 
         netServer.admins.addActionFilter(action -> action.tile == null || action.type != ActionType.placeBlock || (action.tile.dst(CastleRooms.shardedSpawn) > 64 && action.tile.dst(CastleRooms.blueSpawn) > 64));
 
@@ -76,7 +75,7 @@ public class Main extends Plugin {
             PlayerData.datas().each(data -> {
                 if (data.player.team() != event.unit.team) {
                     data.money += income;
-                    Call.label(data.player.con, "[lime] + [accent]" + income, .5f, event.unit.x, event.unit.y);
+                    Call.label(data.player.con, "[lime] + [accent]" + income, 2f, event.unit.x, event.unit.y);
                 }
             });
         });

@@ -13,6 +13,7 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.world.blocks.storage.StorageBlock;
+import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.meta.BlockGroup;
 
 import static mindustry.Vars.*;
@@ -36,7 +37,7 @@ public class CastleLogic {
         rules.teams.get(Team.sharded).cheat = true;
         rules.teams.get(Team.blue).cheat = true;
 
-        rules.bannedBlocks.addAll(content.blocks().select(b -> b.group == BlockGroup.turrets || b.group == BlockGroup.logic || b instanceof StorageBlock));
+        rules.bannedBlocks.addAll(content.blocks().select(b -> b.group == BlockGroup.logic || b instanceof UnitFactory || b instanceof StorageBlock));
     }
 
     public static void restart() {

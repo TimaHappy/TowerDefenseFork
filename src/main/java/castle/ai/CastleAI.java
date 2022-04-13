@@ -1,6 +1,7 @@
 package castle.ai;
 
 import mindustry.ai.Pathfinder;
+import mindustry.entities.Units;
 import mindustry.entities.units.AIController;
 
 public class CastleAI extends AIController {
@@ -39,7 +40,7 @@ public class CastleAI extends AIController {
 
     public void updateDefend() {
         if (invalid(target)) {
-            target = target(unit.x, unit.y, unit.range(), unit.type.targetAir, unit.type.targetGround);
+            target = Units.closestEnemy(unit.team, unit.x, unit.y, 360f, unit -> true);
 
             if (unit.isFlying()) circle(unit.closestCore(), 30f);
             else moveTo(unit.closestCore(), 30f);

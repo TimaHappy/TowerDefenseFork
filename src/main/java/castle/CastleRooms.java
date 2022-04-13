@@ -2,7 +2,6 @@ package castle;
 
 import arc.math.Mathf;
 import arc.math.geom.Position;
-import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
 import castle.ai.CastleAI;
@@ -11,18 +10,16 @@ import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
-import mindustry.content.Liquids;
 import mindustry.entities.Units;
 import mindustry.game.Team;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Iconc;
+import mindustry.gen.Unit;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
-import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.blocks.defense.turrets.ItemTurret.ItemTurretBuild;
-import mindustry.world.blocks.defense.turrets.LaserTurret.LaserTurretBuild;
-import mindustry.world.blocks.defense.turrets.LiquidTurret.LiquidTurretBuild;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static mindustry.Vars.tilesize;
@@ -31,37 +28,9 @@ import static mindustry.Vars.world;
 public class CastleRooms {
 
     public static Seq<Room> rooms = new Seq<>();
-    public static final ObjectMap<Block, Integer> blockCosts = new ObjectMap<>();
 
     public static final int size = 8;
     public static Tile shardedSpawn, blueSpawn;
-
-    public static void load() {
-        blockCosts.putAll(
-                Blocks.duo, 100,
-                Blocks.scatter, 250,
-                Blocks.scorch, 200,
-                Blocks.hail, 450,
-                Blocks.wave, 300,
-                Blocks.lancer, 350,
-                Blocks.arc, 150,
-                Blocks.parallax, 500,
-                Blocks.swarmer, 1250,
-                Blocks.salvo, 500,
-                Blocks.segment, 750,
-                Blocks.tsunami, 850,
-                Blocks.fuse, 1500,
-                Blocks.ripple, 1500,
-                Blocks.cyclone, 1750,
-                Blocks.foreshadow, 4000,
-                Blocks.spectre, 3000,
-                Blocks.meltdown, 3000,
-
-                Blocks.commandCenter, 750,
-                Blocks.repairPoint, 300,
-                Blocks.repairTurret, 1200
-        );
-    }
 
     public static class Room implements Position {
         public int x;
@@ -163,18 +132,6 @@ public class CastleRooms {
             tile.setNet(block, team, 0);
             if (!(block instanceof CoreBlock)) tile.build.health(Float.MAX_VALUE);
 
-            if (tile.build instanceof ItemTurretBuild itemTurretBuild) {
-                itemTurretBuild.ammo.clear();
-                itemTurretBuild.totalAmmo = 0;
-
-                Item item = ((ItemTurret) itemTurretBuild.block).ammoTypes.entries().next().key;
-                Call.transferItemTo(Nulls.unit, item, 256, data.player.x, data.player.y, itemTurretBuild);
-            } if (tile.build instanceof LiquidTurretBuild || tile.build instanceof LaserTurretBuild) {
-                world.tile(startx, y).setNet(Blocks.liquidSource, team, 0);
-                world.build(startx, y).configure(Liquids.cryofluid);
-                world.build(startx, y).health(Float.MAX_VALUE);
-            }
-
             Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 3f, getX(), getY()));
         }
 
@@ -204,7 +161,7 @@ public class CastleRooms {
         public void update() {
             if (bought && interval.get(300f)) {
                 Call.effect(Fx.mineHuge, getX(), getY(), 0f, team.color);
-                Call.transferItemTo(null, item, 48, getX(), getY(), team.core());
+                Call.transferItemTo(null, item, 36, getX(), getY(), team.core());
             }
         }
     }

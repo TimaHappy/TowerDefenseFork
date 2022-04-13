@@ -17,7 +17,6 @@ import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
-import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.WorldContext;
@@ -104,16 +103,6 @@ public class CastleGenerator implements Cons<Tiles> {
 
                     new BlockRoom(Team.sharded, save.x, save.y, 5000);
                     new BlockRoom(Team.blue, save.x, tiles.height - save.y - 1, 5000);
-                } else if (CastleRooms.blockCosts.containsKey(save.block())) {
-                    int shardedX = save.x;
-                    int shardedY = save.y;
-                    int blueX = save.x;
-                    int blueY = tiles.height - save.y - 2 + save.block().size % 2;
-
-                    Block block = save.block() == Blocks.spectre ? Blocks.meltdown : save.block();
-
-                    new BlockRoom(block, Team.sharded, shardedX, shardedY, CastleRooms.blockCosts.get(save.block()));
-                    new BlockRoom(block, Team.blue, blueX, blueY, CastleRooms.blockCosts.get(save.block()));
                 } else if (save.build instanceof SorterBuild sorterBuild) {
                     Item item = sorterBuild.config();
                     int cost = 250 + Mathf.ceil(item.hardness == 0 ? item.cost * 500 : item.hardness * 250);
@@ -162,7 +151,7 @@ public class CastleGenerator implements Cons<Tiles> {
         addUnitRoom(UnitTypes.aegires, 24, shopX + distance * 13, shopY + 2, 4800);
         addUnitRoom(UnitTypes.navanax, 70, shopX + distance * 14, shopY + 2, 11000);
 
-        addUnitRoom(UnitTypes.flare, 0, shopX + distance * 10, shopY + 2 + distance * 2, 100);
+        addUnitRoom(UnitTypes.flare, 0, shopX + distance * 10, shopY + 2 + distance * 2, 250);
         addUnitRoom(UnitTypes.horizon, 2, shopX + distance * 11, shopY + 2 + distance * 2, 500);
         addUnitRoom(UnitTypes.zenith, 8, shopX + distance * 12, shopY + 2 + distance * 2, 2000);
         addUnitRoom(UnitTypes.antumbra, 30, shopX + distance * 13, shopY + 2 + distance * 2, 7500);
