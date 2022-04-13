@@ -17,6 +17,7 @@ import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
+import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.WorldContext;
@@ -109,8 +110,10 @@ public class CastleGenerator implements Cons<Tiles> {
                     int blueX = save.x;
                     int blueY = tiles.height - save.y - 2 + save.block().size % 2;
 
-                    new BlockRoom(save.block(), Team.sharded, shardedX, shardedY, CastleRooms.blockCosts.get(save.block()));
-                    new BlockRoom(save.block(), Team.blue, blueX, blueY, CastleRooms.blockCosts.get(save.block()));
+                    Block block = save.block() == Blocks.spectre ? Blocks.meltdown : save.block();
+
+                    new BlockRoom(block, Team.sharded, shardedX, shardedY, CastleRooms.blockCosts.get(save.block()));
+                    new BlockRoom(block, Team.blue, blueX, blueY, CastleRooms.blockCosts.get(save.block()));
                 } else if (save.build instanceof SorterBuild sorterBuild) {
                     Item item = sorterBuild.config();
                     int cost = 250 + Mathf.ceil(item.hardness == 0 ? item.cost * 500 : item.hardness * 250);
@@ -160,10 +163,10 @@ public class CastleGenerator implements Cons<Tiles> {
         addUnitRoom(UnitTypes.navanax, 70, shopX + distance * 14, shopY + 2, 11000);
 
         addUnitRoom(UnitTypes.flare, 0, shopX + distance * 10, shopY + 2 + distance * 2, 100);
-        addUnitRoom(UnitTypes.horizon, 1, shopX + distance * 11, shopY + 2 + distance * 2, 250);
-        addUnitRoom(UnitTypes.zenith, 5, shopX + distance * 12, shopY + 2 + distance * 2, 1000);
-        addUnitRoom(UnitTypes.antumbra, 25, shopX + distance * 13, shopY + 2 + distance * 2, 5000);
-        addUnitRoom(UnitTypes.eclipse, 55, shopX + distance * 14, shopY + 2 + distance * 2, 12000);
+        addUnitRoom(UnitTypes.horizon, 2, shopX + distance * 11, shopY + 2 + distance * 2, 500);
+        addUnitRoom(UnitTypes.zenith, 8, shopX + distance * 12, shopY + 2 + distance * 2, 2000);
+        addUnitRoom(UnitTypes.antumbra, 30, shopX + distance * 13, shopY + 2 + distance * 2, 7500);
+        addUnitRoom(UnitTypes.eclipse, 55, shopX + distance * 14, shopY + 2 + distance * 2, 15000);
     }
 
     public void addUnitRoom(UnitType type, int income, int x, int y, int cost) {

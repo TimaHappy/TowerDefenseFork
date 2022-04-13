@@ -11,6 +11,7 @@ import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
+import mindustry.content.Liquids;
 import mindustry.entities.Units;
 import mindustry.game.Team;
 import mindustry.gen.*;
@@ -20,6 +21,8 @@ import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.ItemTurret.ItemTurretBuild;
+import mindustry.world.blocks.defense.turrets.LaserTurret.LaserTurretBuild;
+import mindustry.world.blocks.defense.turrets.LiquidTurret.LiquidTurretBuild;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static mindustry.Vars.tilesize;
@@ -166,6 +169,10 @@ public class CastleRooms {
 
                 Item item = ((ItemTurret) itemTurretBuild.block).ammoTypes.entries().next().key;
                 Call.transferItemTo(Nulls.unit, item, 256, data.player.x, data.player.y, itemTurretBuild);
+            } if (tile.build instanceof LiquidTurretBuild || tile.build instanceof LaserTurretBuild) {
+                world.tile(startx, y).setNet(Blocks.liquidSource, team, 0);
+                world.build(startx, y).configure(Liquids.cryofluid);
+                world.build(startx, y).health(Float.MAX_VALUE);
             }
 
             Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 3f, getX(), getY()));

@@ -38,7 +38,7 @@ public class PlayerData {
         if (!connected || !player.team().active()) return;
 
         if (interval.get(60f)) {
-            money += income;
+            money += income * 100;
             CastleRooms.rooms.each(room -> room.showLabel(this), room -> Call.label(player.con, room.label, 1f, room.getX(), room.getY()));
         }
 
@@ -47,7 +47,7 @@ public class PlayerData {
         if (hideHud) return;
         StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
 
-        if (Units.getCap(player.team()) <= player.team().data().unitCount) hud.append(Bundle.format("ui.hud.unit-limit", locale, player.team().data().unitCap));
+        if (Units.getCap(player.team()) <= player.team().data().unitCount) hud.append(Bundle.format("ui.hud.unit-limit", locale, Units.getCap(player.team())));
 
         hud.append(Bundle.format("ui.hud.timer", locale, timer));
         Call.setHudText(player.con, hud.toString());
@@ -57,6 +57,8 @@ public class PlayerData {
         this.player = player;
         this.interval = new Interval();
         this.locale = Bundle.findLocale(player);
+
+        this.connected = true;
 
         CastleRooms.rooms.each(room -> room instanceof UnitRoom, room -> Call.label(player.con, room.label, Float.MAX_VALUE, room.getX(), room.getY()));
     }
