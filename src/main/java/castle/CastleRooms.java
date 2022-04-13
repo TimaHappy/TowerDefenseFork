@@ -13,14 +13,13 @@ import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.entities.Units;
 import mindustry.game.Team;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Iconc;
-import mindustry.gen.Unit;
+import mindustry.gen.*;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
+import mindustry.world.blocks.defense.turrets.ItemTurret;
+import mindustry.world.blocks.defense.turrets.ItemTurret.ItemTurretBuild;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static mindustry.Vars.tilesize;
@@ -28,7 +27,7 @@ import static mindustry.Vars.world;
 
 public class CastleRooms {
 
-    public static final Seq<Room> rooms = new Seq<>();
+    public static Seq<Room> rooms = new Seq<>();
     public static final ObjectMap<Block, Integer> blockCosts = new ObjectMap<>();
 
     public static final int size = 8;
@@ -160,6 +159,14 @@ public class CastleRooms {
 
             tile.setNet(block, team, 0);
             if (!(block instanceof CoreBlock)) tile.build.health(Float.MAX_VALUE);
+
+            if (tile.build instanceof ItemTurretBuild itemTurretBuild) {
+                itemTurretBuild.ammo.clear();
+                itemTurretBuild.totalAmmo = 0;
+
+                Item item = ((ItemTurret) itemTurretBuild.block).ammoTypes.entries().next().key;
+                Call.transferItemTo(Nulls.unit, item, 256, data.player.x, data.player.y, itemTurretBuild);
+            }
 
             Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 3f, getX(), getY()));
         }

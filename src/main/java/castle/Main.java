@@ -1,6 +1,7 @@
 package castle;
 
 import arc.Events;
+import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Interval;
 import castle.CastleRooms.Room;
@@ -11,10 +12,7 @@ import castle.components.CastleUnitDrops;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.content.UnitTypes;
-import mindustry.game.EventType.BlockDestroyEvent;
-import mindustry.game.EventType.PlayerJoin;
-import mindustry.game.EventType.Trigger;
-import mindustry.game.EventType.UnitDestroyEvent;
+import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
@@ -44,10 +42,26 @@ public class Main extends Plugin {
 
         netServer.admins.addActionFilter(action -> action.tile == null || action.type != ActionType.placeBlock || (action.tile.dst(CastleRooms.shardedSpawn) > 64 && action.tile.dst(CastleRooms.blueSpawn) > 64));
 
+        netServer.assigner = (player, players) -> {
+            Seq<Player> arr = Seq.with(players);
+            int sharded = arr.count(p -> p.team() == Team.sharded);
+            return arr.size - sharded >= sharded ? Team.sharded : Team.blue;
+        };
+
         Events.on(PlayerJoin.class, event -> {
-            PlayerData old = PlayerData.datas.get(event.player.uuid());
-            if (old != null) old.handlePlayer(event.player);
-            else PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player));
+            if (PlayerData.datas.containsKey(event.player.uuid())) {
+                PlayerData data = PlayerData.datas.get(event.player.uuid());
+                data.handlePlayerJoin(event.player);
+            } else {
+                PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player));
+            }
+        });
+
+        Events.on(PlayerLeave.class, event -> {
+            if (PlayerData.datas.containsKey(event.player.uuid())) {
+                PlayerData data = PlayerData.datas.get(event.player.uuid());
+                data.connected = false;
+            }
         });
 
         Events.on(BlockDestroyEvent.class, event -> {
@@ -59,9 +73,11 @@ public class Main extends Plugin {
         Events.on(UnitDestroyEvent.class, event -> {
             int income = CastleUnitDrops.get(event.unit.type);
             if (income <= 0 || event.unit.spawnedByCore) return;
-            PlayerData.datas().each(data -> data.player.team() != event.unit.team, data -> {
-                data.money += income;
-                Call.label(data.player.con, "[lime] + [accent]" + income, .5f, event.unit.x, event.unit.y);
+            PlayerData.datas().each(data -> {
+                if (data.player.team() != event.unit.team) {
+                    data.money += income;
+                    Call.label(data.player.con, "[lime] + [accent]" + income, .5f, event.unit.x, event.unit.y);
+                }
             });
         });
 
@@ -98,6 +114,5 @@ public class Main extends Plugin {
         handler.removeCommand("gameover");
 
         handler.register("gameover", "End the game.", args -> gameOver(Team.derelict));
-        handler.register("hack", "DO NOT USE THIS ONLY FOR TESTING!", args -> PlayerData.datas().each(data -> data.income = 1000));
     }
 }

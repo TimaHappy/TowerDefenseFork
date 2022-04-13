@@ -129,41 +129,41 @@ public class CastleGenerator implements Cons<Tiles> {
     public void generateShop(int shopX, int shopY) {
         int distance = CastleRooms.size + 2;
 
-        addUnitRoom(UnitTypes.dagger, 0, shopX, shopY + 2, 100);
+        addUnitRoom(UnitTypes.dagger, 0, shopX, shopY + 2, 60);
         addUnitRoom(UnitTypes.mace, 1, shopX + distance, shopY + 2, 150);
-        addUnitRoom(UnitTypes.fortress, 4, shopX + distance * 2, shopY + 2, 525);
+        addUnitRoom(UnitTypes.fortress, 4, shopX + distance * 2, shopY + 2, 500);
         addUnitRoom(UnitTypes.scepter, 20, shopX + distance * 3, shopY + 2, 3000);
-        addUnitRoom(UnitTypes.reign, 55, shopX + distance * 4, shopY + 2, 8000);
+        addUnitRoom(UnitTypes.reign, 45, shopX + distance * 4, shopY + 2, 10000);
 
-        addUnitRoom(UnitTypes.crawler, 0, shopX, shopY + 2 + distance * 2, 70);
-        addUnitRoom(UnitTypes.atrax, 1, shopX + distance, shopY + 2 + distance * 2, 175);
-        addUnitRoom(UnitTypes.spiroct, 4, shopX + distance * 2, shopY + 2 + distance * 2, 600);
-        addUnitRoom(UnitTypes.arkyid, 24, shopX + distance * 3, shopY + 2 + distance * 2, 5000);
-        addUnitRoom(UnitTypes.toxopid, 60, shopX + distance * 4, shopY + 2 + distance * 2, 9000);
+        addUnitRoom(UnitTypes.crawler, 0, shopX, shopY + 2 + distance * 2, 75);
+        addUnitRoom(UnitTypes.atrax, 1, shopX + distance, shopY + 2 + distance * 2, 160);
+        addUnitRoom(UnitTypes.spiroct, 4, shopX + distance * 2, shopY + 2 + distance * 2, 500);
+        addUnitRoom(UnitTypes.arkyid, 24, shopX + distance * 3, shopY + 2 + distance * 2, 4600);
+        addUnitRoom(UnitTypes.toxopid, 50, shopX + distance * 4, shopY + 2 + distance * 2, 12500);
 
-        addUnitRoom(UnitTypes.nova, 0, shopX + distance * 5, shopY + 2, 100);
-        addUnitRoom(UnitTypes.pulsar, 1, shopX + distance * 6, shopY + 2, 175);
-        addUnitRoom(UnitTypes.quasar, 4, shopX + distance * 7, shopY + 2, 750);
-        addUnitRoom(UnitTypes.vela, 22, shopX + distance * 8, shopY + 2, 3500);
-        addUnitRoom(UnitTypes.corvus, 65, shopX + distance * 9, shopY + 2, 10000);
+        addUnitRoom(UnitTypes.nova, 0, shopX + distance * 5, shopY + 2, 75);
+        addUnitRoom(UnitTypes.pulsar, 1, shopX + distance * 6, shopY + 2, 160);
+        addUnitRoom(UnitTypes.quasar, 4, shopX + distance * 7, shopY + 2, 500);
+        addUnitRoom(UnitTypes.vela, 25, shopX + distance * 8, shopY + 2, 3750);
+        addUnitRoom(UnitTypes.corvus, 55, shopX + distance * 9, shopY + 2, 15000);
 
-        addUnitRoom(UnitTypes.risso, 0, shopX + distance * 5, shopY + 2 + distance * 2, 200);
+        addUnitRoom(UnitTypes.risso, 0, shopX + distance * 5, shopY + 2 + distance * 2, 150);
         addUnitRoom(UnitTypes.minke, 2, shopX + distance * 6, shopY + 2 + distance * 2, 350);
-        addUnitRoom(UnitTypes.bryde, 8, shopX + distance * 7, shopY + 2 + distance * 2, 1200);
-        addUnitRoom(UnitTypes.sei, 24, shopX + distance * 8, shopY + 2 + distance * 2, 3750);
-        addUnitRoom(UnitTypes.omura, 65, shopX + distance * 9, shopY + 2 + distance * 2, 10000);
+        addUnitRoom(UnitTypes.bryde, 6, shopX + distance * 7, shopY + 2 + distance * 2, 1200);
+        addUnitRoom(UnitTypes.sei, 22, shopX + distance * 8, shopY + 2 + distance * 2, 3750);
+        addUnitRoom(UnitTypes.omura, 50, shopX + distance * 9, shopY + 2 + distance * 2, 15000);
 
         addUnitRoom(UnitTypes.retusa, 1, shopX + distance * 10, shopY + 2, 200);
-        addUnitRoom(UnitTypes.oxynoe, 5, shopX + distance * 11, shopY + 2, 800);
-        addUnitRoom(UnitTypes.cyerce, 12, shopX + distance * 12, shopY + 2, 1800);
-        addUnitRoom(UnitTypes.aegires, 25, shopX + distance * 13, shopY + 2, 5000);
-        addUnitRoom(UnitTypes.navanax, 70, shopX + distance * 14, shopY + 2, 12000);
+        addUnitRoom(UnitTypes.oxynoe, 3, shopX + distance * 11, shopY + 2, 750);
+        addUnitRoom(UnitTypes.cyerce, 8, shopX + distance * 12, shopY + 2, 1600);
+        addUnitRoom(UnitTypes.aegires, 24, shopX + distance * 13, shopY + 2, 4800);
+        addUnitRoom(UnitTypes.navanax, 70, shopX + distance * 14, shopY + 2, 11000);
 
         addUnitRoom(UnitTypes.flare, 0, shopX + distance * 10, shopY + 2 + distance * 2, 100);
         addUnitRoom(UnitTypes.horizon, 1, shopX + distance * 11, shopY + 2 + distance * 2, 250);
         addUnitRoom(UnitTypes.zenith, 5, shopX + distance * 12, shopY + 2 + distance * 2, 1000);
-        addUnitRoom(UnitTypes.antumbra, 25, shopX + distance * 13, shopY + 2 + distance * 2, 4000);
-        addUnitRoom(UnitTypes.eclipse, 55, shopX + distance * 14, shopY + 2 + distance * 2, 10000);
+        addUnitRoom(UnitTypes.antumbra, 25, shopX + distance * 13, shopY + 2 + distance * 2, 5000);
+        addUnitRoom(UnitTypes.eclipse, 55, shopX + distance * 14, shopY + 2 + distance * 2, 12000);
     }
 
     public void addUnitRoom(UnitType type, int income, int x, int y, int cost) {
