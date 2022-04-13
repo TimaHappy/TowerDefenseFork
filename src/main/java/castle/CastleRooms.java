@@ -12,10 +12,7 @@ import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.entities.Units;
 import mindustry.game.Team;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Iconc;
-import mindustry.gen.Unit;
+import mindustry.gen.*;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
@@ -187,6 +184,12 @@ public class CastleRooms {
                     CastleIcons.get(unitType) + (roomType == UnitRoomType.attack ? " [accent]\uE865" : " [scarlet]\uE84D") +
                     "\n[gray]" + cost +
                     "\n[white]" + Iconc.blockPlastaniumCompressor + " : " + (income < 0 ? "[crimson]" : income > 0 ? "[lime]+" : "[gray]") + income;
+
+            WorldLabel worldLabel = WorldLabel.create();
+            worldLabel.set(getX(), getY() + 12f);
+            worldLabel.text(this.label);
+            worldLabel.fontSize = 2f;
+            worldLabel.add();
         }
 
         @Override

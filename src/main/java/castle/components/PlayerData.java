@@ -4,7 +4,6 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
 import castle.CastleRooms;
-import castle.CastleRooms.UnitRoom;
 import mindustry.entities.Units;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
@@ -59,7 +58,5 @@ public class PlayerData {
         this.locale = Bundle.findLocale(player);
 
         this.connected = true;
-
-        CastleRooms.rooms.each(room -> room instanceof UnitRoom, room -> Call.label(player.con, room.label, Float.MAX_VALUE, room.getX(), room.getY()));
     }
 }
