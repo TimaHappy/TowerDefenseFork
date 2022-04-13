@@ -38,7 +38,7 @@ public class PlayerData {
         if (!connected || !player.team().active()) return;
 
         if (interval.get(60f)) {
-            money += income * 100;
+            money += income;
             CastleRooms.rooms.each(room -> room.showLabel(this), room -> Call.label(player.con, room.label, 1f, room.getX(), room.getY()));
         }
 
