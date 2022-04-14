@@ -49,17 +49,9 @@ public class Main extends Plugin {
 
         Events.on(PlayerJoin.class, event -> {
             if (PlayerData.datas.containsKey(event.player.uuid())) {
-                PlayerData data = PlayerData.datas.get(event.player.uuid());
-                data.handlePlayerJoin(event.player);
+                PlayerData.datas.get(event.player.uuid()).handlePlayerJoin(event.player);
             } else {
                 PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player));
-            }
-        });
-
-        Events.on(PlayerLeave.class, event -> {
-            if (PlayerData.datas.containsKey(event.player.uuid())) {
-                PlayerData data = PlayerData.datas.get(event.player.uuid());
-                data.connected = false;
             }
         });
 

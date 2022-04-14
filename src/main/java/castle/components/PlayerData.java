@@ -22,7 +22,7 @@ public class PlayerData {
     public int money = 0;
     public int income = 15;
 
-    public boolean connected = true, hideHud = false;
+    public boolean hideHud = false;
     public Locale locale;
 
     public static Seq<PlayerData> datas() {
@@ -34,7 +34,7 @@ public class PlayerData {
     }
 
     public void update() {
-        if (!connected || !player.team().active()) return;
+        if (!player.con.isConnected()) return;
 
         if (interval.get(60f)) {
             money += income;
@@ -54,9 +54,7 @@ public class PlayerData {
 
     public void handlePlayerJoin(Player player) {
         this.player = player;
-        this.interval = new Interval();
         this.locale = Bundle.findLocale(player);
-
-        this.connected = true;
+        this.interval = new Interval();
     }
 }

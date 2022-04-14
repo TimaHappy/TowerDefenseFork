@@ -23,11 +23,8 @@ public class CastleAI extends AIController {
     }
 
     public void updateAttack() {
-        if (!unit.isFlying()) {
-            pathfind(Pathfinder.fieldCore);
-        } else {
-            moveTo(unit.closestEnemyCore(), unit.range() / 1.5f);
-        }
+        if (!unit.isFlying()) pathfind(Pathfinder.fieldCore);
+        else moveTo(unit.closestEnemyCore(), unit.range() / 1.5f);
 
         if (invalid(target)) {
             target = target(unit.x, unit.y, unit.range(), unit.type.targetAir, unit.type.targetGround);
@@ -42,8 +39,8 @@ public class CastleAI extends AIController {
         if (invalid(target)) {
             target = Units.closestEnemy(unit.team, unit.x, unit.y, 360f, unit -> true);
 
-            if (unit.isFlying()) circle(unit.closestCore(), 30f);
-            else moveTo(unit.closestCore(), 30f);
+            if (unit.isFlying()) circle(unit.closestCore(), 60f);
+            else moveTo(unit.closestCore(), 60f);
         } else {
             moveTo(target, unit.range());
 
