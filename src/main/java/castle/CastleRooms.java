@@ -4,7 +4,7 @@ import arc.math.Mathf;
 import arc.math.geom.Position;
 import arc.struct.Seq;
 import arc.util.Interval;
-import castle.ai.CastleAI;
+import castle.ai.GroundCastleAI;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
@@ -203,11 +203,11 @@ public class CastleRooms {
             if (roomType == UnitRoomType.attack) {
                 tile = data.player.team() == Team.sharded ? blueSpawn : shardedSpawn;
                 unit = unitType.spawn(data.player.team(), tile.worldx() + Mathf.random(-40, 40), tile.worldy() + Mathf.random(-40, 40));
-                unit.controller(new CastleAI());
+                unit.controller(new GroundCastleAI());
             } else if (data.player.team().core() != null) {
                 tile = data.player.team().core().tile;
                 unit = unitType.spawn(data.player.team(), tile.worldx() + 40, tile.worldy() + Mathf.random(-40, 40));
-                unit.controller(new CastleAI());
+                unit.controller(new GroundCastleAI());
             }
         }
 
