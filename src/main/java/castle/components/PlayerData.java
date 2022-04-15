@@ -38,7 +38,6 @@ public class PlayerData {
 
         if (interval.get(60f)) {
             money += income;
-            CastleRooms.rooms.each(room -> room.showLabel(this), room -> Call.label(player.con, room.label, 1f, room.getX(), room.getY()));
         }
 
         if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));

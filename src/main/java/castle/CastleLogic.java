@@ -30,6 +30,10 @@ public class CastleLogic {
         rules.unitCap = 500;
         rules.unitCapVariable = false;
 
+        rules.polygonCoreProtection = true;
+        rules.buildSpeedMultiplier = 0.5f;
+        rules.buildCostMultiplier = 2.5f;
+
         rules.waves = false;
         rules.waveTimer = false;
         rules.modeName = "Castle Wars";

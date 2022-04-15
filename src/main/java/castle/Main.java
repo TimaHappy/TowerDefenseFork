@@ -5,8 +5,6 @@ import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Interval;
 import castle.CastleRooms.Room;
-import castle.ai.FlyingCastleAI;
-import castle.ai.GroundCastleAI;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.CastleUnitDrops;
@@ -33,8 +31,6 @@ public class Main extends Plugin {
     public void init() {
         ((CoreBlock) Blocks.coreShard).unitType = UnitTypes.poly;
         ((CoreBlock) Blocks.coreNucleus).unitType = UnitTypes.mega;
-
-        content.units().each(type -> type.defaultController = type.flying ? FlyingCastleAI::new : GroundCastleAI::new);
 
         CastleLogic.load();
         CastleIcons.load();

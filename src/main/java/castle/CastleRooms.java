@@ -4,7 +4,6 @@ import arc.math.Mathf;
 import arc.math.geom.Position;
 import arc.struct.Seq;
 import arc.util.Interval;
-import castle.ai.GroundCastleAI;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
@@ -43,7 +42,9 @@ public class CastleRooms {
 
         public float offset;
         public Tile tile;
+
         public String label = "";
+        public WorldLabel worldLabel = WorldLabel.create();
 
         public Room(int x, int y, int cost, int size) {
             this.x = x;
@@ -59,7 +60,7 @@ public class CastleRooms {
             this.offset = size % 2 == 0 ? 0f : 4f;
             this.tile = world.tile(x, y);
 
-            spawn();
+            this.spawn();
             rooms.add(this);
         }
 
@@ -71,10 +72,6 @@ public class CastleRooms {
 
         public boolean canBuy(PlayerData data) {
             return data.money >= cost;
-        }
-
-        public boolean showLabel(PlayerData data) {
-            return true;
         }
 
         public boolean check(float x, float y) {
@@ -96,6 +93,13 @@ public class CastleRooms {
                 world.tile(x, y).setFloor(floor.asFloor());
             }
         }
+
+        public void addLabel() {
+            worldLabel.set(getX(), getY());
+            worldLabel.text(label);
+            worldLabel.fontSize = 1.5f;
+            worldLabel.add();
+        }
     }
 
     public static class BlockRoom extends Room {
@@ -110,6 +114,8 @@ public class CastleRooms {
             this.block = block;
             this.team = team;
             this.label = CastleIcons.get(block) + " :[white] " + cost;
+
+            this.addLabel();
         }
 
         public BlockRoom(Block block, Team team, int x, int y, int cost) {
@@ -124,6 +130,7 @@ public class CastleRooms {
         @Override
         public void buy(PlayerData data) {
             super.buy(data);
+            worldLabel.hide();
             bought = true;
 
             tile.setNet(block, team, 0);
@@ -134,12 +141,7 @@ public class CastleRooms {
 
         @Override
         public boolean canBuy(PlayerData data) {
-            return super.canBuy(data) && showLabel(data);
-        }
-
-        @Override
-        public boolean showLabel(PlayerData data) {
-            return data.player.team() == team && !bought;
+            return super.canBuy(data) && data.player.team() == team && !bought;
         }
     }
 
@@ -152,6 +154,8 @@ public class CastleRooms {
 
             this.item = item;
             this.label = "[" + CastleIcons.get(item) + "] " + CastleIcons.get(block) + " :[white] " + cost;
+
+            this.addLabel();
         }
 
         @Override
@@ -185,11 +189,7 @@ public class CastleRooms {
                     "\n[gray]" + cost +
                     "\n[white]" + Iconc.blockPlastaniumCompressor + " : " + (income < 0 ? "[crimson]" : income > 0 ? "[lime]+" : "[gray]") + income;
 
-            WorldLabel worldLabel = WorldLabel.create();
-            worldLabel.set(getX(), getY() + 12f);
-            worldLabel.text(this.label);
-            worldLabel.fontSize = 2f;
-            worldLabel.add();
+            this.addLabel();
         }
 
         @Override
@@ -198,16 +198,13 @@ public class CastleRooms {
             data.income += income;
 
             Tile tile;
-            Unit unit;
 
             if (roomType == UnitRoomType.attack) {
                 tile = data.player.team() == Team.sharded ? blueSpawn : shardedSpawn;
-                unit = unitType.spawn(data.player.team(), tile.worldx() + Mathf.random(-40, 40), tile.worldy() + Mathf.random(-40, 40));
-                unit.controller(new GroundCastleAI());
+                unitType.spawn(data.player.team(), tile.worldx() + Mathf.random(-40, 40), tile.worldy() + Mathf.random(-40, 40));
             } else if (data.player.team().core() != null) {
                 tile = data.player.team().core().tile;
-                unit = unitType.spawn(data.player.team(), tile.worldx() + 40, tile.worldy() + Mathf.random(-40, 40));
-                unit.controller(new GroundCastleAI());
+                unitType.spawn(data.player.team(), tile.worldx() + 40, tile.worldy() + Mathf.random(-40, 40));
             }
         }
 
@@ -217,8 +214,11 @@ public class CastleRooms {
         }
 
         @Override
-        public boolean showLabel(PlayerData data) {
-            return false;
+        public void addLabel() {
+            worldLabel.set(getX(), getY() + 12f);
+            worldLabel.text(label);
+            worldLabel.fontSize = 2f;
+            worldLabel.add();
         }
     }
 }
