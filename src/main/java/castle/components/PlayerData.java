@@ -36,9 +36,7 @@ public class PlayerData {
     public void update() {
         if (!player.con.isConnected()) return;
 
-        if (interval.get(60f)) {
-            money += income;
-        }
+        if (interval.get(60f)) money += income;
 
         if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
 

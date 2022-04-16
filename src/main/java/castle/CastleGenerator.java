@@ -75,7 +75,7 @@ public class CastleGenerator implements Cons<Tiles> {
     public void get(Tiles tiles) {
         saved = tiles;
 
-        tiles = world.resize(world.width(), world.height() * size * 4 + 11);
+        tiles = world.resize(world.width(), world.height() * 2 + size * 4 + 5);
 
         for (int x = 0; x < tiles.width; x++) {
             for (int y = 0; y < tiles.height; y++) {
@@ -111,11 +111,10 @@ public class CastleGenerator implements Cons<Tiles> {
             }
         }
 
-        generateShop(9, saved.height + 6);
+        generateShop(8, saved.height + 7);
     }
 
     public void generateShop(int shopX, int shopY) {
-
         addUnitRoom(UnitTypes.dagger, 0, shopX, shopY, 60);
         addUnitRoom(UnitTypes.mace, 1, shopX + size, shopY, 150);
         addUnitRoom(UnitTypes.fortress, 4, shopX + size * 2, shopY, 500);
@@ -145,12 +144,6 @@ public class CastleGenerator implements Cons<Tiles> {
         addUnitRoom(UnitTypes.cyerce, 8, shopX + size * 12, shopY, 1600);
         addUnitRoom(UnitTypes.aegires, 24, shopX + size * 13, shopY, 4800);
         addUnitRoom(UnitTypes.navanax, 70, shopX + size * 14, shopY, 11000);
-
-        addUnitRoom(UnitTypes.flare, 0, shopX + size * 10, shopY + size * 2, 150);
-        addUnitRoom(UnitTypes.horizon, 2, shopX + size * 11, shopY + size * 2, 300);
-        addUnitRoom(UnitTypes.zenith, 8, shopX + size * 12, shopY + size * 2, 1500);
-        addUnitRoom(UnitTypes.antumbra, 30, shopX + size * 13, shopY + size * 2, 5000);
-        addUnitRoom(UnitTypes.eclipse, 55, shopX + size * 14, shopY + size * 2, 12500);
     }
 
     public void addUnitRoom(UnitType type, int income, int x, int y, int cost) {

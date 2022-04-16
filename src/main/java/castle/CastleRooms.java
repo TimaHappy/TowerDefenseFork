@@ -62,7 +62,6 @@ public class CastleRooms {
             this.label.set(getX(), getY());
             this.label.fontSize(1.5f);
             this.label.flags(WorldLabel.flagOutline);
-            this.label.text("[scarlet]?");
 
             this.spawn();
             rooms.add(this);
