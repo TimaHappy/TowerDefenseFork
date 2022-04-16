@@ -31,7 +31,7 @@ public class Main extends Plugin {
 
         CastleLogic.load();
         CastleIcons.load();
-        CastleUnitDrops.load();
+        CastleUnits.load();
 
         netServer.admins.addActionFilter(action -> action.tile == null || action.type != ActionType.placeBlock || (action.tile.dst(CastleRooms.shardedSpawn) > 64 && action.tile.dst(CastleRooms.blueSpawn) > 64));
 
@@ -56,7 +56,7 @@ public class Main extends Plugin {
         });
 
         Events.on(UnitDestroyEvent.class, event -> {
-            int income = CastleUnitDrops.get(event.unit.type);
+            int income = CastleUnits.drop(event.unit.type);
             if (income <= 0 || event.unit.spawnedByCore) return;
             PlayerData.datas().each(data -> {
                 if (data.player.team() != event.unit.team) {

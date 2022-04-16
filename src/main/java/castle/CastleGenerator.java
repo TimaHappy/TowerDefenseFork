@@ -3,8 +3,9 @@ package castle;
 import arc.func.Cons;
 import arc.math.Mathf;
 import arc.util.Log;
+import castle.components.CastleUnits;
+import castle.components.CastleUnits.Moneys;
 import mindustry.content.Blocks;
-import mindustry.content.UnitTypes;
 import mindustry.core.GameState.State;
 import mindustry.game.Team;
 import mindustry.io.SaveIO;
@@ -27,6 +28,10 @@ public class CastleGenerator implements Cons<Tiles> {
 
     public Tiles saved;
 
+    // variables for generating shop
+    private boolean top;
+    private int offset;
+    
     public void loadMap(Map map) {
         try {
             SaveIO.load(map.file, new WorldContext() {
@@ -115,39 +120,15 @@ public class CastleGenerator implements Cons<Tiles> {
     }
 
     public void generateShop(int shopX, int shopY) {
-        addUnitRoom(UnitTypes.dagger, 0, shopX, shopY, 60);
-        addUnitRoom(UnitTypes.mace, 1, shopX + size, shopY, 150);
-        addUnitRoom(UnitTypes.fortress, 4, shopX + size * 2, shopY, 500);
-        addUnitRoom(UnitTypes.scepter, 20, shopX + size * 3, shopY, 3000);
-        addUnitRoom(UnitTypes.reign, 45, shopX + size * 4, shopY, 10000);
-
-        addUnitRoom(UnitTypes.crawler, 0, shopX, shopY + size * 2, 75);
-        addUnitRoom(UnitTypes.atrax, 1, shopX + size, shopY + size * 2, 160);
-        addUnitRoom(UnitTypes.spiroct, 4, shopX + size * 2, shopY + size * 2, 500);
-        addUnitRoom(UnitTypes.arkyid, 24, shopX + size * 3, shopY + size * 2, 4600);
-        addUnitRoom(UnitTypes.toxopid, 50, shopX + size * 4, shopY + size * 2, 12500);
-
-        addUnitRoom(UnitTypes.nova, 0, shopX + size * 5, shopY, 75);
-        addUnitRoom(UnitTypes.pulsar, 1, shopX + size * 6, shopY, 160);
-        addUnitRoom(UnitTypes.quasar, 4, shopX + size * 7, shopY, 500);
-        addUnitRoom(UnitTypes.vela, 25, shopX + size * 8, shopY, 3750);
-        addUnitRoom(UnitTypes.corvus, 55, shopX + size * 9, shopY, 15000);
-
-        addUnitRoom(UnitTypes.risso, 0, shopX + size * 5, shopY + size * 2, 150);
-        addUnitRoom(UnitTypes.minke, 2, shopX + size * 6, shopY + size * 2, 350);
-        addUnitRoom(UnitTypes.bryde, 6, shopX + size * 7, shopY + size * 2, 1200);
-        addUnitRoom(UnitTypes.sei, 22, shopX + size * 8, shopY + size * 2, 3750);
-        addUnitRoom(UnitTypes.omura, 50, shopX + size * 9, shopY + size * 2, 15000);
-
-        addUnitRoom(UnitTypes.retusa, 1, shopX + size * 10, shopY, 200);
-        addUnitRoom(UnitTypes.oxynoe, 3, shopX + size * 11, shopY, 750);
-        addUnitRoom(UnitTypes.cyerce, 8, shopX + size * 12, shopY, 1600);
-        addUnitRoom(UnitTypes.aegires, 24, shopX + size * 13, shopY, 4800);
-        addUnitRoom(UnitTypes.navanax, 70, shopX + size * 14, shopY, 11000);
+        CastleUnits.units.each((type, money) -> {
+            addUnitRoom(type, shopX + size * offset++, shopY + (top ? size * 2 : 0));
+            if (offset % 5 == 0 && (top = !top)) offset -= 5; // bruh, just don't touch it
+        });
     }
 
-    public void addUnitRoom(UnitType type, int income, int x, int y, int cost) {
-        new UnitRoom(type, UnitRoom.UnitRoomType.attack, income, x, y, cost);
-        new UnitRoom(type, UnitRoom.UnitRoomType.defend, -income, x, y + size, cost);
+    public void addUnitRoom(UnitType type, int x, int y){
+        Moneys money = CastleUnits.units.get(type);
+        new UnitRoom(type, UnitRoom.UnitRoomType.attack, money.income(), x, y, money.cost());
+        new UnitRoom(type, UnitRoom.UnitRoomType.defend, -money.income(), x, y + size, money.cost());
     }
 }
