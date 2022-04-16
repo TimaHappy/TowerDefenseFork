@@ -25,7 +25,7 @@ public class CastleRooms {
 
     public static Seq<Room> rooms = new Seq<>();
 
-    public static final int size = 8;
+    public static final int size = 10;
     public static Tile shardedSpawn, blueSpawn;
 
     public static class Room implements Position {
