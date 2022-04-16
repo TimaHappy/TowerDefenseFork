@@ -1,6 +1,5 @@
 package castle;
 
-import arc.Events;
 import arc.func.Cons;
 import arc.math.Mathf;
 import arc.util.Log;
@@ -10,9 +9,7 @@ import castle.CastleRooms.UnitRoom;
 import mindustry.content.Blocks;
 import mindustry.content.UnitTypes;
 import mindustry.core.GameState.State;
-import mindustry.game.EventType.WorldLoadEvent;
 import mindustry.game.Team;
-import mindustry.gen.Groups;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.type.Item;
@@ -23,10 +20,10 @@ import mindustry.world.WorldContext;
 import mindustry.world.blocks.distribution.Sorter.SorterBuild;
 import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.TreeBlock;
-import mindustry.world.blocks.legacy.LegacyBlock;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.state;
+import static mindustry.Vars.world;
 
 public class CastleGenerator implements Cons<Tiles> {
 
@@ -59,12 +56,13 @@ public class CastleGenerator implements Cons<Tiles> {
 
                 @Override
                 public void begin() {
-                    beginMapLoad();
+                    world.beginMapLoad();
                 }
 
                 @Override
                 public void end() {
-                    endMapLoad();
+                    get(world.tiles);
+                    world.endMapLoad();
                 }
             });
 
@@ -151,39 +149,15 @@ public class CastleGenerator implements Cons<Tiles> {
         addUnitRoom(UnitTypes.aegires, 24, shopX + distance * 13, shopY + 2, 4800);
         addUnitRoom(UnitTypes.navanax, 70, shopX + distance * 14, shopY + 2, 11000);
 
-        addUnitRoom(UnitTypes.flare, 0, shopX + distance * 10, shopY + 2 + distance * 2, 250);
-        addUnitRoom(UnitTypes.horizon, 2, shopX + distance * 11, shopY + 2 + distance * 2, 500);
-        addUnitRoom(UnitTypes.zenith, 8, shopX + distance * 12, shopY + 2 + distance * 2, 2000);
-        addUnitRoom(UnitTypes.antumbra, 30, shopX + distance * 13, shopY + 2 + distance * 2, 7500);
-        addUnitRoom(UnitTypes.eclipse, 55, shopX + distance * 14, shopY + 2 + distance * 2, 15000);
+        addUnitRoom(UnitTypes.flare, 0, shopX + distance * 10, shopY + 2 + distance * 2, 150);
+        addUnitRoom(UnitTypes.horizon, 2, shopX + distance * 11, shopY + 2 + distance * 2, 300);
+        addUnitRoom(UnitTypes.zenith, 8, shopX + distance * 12, shopY + 2 + distance * 2, 1500);
+        addUnitRoom(UnitTypes.antumbra, 30, shopX + distance * 13, shopY + 2 + distance * 2, 5000);
+        addUnitRoom(UnitTypes.eclipse, 55, shopX + distance * 14, shopY + 2 + distance * 2, 12500);
     }
 
     public void addUnitRoom(UnitType type, int income, int x, int y, int cost) {
         new UnitRoom(type, UnitRoom.UnitRoomType.attack, income, x, y, cost);
         new UnitRoom(type, UnitRoom.UnitRoomType.defend, -income, x, y + CastleRooms.size + 2, cost);
-    }
-
-    public void beginMapLoad() {
-        world.setGenerating(true);
-    }
-
-    public void endMapLoad() {
-        get(world.tiles);
-
-        for (Tile tile : world.tiles) {
-            if (tile.block() instanceof LegacyBlock legacy) {
-                legacy.removeSelf(tile);
-                continue;
-            }
-
-            if (tile.build != null) tile.build.updateProximity();
-        }
-
-        world.addDarkness(world.tiles);
-
-        Groups.resize(-finalWorldBounds, -finalWorldBounds, world.tiles.width * tilesize + finalWorldBounds * 2, world.tiles.height * tilesize + finalWorldBounds * 2);
-
-        world.setGenerating(false);
-        Events.fire(new WorldLoadEvent());
     }
 }

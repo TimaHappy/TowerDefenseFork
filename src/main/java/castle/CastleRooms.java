@@ -43,8 +43,7 @@ public class CastleRooms {
         public float offset;
         public Tile tile;
 
-        public String label = "";
-        public WorldLabel worldLabel = WorldLabel.create();
+        public WorldLabel label = WorldLabel.create();
 
         public Room(int x, int y, int cost, int size) {
             this.x = x;
@@ -59,6 +58,11 @@ public class CastleRooms {
             this.size = size;
             this.offset = size % 2 == 0 ? 0f : 4f;
             this.tile = world.tile(x, y);
+
+            this.label.set(getX(), getY());
+            this.label.fontSize(1.5f);
+            this.label.flags(WorldLabel.flagOutline);
+            this.label.text("[scarlet]?");
 
             this.spawn();
             rooms.add(this);
@@ -93,13 +97,6 @@ public class CastleRooms {
                 world.tile(x, y).setFloor(floor.asFloor());
             }
         }
-
-        public void addLabel() {
-            worldLabel.set(getX(), getY());
-            worldLabel.text(label);
-            worldLabel.fontSize = 1.5f;
-            worldLabel.add();
-        }
     }
 
     public static class BlockRoom extends Room {
@@ -113,9 +110,9 @@ public class CastleRooms {
 
             this.block = block;
             this.team = team;
-            this.label = CastleIcons.get(block) + " :[white] " + cost;
+            this.label.text(CastleIcons.get(block) + " :[white] " + cost);
 
-            this.addLabel();
+            this.label.add();
         }
 
         public BlockRoom(Block block, Team team, int x, int y, int cost) {
@@ -130,13 +127,13 @@ public class CastleRooms {
         @Override
         public void buy(PlayerData data) {
             super.buy(data);
-            worldLabel.hide();
+            label.hide();
             bought = true;
 
             tile.setNet(block, team, 0);
             if (!(block instanceof CoreBlock)) tile.build.health(Float.MAX_VALUE);
 
-            Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 3f, getX(), getY()));
+            Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 1f, getX(), getY()));
         }
 
         @Override
@@ -153,9 +150,9 @@ public class CastleRooms {
             super(Blocks.laserDrill, team, x, y, cost);
 
             this.item = item;
-            this.label = "[" + CastleIcons.get(item) + "] " + CastleIcons.get(block) + " :[white] " + cost;
+            this.label.text("[" + CastleIcons.get(item) + "] " + CastleIcons.get(block) + " :[white] " + cost);
 
-            this.addLabel();
+            this.label.add();
         }
 
         @Override
@@ -184,12 +181,15 @@ public class CastleRooms {
             this.unitType = unitType;
             this.roomType = roomType;
             this.income = income;
-            this.label = " ".repeat(Math.max(0, (String.valueOf(income).length() + String.valueOf(cost).length() + 2) / 2)) +
+
+            this.label.set(getX(), getY() + 12f);
+            this.label.fontSize(2f);
+            this.label.text(" ".repeat(Math.max(0, (String.valueOf(income).length() + String.valueOf(cost).length() + 2) / 2)) +
                     CastleIcons.get(unitType) + (roomType == UnitRoomType.attack ? " [accent]\uE865" : " [scarlet]\uE84D") +
                     "\n[gray]" + cost +
-                    "\n[white]" + Iconc.blockPlastaniumCompressor + " : " + (income < 0 ? "[crimson]" : income > 0 ? "[lime]+" : "[gray]") + income;
+                    "\n[white]" + Iconc.blockPlastaniumCompressor + " : " + (income < 0 ? "[crimson]" : income > 0 ? "[lime]+" : "[gray]") + income);
 
-            this.addLabel();
+            this.label.add();
         }
 
         @Override
@@ -211,14 +211,6 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && Units.getCap(data.player.team()) > data.player.team().data().unitCount;
-        }
-
-        @Override
-        public void addLabel() {
-            worldLabel.set(getX(), getY() + 12f);
-            worldLabel.text(label);
-            worldLabel.fontSize = 2f;
-            worldLabel.add();
         }
     }
 }

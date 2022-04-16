@@ -73,7 +73,7 @@ public class CastleLogic {
         Events.fire("CastleGameOver");
         Call.updateGameOver(team);
 
-        Log.info("Игра окончена. Генерирую карту заново...");
+        Log.info("Игра окончена. Загружаю новую карту...");
         Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.derelict ? "events.draw" : "events.gameover", Bundle.findLocale(p), colorizedTeam(team))));
         Call.hideHudText();
 
