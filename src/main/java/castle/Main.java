@@ -5,6 +5,7 @@ import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Interval;
 import castle.CastleRooms.Room;
+import castle.ai.AIShell;
 import castle.components.*;
 import mindustry.content.Blocks;
 import mindustry.content.UnitTypes;
@@ -32,6 +33,11 @@ public class Main extends Plugin {
         CastleLogic.load();
         CastleIcons.load();
         CastleUnits.load();
+
+        content.units().each(unit -> {
+            var parent = unit.defaultController;
+            unit.defaultController = () -> new AIShell(parent);
+        });
 
         netServer.admins.addActionFilter(action -> action.tile == null || action.type != ActionType.placeBlock || (action.tile.dst(CastleRooms.shardedSpawn) > 64 && action.tile.dst(CastleRooms.blueSpawn) > 64));
 
