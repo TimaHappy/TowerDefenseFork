@@ -156,9 +156,9 @@ public class CastleRooms {
 
         @Override
         public void update() {
-            if (bought && interval.get(300f)) {
+            if (bought && interval.get(240f)) {
                 Call.effect(Fx.mineHuge, getX(), getY(), 0f, team.color);
-                Call.transferItemTo(null, item, 36, getX(), getY(), team.core());
+                Call.transferItemTo(null, item, 120, getX(), getY(), team.core());
             }
         }
     }
