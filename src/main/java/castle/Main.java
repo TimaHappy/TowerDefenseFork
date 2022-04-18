@@ -16,6 +16,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
+import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static castle.CastleLogic.*;
@@ -39,7 +40,10 @@ public class Main extends Plugin {
             unit.defaultController = () -> new AIShell(parent);
         });
 
-        netServer.admins.addActionFilter(action -> action.tile == null || action.type != ActionType.placeBlock || (action.tile.dst(CastleRooms.shardedSpawn) > 64 && action.tile.dst(CastleRooms.blueSpawn) > 64));
+        netServer.admins.addActionFilter(action -> {
+            if (action.tile != null && action.tile.block() instanceof Turret) return false;
+            return action.tile == null || action.type != ActionType.placeBlock || (action.tile.dst(CastleRooms.shardedSpawn) > 64 && action.tile.dst(CastleRooms.blueSpawn) > 64);
+        });
 
         netServer.assigner = (player, players) -> {
             Seq<Player> arr = Seq.with(players);
