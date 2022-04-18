@@ -4,11 +4,14 @@ import arc.math.Mathf;
 import arc.math.geom.Position;
 import arc.struct.Seq;
 import arc.util.Interval;
+import arc.util.Log;
+import arc.util.Time;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
+import mindustry.content.Liquids;
 import mindustry.entities.Units;
 import mindustry.game.Team;
 import mindustry.gen.*;
@@ -16,10 +19,12 @@ import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
+import mindustry.world.blocks.defense.turrets.ItemTurret;
+import mindustry.world.blocks.defense.turrets.ItemTurret.ItemTurretBuild;
+import mindustry.world.blocks.defense.turrets.LiquidTurret.LiquidTurretBuild;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static mindustry.Vars.tilesize;
-import static mindustry.Vars.world;
+import static mindustry.Vars.*;
 
 public class CastleRooms {
 
@@ -138,6 +143,40 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && data.player.team() == team && !bought;
+        }
+    }
+
+    public static class TurretRoom extends BlockRoom {
+
+        public TurretRoom(Block block, Team team, int x, int y, int cost) {
+            super(block, team, x, y, cost);
+            Log.info("turret");
+        }
+
+        @Override
+        public void buy(PlayerData data) {
+            super.buy(data);
+
+            Tile source = world.tile(startx, y);
+            if (tile.build instanceof ItemTurretBuild build) {
+                source.setNet(Blocks.itemSource, team, 0);
+                source.build.health(Float.MAX_VALUE);
+                source.build.configure(((ItemTurret) build.block).ammoTypes.entries().next().key);
+                Time.run(60f, () -> {
+                    Call.effect(Fx.mineHuge, source.worldx(), source.worldy(), 0, team.color);
+                    source.removeNet();
+                });
+            }
+
+            if (tile.build instanceof LiquidTurretBuild build) {
+                source.setNet(Blocks.liquidSource, team, 0);
+                source.build.health(Float.MAX_VALUE);
+                source.build.configure(Liquids.cryofluid);
+                Time.run(60f, () -> {
+                    Call.effect(Fx.mineHuge, source.worldx(), source.worldy(), 0, team.color);
+                    source.removeNet();
+                });
+            }
         }
     }
 

@@ -15,6 +15,7 @@ import mindustry.type.UnitType;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.WorldContext;
+import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.distribution.Sorter.SorterBuild;
 import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.TreeBlock;
@@ -27,10 +28,8 @@ import static castle.CastleRooms.*;
 public class CastleGenerator implements Cons<Tiles> {
 
     public Tiles saved;
-
-    // variables for generating shop
-    private boolean top;
-    private int offset;
+    public boolean top;
+    public int offset;
     
     public void loadMap(Map map) {
         try {
@@ -104,6 +103,10 @@ public class CastleGenerator implements Cons<Tiles> {
 
                     new BlockRoom(Team.sharded, save.x, save.y, 5000);
                     new BlockRoom(Team.blue, save.x, tiles.height - save.y - 1, 5000);
+
+                } else if (save.block() instanceof Turret turret) {
+                    new TurretRoom(turret, Team.sharded, save.x, save.y, 1000);
+                    new TurretRoom(turret, Team.blue, save.x, tiles.height - save.y - 1, 1000);
                 } else if (save.build instanceof SorterBuild sorterBuild) {
                     Item item = sorterBuild.config();
                     int cost = 250 + Mathf.ceil(item.hardness == 0 ? item.cost * 500 : item.hardness * 250);
@@ -122,7 +125,7 @@ public class CastleGenerator implements Cons<Tiles> {
     public void generateShop(int shopX, int shopY) {
         CastleUnits.units.each((type, money) -> {
             addUnitRoom(type, shopX + size * offset++, shopY + (top ? size * 2 : 0));
-            if (offset % 5 == 0 && (top = !top)) offset -= 5; // bruh, just don't touch it
+            if (offset % 5 == 0 && (top = !top)) offset -= 5;
         });
     }
 
