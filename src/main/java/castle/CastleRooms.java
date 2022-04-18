@@ -2,9 +2,9 @@ package castle;
 
 import arc.math.Mathf;
 import arc.math.geom.Position;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
-import arc.util.Log;
 import arc.util.Time;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
@@ -14,7 +14,10 @@ import mindustry.content.Fx;
 import mindustry.content.Liquids;
 import mindustry.entities.Units;
 import mindustry.game.Team;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Iconc;
+import mindustry.gen.WorldLabel;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
@@ -22,9 +25,11 @@ import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.ItemTurret.ItemTurretBuild;
 import mindustry.world.blocks.defense.turrets.LiquidTurret.LiquidTurretBuild;
+import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static mindustry.Vars.*;
+import static mindustry.Vars.tilesize;
+import static mindustry.Vars.world;
 
 public class CastleRooms {
 
@@ -95,9 +100,8 @@ public class CastleRooms {
         }
 
         public void spawn() {
-            boolean core = tile.block() == Blocks.coreNucleus;
             for (int x = startx; x <= endx; x++) for (int y = starty; y <= endy; y++) {
-                Block floor = core || x == startx || y == starty || x == endx || y == endy ? Blocks.metalFloor5 : Blocks.metalFloor;
+                Block floor = x == startx || y == starty || x == endx || y == endy ? Blocks.metalFloor5 : Blocks.metalFloor;
                 world.tile(x, y).setFloor(floor.asFloor());
             }
         }
@@ -123,11 +127,6 @@ public class CastleRooms {
             this(block, team, x, y, cost, block.size + 1);
         }
 
-        /** Special for cores */
-        public BlockRoom(Team team, int x, int y, int cost) {
-            this(Blocks.coreNucleus, team, x, y, cost, Blocks.coreShard.size + 1);
-        }
-
         @Override
         public void buy(PlayerData data) {
             super.buy(data);
@@ -148,9 +147,31 @@ public class CastleRooms {
 
     public static class TurretRoom extends BlockRoom {
 
-        public TurretRoom(Block block, Team team, int x, int y, int cost) {
-            super(block, team, x, y, cost);
-            Log.info("turret");
+        public static ObjectMap<Turret, Integer> turretCosts;
+
+        public TurretRoom(Turret block, Team team, int x, int y) {
+            super(block, team, x, y, turretCosts.get(block));
+        }
+
+        public static void loadCosts() {
+            turretCosts = ObjectMap.of(
+                    Blocks.duo, 100,
+                    Blocks.scatter, 250,
+                    Blocks.scorch, 200,
+                    Blocks.hail, 450,
+                    Blocks.wave, 300,
+                    Blocks.lancer, 350,
+                    Blocks.arc, 150,
+                    Blocks.swarmer, 1250,
+                    Blocks.salvo, 500,
+                    Blocks.tsunami, 850,
+                    Blocks.fuse, 1500,
+                    Blocks.ripple, 1500,
+                    Blocks.cyclone, 1750,
+                    Blocks.foreshadow, 4000,
+                    Blocks.spectre, 3000,
+                    Blocks.meltdown, 3000
+            );
         }
 
         @Override
@@ -168,7 +189,7 @@ public class CastleRooms {
                 });
             }
 
-            if (tile.build instanceof LiquidTurretBuild build) {
+            if (tile.build instanceof LiquidTurretBuild) {
                 source.setNet(Blocks.liquidSource, team, 0);
                 source.build.health(Float.MAX_VALUE);
                 source.build.configure(Liquids.cryofluid);

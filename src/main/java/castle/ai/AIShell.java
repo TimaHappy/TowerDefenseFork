@@ -39,7 +39,7 @@ public class AIShell extends AIController {
         if (invalid(target)) {
             target = Units.closestEnemy(unit.team, unit.x, unit.y, 360f, unit -> true);
 
-            circle(unit.closestCore(), 120f);
+            moveTo(unit.closestCore(), 160f);
             unit.movePref(unit.vel);
         } else {
             moveTo(target, unit.range());

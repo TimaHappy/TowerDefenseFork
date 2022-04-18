@@ -17,6 +17,7 @@ import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
 import mindustry.world.blocks.defense.turrets.Turret;
+import mindustry.world.blocks.production.Drill;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static castle.CastleLogic.*;
@@ -34,6 +35,7 @@ public class Main extends Plugin {
         CastleLogic.load();
         CastleIcons.load();
         CastleUnits.load();
+        CastleRooms.TurretRoom.loadCosts();
 
         content.units().each(unit -> {
             var parent = unit.defaultController;
@@ -41,7 +43,7 @@ public class Main extends Plugin {
         });
 
         netServer.admins.addActionFilter(action -> {
-            if (action.tile != null && action.tile.block() instanceof Turret) return false;
+            if (action.tile != null && (action.tile.block() instanceof Turret || action.tile.block() instanceof Drill)) return false;
             return action.tile == null || action.type != ActionType.placeBlock || (action.tile.dst(CastleRooms.shardedSpawn) > 64 && action.tile.dst(CastleRooms.blueSpawn) > 64);
         });
 

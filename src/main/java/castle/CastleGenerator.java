@@ -101,12 +101,12 @@ public class CastleGenerator implements Cons<Tiles> {
                     tiles.getc(save.x, save.y).setNet(block, Team.sharded, 0);
                     tiles.getc(save.x, tiles.height - save.y - 1).setNet(block, Team.blue, 0);
 
-                    new BlockRoom(Team.sharded, save.x, save.y, 5000);
-                    new BlockRoom(Team.blue, save.x, tiles.height - save.y - 1, 5000);
+                    new BlockRoom(Blocks.coreNucleus, Team.sharded, save.x, save.y, 5000);
+                    new BlockRoom(Blocks.coreNucleus, Team.blue, save.x, tiles.height - save.y - 1, 5000);
 
                 } else if (save.block() instanceof Turret turret) {
-                    new TurretRoom(turret, Team.sharded, save.x, save.y, 1000);
-                    new TurretRoom(turret, Team.blue, save.x, tiles.height - save.y - 1, 1000);
+                    new TurretRoom(turret, Team.sharded, save.x, save.y);
+                    new TurretRoom(turret, Team.blue, save.x, tiles.height - save.y - 2 + turret.size % 2);
                 } else if (save.build instanceof SorterBuild sorterBuild) {
                     Item item = sorterBuild.config();
                     int cost = 250 + Mathf.ceil(item.hardness == 0 ? item.cost * 500 : item.hardness * 250);
