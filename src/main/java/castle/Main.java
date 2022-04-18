@@ -37,10 +37,11 @@ public class Main extends Plugin {
         CastleUnits.load();
         CastleRooms.TurretRoom.loadCosts();
 
-        content.units().each(unit -> {
-            var parent = unit.defaultController;
-            unit.defaultController = () -> new AIShell(parent);
-        });
+        // TODO (xzxADIxzx) ИИ иногда работает криво, стреляет в никуда и т.д., пофиксить
+        //content.units().each(unit -> {
+        //    var parent = unit.defaultController;
+        //    unit.defaultController = () -> new AIShell(parent);
+        //});
 
         netServer.admins.addActionFilter(action -> {
             if (action.tile != null && (action.tile.block() instanceof Turret || action.tile.block() instanceof Drill)) return false;
