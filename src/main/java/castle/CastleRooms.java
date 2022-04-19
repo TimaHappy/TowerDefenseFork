@@ -180,23 +180,17 @@ public class CastleRooms {
             Tile source = world.tile(startx, y);
             if (tile.build instanceof ItemTurretBuild build) {
                 source.setNet(Blocks.itemSource, team, 0);
-                source.build.health(Float.MAX_VALUE);
                 source.build.configure(((ItemTurret) build.block).ammoTypes.entries().next().key);
-                Time.run(60f, () -> {
-                    Call.effect(Fx.mineHuge, source.worldx(), source.worldy(), 0, team.color);
-                    source.removeNet();
-                });
+            }else if (tile.build instanceof LiquidTurretBuild) {
+                source.setNet(Blocks.liquidSource, team, 0);
+                source.build.configure(Liquids.cryofluid);
             }
 
-            if (tile.build instanceof LiquidTurretBuild) {
-                source.setNet(Blocks.liquidSource, team, 0);
-                source.build.health(Float.MAX_VALUE);
-                source.build.configure(Liquids.cryofluid);
-                Time.run(60f, () -> {
-                    Call.effect(Fx.mineHuge, source.worldx(), source.worldy(), 0, team.color);
-                    source.removeNet();
-                });
-            }
+            source.build.health(Float.MAX_VALUE);
+            Time.run(60f, () -> {
+                Call.effect(Fx.mineHuge, source.worldx(), source.worldy(), 0, team.color);
+                source.removeNet();
+            });
         }
     }
 

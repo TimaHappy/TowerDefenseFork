@@ -102,6 +102,11 @@ public class Main extends Plugin {
             if (data.hideHud) Call.hideHudText(player.con);
             Bundle.bundled(player, data.hideHud ? "commands.hud.off" : "commands.hud.on");
         });
+
+        handler.<Player>register("skip", "Skip the current map.", (args, player) -> {
+            if (Groups.player.size() == 1) gameOver(Team.derelict);
+            else player.sendMessage(Bundle.get("commans.skip.not-alone", Bundle.findLocale(player)));
+        });
     }
 
     @Override
