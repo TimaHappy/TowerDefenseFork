@@ -31,7 +31,6 @@ public class PlayerData {
 
     public PlayerData(Player player) {
         this.handlePlayerJoin(player);
-        if (datas.isEmpty()) player.sendMessage(Bundle.get("commans.skip.offer", locale));
     }
 
     public void update() {
