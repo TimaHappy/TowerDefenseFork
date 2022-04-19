@@ -72,6 +72,7 @@ public class CastleRooms {
             this.label.set(getX(), getY());
             this.label.fontSize(1.5f);
             this.label.flags(WorldLabel.flagOutline);
+            this.label.add();
 
             this.spawn();
             rooms.add(this);
@@ -119,8 +120,6 @@ public class CastleRooms {
             this.block = block;
             this.team = team;
             this.label.text(CastleIcons.get(block) + " :[white] " + cost);
-
-            this.label.add();
         }
 
         public BlockRoom(Block block, Team team, int x, int y, int cost) {
@@ -210,8 +209,6 @@ public class CastleRooms {
 
             this.item = item;
             this.label.text("[" + CastleIcons.get(item) + "] " + CastleIcons.get(block) + " :[white] " + cost);
-
-            this.label.add();
         }
 
         @Override
@@ -247,8 +244,6 @@ public class CastleRooms {
                     CastleIcons.get(unitType) + (roomType == UnitRoomType.attack ? " [accent]\uE865" : " [scarlet]\uE84D") +
                     "\n[gray]" + cost +
                     "\n[white]" + Iconc.blockPlastaniumCompressor + " : " + (income < 0 ? "[crimson]" : income > 0 ? "[lime]+" : "[gray]") + income);
-
-            this.label.add();
         }
 
         @Override

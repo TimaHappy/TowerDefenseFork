@@ -81,4 +81,8 @@ public class CastleLogic {
     public static String colorizedTeam(Team team) {
         return "[#" + team.color + "]" + team.name;
     }
+
+    public static boolean isBreak() {
+        return world.isGenerating() || state.gameOver || state.serverPaused;
+    }
 }

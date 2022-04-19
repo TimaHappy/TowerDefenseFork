@@ -37,11 +37,10 @@ public class Main extends Plugin {
         CastleUnits.load();
         CastleRooms.TurretRoom.loadCosts();
 
-        // TODO (xzxADIxzx) ИИ иногда работает криво, стреляет в никуда и т.д., пофиксить
-        //content.units().each(unit -> {
-        //    var parent = unit.defaultController;
-        //    unit.defaultController = () -> new AIShell(parent);
-        //});
+        content.units().each(unit -> {
+           var parent = unit.defaultController;
+           unit.defaultController = () -> new AIShell(parent);
+        });
 
         netServer.admins.addActionFilter(action -> {
             if (action.tile != null && (action.tile.block() instanceof Turret || action.tile.block() instanceof Drill)) return false;
@@ -63,7 +62,7 @@ public class Main extends Plugin {
         });
 
         Events.on(BlockDestroyEvent.class, event -> {
-            if (world.isGenerating() || state.gameOver) return;
+            if (isBreak()) return;
             if (event.tile.block() instanceof CoreBlock && event.tile.team().cores().size <= 1)
                 gameOver(event.tile.team() == Team.sharded ? Team.blue : Team.sharded);
         });
@@ -80,7 +79,7 @@ public class Main extends Plugin {
         });
 
         Events.run(Trigger.update, () -> {
-            if (world.isGenerating() || state.gameOver || state.serverPaused) return;
+            if (isBreak()) return;
 
             Groups.unit.each(unit -> unit.isFlying() && !unit.spawnedByCore && (unit.tileOn() == null || unit.tileOn().floor() == Blocks.space), Call::unitDespawn);
 
