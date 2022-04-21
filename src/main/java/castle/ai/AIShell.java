@@ -39,7 +39,7 @@ public class AIShell extends AIController {
             target = Units.closestEnemy(unit.team, unit.x, unit.y, 360f, AIShell::onEnemySide);
             moveTo(unit.closestCore(), 160f, 1f);
         } else {
-            moveTo(target, unit.mounts[0].weapon.bullet.range() * .8f + (target instanceof Sized s ? s.hitSize() / 2f : 0f), 1f);
+            moveTo(target, unit.mounts[0].weapon.bullet.range() * .8f + (target instanceof Sized sized ? sized.hitSize() / 2f : 0f), 1f);
             updateWeapons();
         }
 

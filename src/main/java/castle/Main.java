@@ -54,7 +54,6 @@ public class Main extends Plugin {
         };
 
         Events.on(PlayerJoin.class, event -> {
-            if (Groups.player.size() == 1) event.player.sendMessage(Bundle.get("commands.skip.offer", Bundle.findLocale(event.player)));
             if (PlayerData.datas.containsKey(event.player.uuid())) {
                 PlayerData.datas.get(event.player.uuid()).handlePlayerJoin(event.player);
             } else {
@@ -102,11 +101,6 @@ public class Main extends Plugin {
             data.hideHud = !data.hideHud;
             if (data.hideHud) Call.hideHudText(player.con);
             Bundle.bundled(player, data.hideHud ? "commands.hud.off" : "commands.hud.on");
-        });
-
-        handler.<Player>register("skip", "Skip the current map.", (args, player) -> {
-            if (Groups.player.size() == 1) gameOver(Team.derelict);
-            else player.sendMessage(Bundle.get("commands.skip.not-alone", Bundle.findLocale(player)));
         });
     }
 
