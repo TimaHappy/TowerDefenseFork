@@ -72,7 +72,7 @@ public class CastleLogic {
         Call.updateGameOver(team);
 
         Log.info("Игра окончена. Загружаю новую карту...");
-        Groups.player.each(p -> Call.infoMessage(p.con(), Bundle.format(team == Team.derelict ? "events.draw" : "events.gameover", Bundle.findLocale(p), colorizedTeam(team))));
+        Groups.player.each(p -> Call.infoMessage(p.con, Bundle.format(team == Team.derelict ? "events.draw" : "events.gameover", Bundle.findLocale(p), colorizedTeam(team))));
         Call.hideHudText();
 
         Timer.schedule(CastleLogic::restart, 10f);
@@ -83,6 +83,6 @@ public class CastleLogic {
     }
 
     public static boolean isBreak() {
-        return world.isGenerating() || state.gameOver || state.serverPaused;
+        return world.isGenerating() || state.gameOver;
     }
 }

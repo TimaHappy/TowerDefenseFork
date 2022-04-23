@@ -1,6 +1,7 @@
 package castle;
 
 import arc.Events;
+import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Interval;
@@ -21,11 +22,15 @@ import mindustry.world.blocks.production.Drill;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static castle.CastleLogic.*;
+import static castle.components.Bundle.*;
 import static mindustry.Vars.*;
 
 public class Main extends Plugin {
 
+    public static Seq<String> votesRtv = new Seq<>();
     public static Interval interval = new Interval();
+
+    public static float voteRatio = 0.6f;
 
     @Override
     public void init() {
@@ -47,10 +52,10 @@ public class Main extends Plugin {
             return action.tile == null || action.type != ActionType.placeBlock || (action.tile.dst(CastleRooms.shardedSpawn) > 64 && action.tile.dst(CastleRooms.blueSpawn) > 64);
         });
 
-        netServer.assigner = (player, players) -> {
-            Seq<Player> arr = Seq.with(players);
-            int sharded = arr.count(p -> p.team() == Team.sharded);
-            return arr.size - sharded >= sharded ? Team.sharded : Team.blue;
+        netServer.assigner = (player, arr) -> {
+            var players = Seq.with(arr);
+            int sharded = players.count(p -> p.team() == Team.sharded);
+            return players.size - sharded >= sharded ? Team.sharded : Team.blue;
         };
 
         Events.on(PlayerJoin.class, event -> {
@@ -61,8 +66,14 @@ public class Main extends Plugin {
             }
         });
 
+        Events.on(PlayerLeave.class, event -> {
+            if (votesRtv.remove(event.player.uuid())) {
+                sendToChat("commands.rtv.left", event.player.coloredName(), votesRtv.size, Mathf.ceil(voteRatio * Groups.player.size()));
+            }
+        });
+
         Events.on(BlockDestroyEvent.class, event -> {
-            if (isBreak()) return;
+            if (isBreak() || state.serverPaused) return;
             if (event.tile.block() instanceof CoreBlock && event.tile.team().cores().size <= 1)
                 gameOver(event.tile.team() == Team.sharded ? Team.blue : Team.sharded);
         });
@@ -79,7 +90,7 @@ public class Main extends Plugin {
         });
 
         Events.run(Trigger.update, () -> {
-            if (isBreak()) return;
+            if (isBreak() || state.serverPaused) return;
 
             Groups.unit.each(unit -> unit.isFlying() && !unit.spawnedByCore && (unit.tileOn() == null || unit.tileOn().floor() == Blocks.space), Call::unitDespawn);
 
@@ -100,7 +111,30 @@ public class Main extends Plugin {
             PlayerData data = PlayerData.datas.get(player.uuid());
             data.hideHud = !data.hideHud;
             if (data.hideHud) Call.hideHudText(player.con);
-            Bundle.bundled(player, data.hideHud ? "commands.hud.off" : "commands.hud.on");
+            bundled(player, data.hideHud ? "commands.hud.off" : "commands.hud.on");
+        });
+
+        handler.<Player>register("rtv", "Vote to skip the map.", (args, player) -> {
+            if (votesRtv.contains(player.uuid())) {
+                bundled(player, "commands.rtv.already-voted");
+                return;
+            }
+
+            if (isBreak()) {
+                bundled(player, "commands.rtv.can-not-vote");
+                return;
+            }
+
+            votesRtv.add(player.uuid());
+            int cur = votesRtv.size;
+            int req = Mathf.ceil(voteRatio * Groups.player.size());
+            sendToChat("commands.rtv.vote", player.coloredName(), cur, req);
+
+            if (cur < req) return;
+
+            sendToChat("commands.rtv.passed");
+            votesRtv.clear();
+            gameOver(Team.derelict);
         });
     }
 

@@ -124,13 +124,12 @@ public class CastleGenerator implements Cons<Tiles> {
 
     public void generateShop(int shopX, int shopY) {
         CastleUnits.units.each((type, money) -> {
-            addUnitRoom(type, shopX + size * offset++, shopY + (top ? size * 2 : 0));
+            addUnitRoom(type, money, shopX + size * offset++, shopY + (top ? size * 2 : 0));
             if (offset % 5 == 0 && (top = !top)) offset -= 5;
         });
     }
 
-    public void addUnitRoom(UnitType type, int x, int y){
-        Moneys money = CastleUnits.units.get(type);
+    public void addUnitRoom(UnitType type, Moneys money, int x, int y){
         new UnitRoom(type, UnitRoom.UnitRoomType.attack, money.income(), x, y, money.cost());
         new UnitRoom(type, UnitRoom.UnitRoomType.defend, -money.income(), x, y + size, money.cost());
     }
