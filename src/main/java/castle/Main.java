@@ -7,9 +7,10 @@ import arc.util.CommandHandler;
 import arc.util.Interval;
 import castle.CastleRooms.Room;
 import castle.ai.AIShell;
-import castle.components.*;
+import castle.components.CastleIcons;
+import castle.components.CastleUnits;
+import castle.components.PlayerData;
 import mindustry.content.Blocks;
-import mindustry.content.UnitTypes;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.gen.Call;
@@ -22,7 +23,8 @@ import mindustry.world.blocks.production.Drill;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static castle.CastleLogic.*;
-import static castle.components.Bundle.*;
+import static castle.components.Bundle.bundled;
+import static castle.components.Bundle.sendToChat;
 import static mindustry.Vars.*;
 
 public class Main extends Plugin {
@@ -34,9 +36,6 @@ public class Main extends Plugin {
 
     @Override
     public void init() {
-        ((CoreBlock) Blocks.coreShard).unitType = UnitTypes.poly;
-        ((CoreBlock) Blocks.coreNucleus).unitType = UnitTypes.mega;
-
         CastleLogic.load();
         CastleIcons.load();
         CastleUnits.load();
@@ -54,8 +53,8 @@ public class Main extends Plugin {
 
         netServer.assigner = (player, arr) -> {
             var players = Seq.with(arr);
-            int sharded = players.count(p -> p.team() == Team.sharded);
-            return players.size - sharded >= sharded ? Team.sharded : Team.blue;
+            int sharded = players.count(p -> p.team() == Team.sharded), blue = players.count(p -> p.team() == Team.blue);
+            return blue >= sharded ? Team.sharded : Team.blue;
         };
 
         Events.on(PlayerJoin.class, event -> {

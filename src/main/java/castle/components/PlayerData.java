@@ -1,15 +1,23 @@
 package castle.components;
 
+import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
 import castle.CastleRooms;
+import mindustry.content.Blocks;
+import mindustry.content.UnitTypes;
 import mindustry.entities.Units;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
+import mindustry.gen.Unit;
+import mindustry.gen.WaterMovec;
+import mindustry.type.UnitType;
+import mindustry.world.blocks.storage.CoreBlock.CoreBuild;
 
 import java.util.Locale;
 
+import static castle.CastleLogic.spawnUnit;
 import static castle.CastleLogic.timer;
 
 public class PlayerData {
@@ -40,6 +48,8 @@ public class PlayerData {
 
         if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
 
+        if (player.dead() || (player.unit().spawnedByCore && !(player.unit() instanceof WaterMovec))) this.respawn();
+
         if (hideHud) return;
         StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
 
@@ -53,5 +63,15 @@ public class PlayerData {
         this.player = player;
         this.locale = Bundle.findLocale(player);
         this.interval = new Interval();
+    }
+
+    public void respawn() {
+        CoreBuild core = player.core();
+        if (core == null) return;
+
+        UnitType type = core.block == Blocks.coreShard ? UnitTypes.retusa : UnitTypes.oxynoe;
+        Unit unit = spawnUnit(type, player.team(), core.x + 40, core.y + Mathf.range(40));
+        unit.spawnedByCore(true);
+        player.unit(unit);
     }
 }

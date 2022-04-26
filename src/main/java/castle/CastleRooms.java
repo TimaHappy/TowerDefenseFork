@@ -28,6 +28,7 @@ import mindustry.world.blocks.defense.turrets.LiquidTurret.LiquidTurretBuild;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.storage.CoreBlock;
 
+import static castle.CastleLogic.spawnUnit;
 import static mindustry.Vars.tilesize;
 import static mindustry.Vars.world;
 
@@ -249,10 +250,10 @@ public class CastleRooms {
 
             if (roomType == UnitRoomType.attack) {
                 tile = data.player.team() == Team.sharded ? blueSpawn : shardedSpawn;
-                unitType.spawn(data.player.team(), tile.worldx() + Mathf.random(-40, 40), tile.worldy() + Mathf.random(-40, 40));
+                spawnUnit(unitType, data.player.team(), tile.worldx() + Mathf.range(40), tile.worldy() + Mathf.range(40));
             } else if (data.player.team().core() != null) {
                 tile = data.player.team().core().tile;
-                unitType.spawn(data.player.team(), tile.worldx() + 40, tile.worldy() + Mathf.random(-40, 40));
+                spawnUnit(unitType, data.player.team(), tile.worldx() + 40, tile.worldy() + Mathf.range(40));
             }
         }
 

@@ -6,12 +6,15 @@ import arc.util.Log;
 import arc.util.Timer;
 import castle.components.Bundle;
 import castle.components.PlayerData;
+import mindustry.content.Blocks;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.gen.Unit;
+import mindustry.type.UnitType;
 import mindustry.world.meta.BlockGroup;
 
 import static mindustry.Vars.*;
@@ -22,7 +25,7 @@ public class CastleLogic {
     public static int timer = 45 * 60;
 
     public static void load() {
-        rules.pvp = true;
+        rules.pvp = false;
         rules.canGameOver = false;
 
         rules.unitCap = 500;
@@ -39,7 +42,7 @@ public class CastleLogic {
         rules.teams.get(Team.sharded).cheat = true;
         rules.teams.get(Team.blue).cheat = true;
 
-        rules.bannedBlocks.addAll(content.blocks().select(b -> b.group != BlockGroup.power && b.group != BlockGroup.walls && b.group != BlockGroup.projectors && b.group != BlockGroup.none && b.group != BlockGroup.transportation));
+        rules.bannedBlocks.addAll(content.blocks().select(b -> b.group != BlockGroup.power && b.group != BlockGroup.walls && b.group != BlockGroup.projectors && b.group != BlockGroup.none && b.group != BlockGroup.transportation && b != Blocks.commandCenter));
     }
 
     public static void restart() {
@@ -80,6 +83,11 @@ public class CastleLogic {
 
     public static String colorizedTeam(Team team) {
         return "[#" + team.color + "]" + team.name;
+    }
+
+    public static Unit spawnUnit(UnitType type, Team team, float x, float y) {
+        if (world.tileWorld(x, y).solid()) world.tileWorld(x, y).removeNet();
+        return type.spawn(team, x, y);
     }
 
     public static boolean isBreak() {

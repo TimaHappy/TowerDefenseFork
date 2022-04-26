@@ -34,15 +34,15 @@ public class CastleUnits {
                 UnitTypes.sei,      new Moneys(3750,  22, 800),
                 UnitTypes.omura,    new Moneys(15000, 50, 1750),
 
-                UnitTypes.retusa,   new Moneys(200,   1,  25),
-                UnitTypes.oxynoe,   new Moneys(750,   3,  80),
-                UnitTypes.cyerce,   new Moneys(1600,  8,  200),
+                UnitTypes.retusa,   new Moneys(160,   0,  25),
+                UnitTypes.oxynoe,   new Moneys(650,   3,  80),
+                UnitTypes.cyerce,   new Moneys(1300,  6,  200),
                 UnitTypes.aegires,  new Moneys(4800,  24, 800),
                 UnitTypes.navanax,  new Moneys(11000, 70, 2000));
     }
 
     public static int drop(UnitType type) {
-        return units.containsKey(type) ? units.get(type).drop : -1;
+        return units.containsKey(type) ? units.get(type).drop() : -1;
     }
 
     public record Moneys(int cost, int income, int drop) {}
