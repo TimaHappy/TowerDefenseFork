@@ -182,7 +182,7 @@ public class CastleRooms {
             if (tile.build instanceof ItemTurretBuild build) {
                 source.setNet(Blocks.itemSource, team, 0);
                 source.build.configure(((ItemTurret) build.block).ammoTypes.entries().next().key);
-            } else if (tile.build instanceof LiquidTurretBuild) {
+            } else if (tile.build instanceof LiquidTurretBuild || tile.block() == Blocks.meltdown) {
                 source.setNet(Blocks.liquidSource, team, 0);
                 source.build.configure(Liquids.cryofluid);
             } else return;

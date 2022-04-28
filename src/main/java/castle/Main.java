@@ -91,7 +91,7 @@ public class Main extends Plugin {
         Events.run(Trigger.update, () -> {
             if (isBreak() || state.serverPaused) return;
 
-            Groups.unit.each(unit -> unit.isFlying() && !unit.spawnedByCore && (unit.tileOn() == null || unit.tileOn().floor() == Blocks.space), Call::unitDespawn);
+            Groups.unit.each(unit -> unit.isFlying() && (unit.tileOn() == null || unit.tileOn().floor() == Blocks.space), Call::unitDespawn);
 
             PlayerData.datas().each(PlayerData::update);
             CastleRooms.rooms.each(Room::update);
@@ -125,11 +125,11 @@ public class Main extends Plugin {
             }
 
             votesRtv.add(player.uuid());
-            int cur = votesRtv.size;
-            int req = Mathf.ceil(voteRatio * Groups.player.size());
-            sendToChat("commands.rtv.vote", player.coloredName(), cur, req);
+            int current = votesRtv.size;
+            int required = Mathf.ceil(voteRatio * Groups.player.size());
+            sendToChat("commands.rtv.vote", player.coloredName(), current, required);
 
-            if (cur < req) return;
+            if (current < required) return;
 
             sendToChat("commands.rtv.passed");
             votesRtv.clear();
