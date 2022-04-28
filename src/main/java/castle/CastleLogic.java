@@ -6,7 +6,6 @@ import arc.util.Log;
 import arc.util.Timer;
 import castle.components.Bundle;
 import castle.components.PlayerData;
-import mindustry.content.Blocks;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
 import mindustry.game.Team;
@@ -15,6 +14,8 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.type.UnitType;
+import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.meta.BlockGroup;
 
 import static mindustry.Vars.*;
@@ -42,7 +43,7 @@ public class CastleLogic {
         rules.teams.get(Team.sharded).cheat = true;
         rules.teams.get(Team.blue).cheat = true;
 
-        rules.bannedBlocks.addAll(content.blocks().select(b -> b.group != BlockGroup.power && b.group != BlockGroup.walls && b.group != BlockGroup.projectors && b.group != BlockGroup.none && b.group != BlockGroup.transportation && b != Blocks.commandCenter));
+        rules.bannedBlocks.addAll(content.blocks().select(block -> block instanceof CoreBlock || block instanceof UnitFactory || block.group == BlockGroup.turrets || block.group == BlockGroup.drills || block.group == BlockGroup.logic));
     }
 
     public static void restart() {
