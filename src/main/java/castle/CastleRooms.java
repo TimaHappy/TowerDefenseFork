@@ -185,7 +185,7 @@ public class CastleRooms {
             } else if (tile.build instanceof LiquidTurretBuild) {
                 source.setNet(Blocks.liquidSource, team, 0);
                 source.build.configure(Liquids.cryofluid);
-            }
+            } else return;
 
             source.build.health(Float.MAX_VALUE);
             Time.run(60f, () -> {
