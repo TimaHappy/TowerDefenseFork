@@ -17,7 +17,7 @@ public class AIShell extends AIController {
 
     public UnitController parent;
     public Runnable update;
-    
+
     public AIShell(Prov<? extends UnitController> controller) {
         this.parent = controller.get();
         this.update = this::updateMovement;
@@ -26,9 +26,11 @@ public class AIShell extends AIController {
     @Override
     public void init() {
         if (!isBreak()) Core.app.post(() -> {
-            parent.unit(unit);
-            if (onEnemySide(unit)) update = parent::updateUnit;
-        }); // Это необходимо, т.к. во время вызова метода, контроллер, по сути, еще не существует, а юнит не имеет позиции.
+            if (onEnemySide(unit)) {
+                parent.unit(unit);
+                update = parent::updateUnit;
+            } // Это необходимо, т.к. во время вызова метода, контроллер, по сути, еще не существует, а юнит не имеет позиции.
+        });
     }
 
     @Override
@@ -40,7 +42,7 @@ public class AIShell extends AIController {
 
     @Override
     public void updateMovement() {
-        if (invalid(target) || !onEnemySide(target)) {
+        if (invalid(target)) {
             target = Units.closestEnemy(unit.team, unit.x, unit.y, 360f, AIShell::onEnemySide);
             moveTo(unit.closestCore(), unit.hitSize() * tilesize, 1f);
         } else {

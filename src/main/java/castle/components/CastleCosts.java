@@ -48,28 +48,28 @@ public class CastleCosts {
         );
 
         turrets = OrderedMap.of(
-                Blocks.duo, 100,
-                Blocks.scatter, 250,
-                Blocks.scorch, 200,
-                Blocks.hail, 450,
-                Blocks.wave, 300,
-                Blocks.lancer, 350,
-                Blocks.arc, 150,
-                Blocks.swarmer, 1250,
-                Blocks.salvo, 500,
-                Blocks.tsunami, 850,
-                Blocks.fuse, 1500,
-                Blocks.ripple, 1500,
-                Blocks.cyclone, 1750,
+                Blocks.duo,        100,
+                Blocks.scatter,    250,
+                Blocks.scorch,     200,
+                Blocks.hail,       450,
+                Blocks.wave,       300,
+                Blocks.lancer,     350,
+                Blocks.arc,        150,
+                Blocks.swarmer,    1250,
+                Blocks.salvo,      500,
+                Blocks.tsunami,    850,
+                Blocks.fuse,       1500,
+                Blocks.ripple,     1500,
+                Blocks.cyclone,    1750,
                 Blocks.foreshadow, 4000,
-                Blocks.spectre, 3000,
-                Blocks.meltdown, 3000
+                Blocks.spectre,    3000,
+                Blocks.meltdown,   3000
         );
 
         effects = OrderedMap.of(
                 StatusEffects.overclock, 5000,
                 StatusEffects.overdrive, 10000,
-                StatusEffects.boss, 25000
+                StatusEffects.boss,      25000
         );
     }
 

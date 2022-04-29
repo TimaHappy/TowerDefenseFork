@@ -30,7 +30,7 @@ public class CastleGenerator implements Cons<Tiles> {
     public Tiles saved;
     public boolean top;
     public int offset;
-    
+
     public void loadMap(Map map) {
         try {
             SaveIO.load(map.file, new WorldContext() {
@@ -96,32 +96,31 @@ public class CastleGenerator implements Cons<Tiles> {
         }
 
         for (Tile save : saved) {
-            if (save.isCenter()) {
+            if (!save.isCenter()) return;
 
-                if (save.block() instanceof CoreBlock block) {
-                    tiles.getc(save.x, save.y).setNet(block, Team.sharded, 0);
-                    tiles.getc(save.x, tiles.height - save.y - 1).setNet(block, Team.blue, 0);
+            if (save.block() instanceof CoreBlock block) {
+                tiles.getc(save.x, save.y).setNet(block, Team.sharded, 0);
+                tiles.getc(save.x, tiles.height - save.y - 1).setNet(block, Team.blue, 0);
 
-                    new BlockRoom(Blocks.coreNucleus, Team.sharded, save.x, save.y, 5000);
-                    new BlockRoom(Blocks.coreNucleus, Team.blue, save.x, tiles.height - save.y - 1, 5000);
-                }
+                new BlockRoom(Blocks.coreNucleus, Team.sharded, save.x, save.y, 5000);
+                new BlockRoom(Blocks.coreNucleus, Team.blue, save.x, tiles.height - save.y - 1, 5000);
+            }
 
-                if (save.block() instanceof Turret turret) {
-                    new TurretRoom(turret, Team.sharded, save.x, save.y);
-                    new TurretRoom(turret, Team.blue, save.x, tiles.height - save.y - 2 + turret.size % 2);
-                }
+            if (save.block() instanceof Turret turret) {
+                new TurretRoom(turret, Team.sharded, save.x, save.y);
+                new TurretRoom(turret, Team.blue, save.x, tiles.height - save.y - 2 + turret.size % 2);
+            }
 
-                if (save.build instanceof SorterBuild sorterBuild) {
-                    Item item = sorterBuild.config();
-                    int cost = 250 + Mathf.ceil(item.hardness == 0 ? item.cost * 500 : item.hardness * 250);
-                    new MinerRoom(item, Team.sharded, save.x, save.y, cost);
-                    new MinerRoom(item, Team.blue, save.x, tiles.height - save.y - 1, cost);
-                }
+            if (save.build instanceof SorterBuild sorterBuild) {
+                Item item = sorterBuild.config();
+                int cost = 250 + Mathf.ceil(item.hardness == 0 ? item.cost * 500 : item.hardness * 250);
+                new MinerRoom(item, Team.sharded, save.x, save.y, cost);
+                new MinerRoom(item, Team.blue, save.x, tiles.height - save.y - 1, cost);
+            }
 
-                if (save.overlay() == Blocks.spawn) {
-                    shardedSpawn = tiles.getc(save.x, save.y);
-                    blueSpawn = tiles.getc(save.x, tiles.height - save.y - 1);
-                }
+            if (save.overlay() == Blocks.spawn) {
+                shardedSpawn = tiles.getc(save.x, save.y);
+                blueSpawn = tiles.getc(save.x, tiles.height - save.y - 1);
             }
         }
 
@@ -140,7 +139,7 @@ public class CastleGenerator implements Cons<Tiles> {
         });
     }
 
-    public void addUnitRoom(UnitType type, Moneys money, int x, int y){
+    public void addUnitRoom(UnitType type, Moneys money, int x, int y) {
         new UnitRoom(type, UnitRoom.UnitRoomType.attack, money.income(), x, y, money.cost());
         new UnitRoom(type, UnitRoom.UnitRoomType.defend, -money.income(), x, y + size, money.cost());
     }
