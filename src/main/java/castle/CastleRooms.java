@@ -265,6 +265,7 @@ public class CastleRooms {
 
     public static class EffectRoom extends Room {
         public StatusEffect effect;
+        public Interval interval = new Interval();
 
         public EffectRoom(StatusEffect effect, int x, int y, int cost) {
             super(x, y, cost, 4);
@@ -278,7 +279,13 @@ public class CastleRooms {
 
         @Override
         public void buy(PlayerData data) {
-            // TODO
+            super.buy(data);
+            Groups.unit.each(unit -> unit.team == data.player.team(), unit -> unit.apply(effect, Float.POSITIVE_INFINITY));
+        }
+
+        @Override
+        public boolean canBuy(PlayerData data) {
+            return super.canBuy(data) && interval.get(60f);
         }
     }
 }
