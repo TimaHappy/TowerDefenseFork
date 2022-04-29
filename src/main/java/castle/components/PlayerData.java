@@ -28,7 +28,7 @@ public class PlayerData {
     public Interval interval;
 
     public int money = 0;
-    public int income = 15;
+    public int income = 15 * 100;
 
     public boolean hideHud = false;
     public Locale locale;

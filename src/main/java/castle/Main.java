@@ -8,7 +8,7 @@ import arc.util.Interval;
 import castle.CastleRooms.Room;
 import castle.ai.AIShell;
 import castle.components.CastleIcons;
-import castle.components.CastleUnits;
+import castle.components.CastleCosts;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.game.EventType.*;
@@ -38,8 +38,7 @@ public class Main extends Plugin {
     public void init() {
         CastleLogic.load();
         CastleIcons.load();
-        CastleUnits.load();
-        CastleRooms.TurretRoom.loadCosts();
+        CastleCosts.load();
 
         content.units().each(unit -> {
            var parent = unit.defaultController;
@@ -78,7 +77,7 @@ public class Main extends Plugin {
         });
 
         Events.on(UnitDestroyEvent.class, event -> {
-            int income = CastleUnits.drop(event.unit.type);
+            int income = CastleCosts.drop(event.unit.type);
             if (income <= 0 || event.unit.spawnedByCore) return;
             PlayerData.datas().each(data -> {
                 if (data.player.team() != event.unit.team) {

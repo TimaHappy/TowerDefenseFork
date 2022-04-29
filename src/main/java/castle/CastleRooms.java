@@ -2,12 +2,12 @@ package castle;
 
 import arc.math.Mathf;
 import arc.math.geom.Position;
-import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
 import arc.util.Strings;
 import arc.util.Time;
 import castle.components.Bundle;
+import castle.components.CastleCosts;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
@@ -148,31 +148,8 @@ public class CastleRooms {
     }
 
     public static class TurretRoom extends BlockRoom {
-        public static ObjectMap<Turret, Integer> turretCosts;
-
         public TurretRoom(Turret block, Team team, int x, int y) {
-            super(block, team, x, y, turretCosts.get(block));
-        }
-
-        public static void loadCosts() {
-            turretCosts = ObjectMap.of(
-                    Blocks.duo, 100,
-                    Blocks.scatter, 250,
-                    Blocks.scorch, 200,
-                    Blocks.hail, 450,
-                    Blocks.wave, 300,
-                    Blocks.lancer, 350,
-                    Blocks.arc, 150,
-                    Blocks.swarmer, 1250,
-                    Blocks.salvo, 500,
-                    Blocks.tsunami, 850,
-                    Blocks.fuse, 1500,
-                    Blocks.ripple, 1500,
-                    Blocks.cyclone, 1750,
-                    Blocks.foreshadow, 4000,
-                    Blocks.spectre, 3000,
-                    Blocks.meltdown, 3000
-            );
+            super(block, team, x, y, CastleCosts.turrets.get(block));
         }
 
         @Override
@@ -274,7 +251,7 @@ public class CastleRooms {
 
             this.label.set(getX(), getY() + 12f);
             this.label.fontSize(2f);
-            this.label.text("[accent]" + Strings.capitalize(effect.name) + " effect\n[white]" + CastleIcons.get(effect) + " [white]: [gray]" + cost);
+            this.label.text("[accent]" + Strings.capitalize(effect.name) + "\n" + "effect" + "\n[white]" + CastleIcons.get(effect) + " : [gray]" + cost);
         }
 
         @Override
