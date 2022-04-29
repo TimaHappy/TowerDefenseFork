@@ -28,13 +28,13 @@ public class PlayerData {
     public Interval interval;
 
     public int money = 0;
-    public int income = 15 * 100;
+    public int income = 15;
 
     public boolean hideHud = false;
     public Locale locale;
 
     public static Seq<PlayerData> datas() {
-        return Seq.with(datas.values());
+        return datas.values().toSeq();
     }
 
     public PlayerData(Player player) {
