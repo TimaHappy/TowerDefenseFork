@@ -2,8 +2,11 @@ package castle.components;
 
 import arc.struct.OrderedMap;
 import mindustry.content.Blocks;
+import mindustry.content.Items;
 import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
+import mindustry.gen.Iconc;
+import mindustry.type.Item;
 import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.defense.turrets.Turret;
@@ -12,6 +15,7 @@ public class CastleCosts {
 
     public static OrderedMap<UnitType, Moneys> units;
     public static OrderedMap<Turret, Integer> turrets;
+    public static OrderedMap<Item, Integer> items;
     public static OrderedMap<StatusEffect, Integer> effects;
 
     public static void load() {
@@ -66,9 +70,28 @@ public class CastleCosts {
                 Blocks.meltdown,   3000
         );
 
+        items = OrderedMap.of(
+                Items.copper, 500,
+                Items.lead, 500,
+                Items.metaglass, 750,
+                Items.graphite, 750,
+                Items.sand, 750,
+                Items.coal, 750,
+                Items.titanium, 800,
+                Items.thorium, 1000,
+                Items.scrap, 500,
+                Items.silicon, 750,
+                Items.plastanium, 1250,
+                Items.phaseFabric, 2000,
+                Items.surgeAlloy, 2500,
+                Items.sporePod, 500,
+                Items.blastCompound, 750,
+                Items.pyratite, 750
+        );
+
         effects = OrderedMap.of(
-                StatusEffects.overclock, 5000,
-                StatusEffects.overdrive, 10000,
+                StatusEffects.overclock, 7500,
+                StatusEffects.overdrive, 15000,
                 StatusEffects.boss,      25000
         );
     }

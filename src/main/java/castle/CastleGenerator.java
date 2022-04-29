@@ -1,7 +1,6 @@
 package castle;
 
 import arc.func.Cons;
-import arc.math.Mathf;
 import arc.util.Log;
 import castle.components.CastleCosts;
 import castle.components.CastleCosts.Moneys;
@@ -96,7 +95,7 @@ public class CastleGenerator implements Cons<Tiles> {
         }
 
         for (Tile save : saved) {
-            if (!save.isCenter()) return;
+            if (!save.isCenter()) continue;
 
             if (save.block() instanceof CoreBlock block) {
                 tiles.getc(save.x, save.y).setNet(block, Team.sharded, 0);
@@ -113,9 +112,8 @@ public class CastleGenerator implements Cons<Tiles> {
 
             if (save.build instanceof SorterBuild sorterBuild) {
                 Item item = sorterBuild.config();
-                int cost = 250 + Mathf.ceil(item.hardness == 0 ? item.cost * 500 : item.hardness * 250);
-                new MinerRoom(item, Team.sharded, save.x, save.y, cost);
-                new MinerRoom(item, Team.blue, save.x, tiles.height - save.y - 1, cost);
+                new MinerRoom(item, Team.sharded, save.x, save.y);
+                new MinerRoom(item, Team.blue, save.x, tiles.height - save.y - 1);
             }
 
             if (save.overlay() == Blocks.spawn) {

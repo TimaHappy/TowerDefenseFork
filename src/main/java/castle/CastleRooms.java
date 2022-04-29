@@ -175,20 +175,24 @@ public class CastleRooms {
 
     public static class MinerRoom extends BlockRoom {
         public Item item;
+        public int amount;
         public Interval interval = new Interval();
 
-        public MinerRoom(Item item, Team team, int x, int y, int cost) {
-            super(Blocks.laserDrill, team, x, y, cost);
+        public MinerRoom(Item item, Team team, int x, int y) {
+            super(Blocks.laserDrill, team, x, y, CastleCosts.items.get(item));
 
             this.item = item;
+            this.amount = (int) (300f - item.cost * 150f);
+
             this.label.text("[" + CastleIcons.get(item) + "] " + CastleIcons.get(block) + " :[white] " + cost);
         }
 
         @Override
         public void update() {
-            if (bought && interval.get(240f)) {
-                Call.effect(Fx.mineHuge, getX(), getY(), 0f, team.color);
-                Call.transferItemTo(null, item, 120, getX(), getY(), team.core());
+            if (bought && interval.get(300f)) {
+                float randomX = getX() + Mathf.range(12f), randomY = getY() + Mathf.range(12f);
+                Call.effect(Fx.mineHuge, randomX, randomY, 0f, team.color);
+                Call.transferItemTo(null, item, amount, randomX, randomY, team.core());
             }
         }
     }
