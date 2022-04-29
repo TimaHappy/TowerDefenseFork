@@ -5,6 +5,7 @@ import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
+import arc.util.Strings;
 import arc.util.Time;
 import castle.components.Bundle;
 import castle.components.CastleIcons;
@@ -19,6 +20,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
 import mindustry.gen.WorldLabel;
 import mindustry.type.Item;
+import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
@@ -146,7 +148,6 @@ public class CastleRooms {
     }
 
     public static class TurretRoom extends BlockRoom {
-
         public static ObjectMap<Turret, Integer> turretCosts;
 
         public TurretRoom(Turret block, Team team, int x, int y) {
@@ -216,7 +217,6 @@ public class CastleRooms {
     }
 
     public static class UnitRoom extends Room {
-
         public enum UnitRoomType {
             attack, defend
         }
@@ -260,6 +260,25 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && Units.getCap(data.player.team()) > data.player.team().data().unitCount;
+        }
+    }
+
+    public static class EffectRoom extends Room {
+        public StatusEffect effect;
+
+        public EffectRoom(StatusEffect effect, int x, int y, int cost) {
+            super(x, y, cost, 4);
+
+            this.effect = effect;
+
+            this.label.set(getX(), getY() + 12f);
+            this.label.fontSize(2f);
+            this.label.text("[accent]" + Strings.capitalize(effect.name) + " effect\n[white]" + CastleIcons.get(effect) + " [white]: [gray]" + cost);
+        }
+
+        @Override
+        public void buy(PlayerData data) {
+            // TODO
         }
     }
 }
