@@ -5,7 +5,6 @@ import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
-import mindustry.gen.Iconc;
 import mindustry.type.Item;
 import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
@@ -71,22 +70,22 @@ public class CastleCosts {
         );
 
         items = OrderedMap.of(
-                Items.copper, 500,
-                Items.lead, 500,
-                Items.metaglass, 750,
-                Items.graphite, 750,
-                Items.sand, 750,
-                Items.coal, 750,
-                Items.titanium, 800,
-                Items.thorium, 1000,
-                Items.scrap, 500,
-                Items.silicon, 750,
-                Items.plastanium, 1250,
-                Items.phaseFabric, 2000,
-                Items.surgeAlloy, 2500,
-                Items.sporePod, 500,
+                Items.copper,        500,
+                Items.lead,          500,
+                Items.metaglass,     750,
+                Items.graphite,      750,
+                Items.sand,          750,
+                Items.coal,          750,
+                Items.titanium,      800,
+                Items.thorium,       1000,
+                Items.scrap,         500,
+                Items.silicon,       750,
+                Items.plastanium,    1250,
+                Items.phaseFabric,   2000,
+                Items.surgeAlloy,    2500,
+                Items.sporePod,      500,
                 Items.blastCompound, 750,
-                Items.pyratite, 750
+                Items.pyratite,      750
         );
 
         effects = OrderedMap.of(

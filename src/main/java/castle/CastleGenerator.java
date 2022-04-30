@@ -81,12 +81,12 @@ public class CastleGenerator implements Cons<Tiles> {
         tiles = world.resize(world.width(), world.height() * 2 + size * 4 + 5);
 
         for (int x = 0; x < tiles.width; x++) {
-            for (int y = 0; y < tiles.height; y++) {
+            for (int y = saved.height; y < tiles.height - saved.height; y++) {
                 tiles.set(x, y, new Tile(x, y, Blocks.space, Blocks.air, Blocks.air));
             }
         }
 
-        for (int x = 0; x < tiles.width; x++) {
+        for (int x = 0; x < saved.width; x++) {
             for (int y = 0; y < saved.height; y++) {
                 Tile save = saved.getc(x, y);
                 tiles.set(x, y, new Tile(x, y, save.floor(), save.overlay() != Blocks.spawn ? save.overlay() : Blocks.air, save.block() instanceof Prop || save.block() instanceof TreeBlock ? save.block() : Blocks.air));
