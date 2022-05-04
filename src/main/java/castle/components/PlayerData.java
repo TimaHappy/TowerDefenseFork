@@ -4,23 +4,21 @@ import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
-import arc.util.Strings;
 import castle.CastleRooms;
-import castle.CastleRooms.BlockRoom;
 import mindustry.content.Blocks;
 import mindustry.content.UnitTypes;
+import mindustry.entities.Units;
 import mindustry.gen.Call;
-import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
-import mindustry.entities.Units;
+import mindustry.gen.WaterMovec;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.storage.CoreBlock.CoreBuild;
 
 import java.util.Locale;
 
+import static castle.CastleLogic.spawnUnit;
 import static castle.CastleLogic.timer;
-import static mindustry.Vars.tilesize;
 
 public class PlayerData {
 
@@ -29,88 +27,51 @@ public class PlayerData {
     public Player player;
     public Interval interval;
 
-    // TODO сохранение вышедших игроков до конца раунда
-    public int money;
-    public int income;
+    public int money = 0;
+    public int income = 15 * 100;
 
-    public float bonus;
-
-    public boolean showHud;
-
-    public PlayerData(Player player) {
-        this.player = player;
-        this.interval = new Interval(2);
-        this.money = 0;
-
-        // TODO почему 15, мб сделать рандомное для каждой карты?
-        this.income = 15;
-        this.bonus = 1f;
-        this.showHud = true;
-    }
+    public boolean hideHud = false;
+    public Locale locale;
 
     public static Seq<PlayerData> datas() {
         return datas.values().toSeq();
     }
 
-    public void update() {
-
-        // TODO странная формула для бонуса, улушчить?
-        if (interval.get(0, 60f)) {
-            bonus = Math.max((float) Groups.player.size() / Groups.player.count(p -> p.team() == player.team()) / 2f, 1f);
-            money += Mathf.floor(income * bonus);
-        }
-
-        // TODO этачо за хуйня
-        if (interval.get(1, 150f)) {
-            CastleRooms.rooms.each(room -> room.showLabel, room -> {
-                if ((room instanceof BlockRoom blockRoom && blockRoom.team != player.team())) return;
-                Call.label(player.con, room.label, 2.5f, room.x * tilesize, room.y * tilesize - room.size * 2);
-            });
-        }
-
-        // TODO еще большая хуйня
-        if (!player.dead() && player.team().core() != null) {
-            if (player.shooting) {
-                CastleRooms.rooms.each(room -> {
-                    if (room.check(player.unit().aimX, player.unit().aimY) && room.canBuy(this)) {
-                        room.buy(this);
-                    }
-                });
-            }
-
-            CoreBuild core = player.team().core();
-            UnitType type = core.block == Blocks.coreNucleus ? UnitTypes.cyerce : UnitTypes.retusa;
-
-            // TODO самая большая хуйня
-            if (player.unit().type != type && player.unit().spawnedByCore) {
-                Unit unit = type.spawn(player.team(), core.x + 40, core.y + Mathf.random(-40, 40));
-                player.unit(unit);
-                unit.spawnedByCore(true);
-            }
-        }
-
-        // TODO блять это что нахуй
-        if (showHud) {
-            Locale locale = Bundle.findLocale(player);
-            StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
-            if (bonus > 1f) {
-                hud.append(Strings.format(" [lightgray]([accent]+@%[lightgray])", String.valueOf((bonus - 1) * 100).length() > 5 ? String.valueOf((bonus - 1) * 100).substring(0, 6) : (bonus - 1) * 100));
-            }
-
-            if (Units.getCap(player.team()) <= player.team().data().unitCount) {
-                hud.append(Bundle.format("ui.hud.unit-limit", locale, player.team().data().unitCap));
-            }
-
-            hud.append(Bundle.format("ui.hud.timer", locale, timer));
-            Call.setHudText(player.con, hud.toString());
-        }
+    public PlayerData(Player player) {
+        this.handlePlayerJoin(player);
     }
 
-    public void reset() {
-        for (int i = 0; i < interval.getTimes().length; i++) interval.reset(i, 0f);
+    public void update() {
+        if (!player.con.isConnected()) return;
 
-        money = 0;
-        income = 15;
-        bonus = 1f;
+        if (interval.get(60f)) money += income;
+
+        if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
+
+        if (player.dead() || (player.unit().spawnedByCore && !(player.unit() instanceof WaterMovec))) this.respawn();
+
+        if (hideHud) return;
+        StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
+
+        if (Units.getCap(player.team()) <= player.team().data().unitCount) hud.append(Bundle.format("ui.hud.unit-limit", locale, Units.getCap(player.team())));
+
+        hud.append(Bundle.format("ui.hud.timer", locale, timer));
+        Call.setHudText(player.con, hud.toString());
+    }
+
+    public void handlePlayerJoin(Player player) {
+        this.player = player;
+        this.locale = Bundle.findLocale(player);
+        this.interval = new Interval();
+    }
+
+    public void respawn() {
+        CoreBuild core = player.core();
+        if (core == null) return;
+
+        UnitType type = core.block == Blocks.coreShard ? UnitTypes.retusa : UnitTypes.oxynoe;
+        Unit unit = spawnUnit(type, player.team(), core.x + 40, core.y + Mathf.range(40));
+        unit.spawnedByCore(true);
+        player.unit(unit);
     }
 }

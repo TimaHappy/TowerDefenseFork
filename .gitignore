@@ -1,6 +1,11 @@
 .gradle
 /build/
 
+# I rly need this
+eclipse-formatter.xml
+/bin/
+/.vscode/
+
 # Ignore Gradle GUI config
 gradle-app.setting
 
