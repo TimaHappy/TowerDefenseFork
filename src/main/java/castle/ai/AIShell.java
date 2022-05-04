@@ -44,7 +44,8 @@ public class AIShell extends AIController {
     public void updateMovement() {
         if (invalid(target)) {
             target = Units.closestEnemy(unit.team, unit.x, unit.y, 360f, AIShell::onEnemySide);
-            moveTo(unit.closestCore(), unit.hitSize() * tilesize, 1f);
+            if (unit.type.flying) circle(unit.closestCore(), Math.max(unit.hitSize() * tilesize, 150f));
+            else moveTo(unit.closestCore(), Math.max(unit.hitSize() * tilesize, 120f), 1f);
         } else {
             moveTo(target, unit.mounts[0].weapon.bullet.range() * .8f + (target instanceof Sized sized ? sized.hitSize() / 2f : 0f), 1f);
             updateWeapons();
