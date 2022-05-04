@@ -47,7 +47,13 @@ public class CastleCosts {
                 UnitTypes.oxynoe,   new Moneys(650,   3,  80),
                 UnitTypes.cyerce,   new Moneys(1300,  6,  200),
                 UnitTypes.aegires,  new Moneys(4800,  24, 800),
-                UnitTypes.navanax,  new Moneys(11000, 70, 2000)
+                UnitTypes.navanax,  new Moneys(11000, 70, 2000),
+
+                UnitTypes.flare, new Moneys(0, 0, 0),
+                UnitTypes.horizon, new Moneys(0, 0, 0),
+                UnitTypes.zenith, new Moneys(0, 0, 0),
+                UnitTypes.antumbra, new Moneys(0, 0, 0),
+                UnitTypes.eclipse, new Moneys(0, 0, 0)
         );
 
         turrets = OrderedMap.of(

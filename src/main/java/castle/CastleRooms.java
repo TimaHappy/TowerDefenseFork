@@ -73,7 +73,7 @@ public class CastleRooms {
             this.tile = world.tile(x, y);
 
             this.label.set(getX(), getY());
-            this.label.fontSize(1.5f);
+            this.label.fontSize(1.75f);
             this.label.flags(WorldLabel.flagOutline);
             this.label.add();
 
@@ -184,7 +184,7 @@ public class CastleRooms {
             this.item = item;
             this.amount = (int) (300f - item.cost * 150f);
 
-            this.label.text("[" + CastleIcons.get(item) + "] " + CastleIcons.get(block) + " :[white] " + cost);
+            this.label.text("[" + CastleIcons.get(item) + "] : " + cost);
         }
 
         @Override
@@ -215,7 +215,7 @@ public class CastleRooms {
             this.income = income;
 
             this.label.set(getX(), getY() + 12f);
-            this.label.fontSize(2f);
+            this.label.fontSize(2.25f);
             this.label.text(" ".repeat(Math.max(0, (String.valueOf(income).length() + String.valueOf(cost).length() + 2) / 2)) +
                     CastleIcons.get(unitType) + (roomType == UnitRoomType.attack ? " [accent]\uE865" : " [scarlet]\uE84D") +
                     "\n[gray]" + cost +
@@ -254,7 +254,7 @@ public class CastleRooms {
             this.effect = effect;
 
             this.label.set(getX(), getY() + 12f);
-            this.label.fontSize(2f);
+            this.label.fontSize(2.25f);
             this.label.text("[accent]" + Strings.capitalize(effect.name) + "\n" + "effect" + "\n[white]" + CastleIcons.get(effect) + " : [gray]" + cost);
         }
 
