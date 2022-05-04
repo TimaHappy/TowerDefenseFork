@@ -49,11 +49,11 @@ public class CastleCosts {
                 UnitTypes.aegires,  new Moneys(4800,  24, 800),
                 UnitTypes.navanax,  new Moneys(11000, 70, 2000),
 
-                UnitTypes.flare, new Moneys(0, 0, 0),
-                UnitTypes.horizon, new Moneys(0, 0, 0),
-                UnitTypes.zenith, new Moneys(0, 0, 0),
-                UnitTypes.antumbra, new Moneys(0, 0, 0),
-                UnitTypes.eclipse, new Moneys(0, 0, 0)
+                UnitTypes.flare,    new Moneys(100, 0, 20),
+                UnitTypes.horizon,  new Moneys(200, 1, 50),
+                UnitTypes.zenith,   new Moneys(850, 4, 150),
+                UnitTypes.antumbra, new Moneys(4000, 25, 750),
+                UnitTypes.eclipse,  new Moneys(12500, 50, 1750)
         );
 
         turrets = OrderedMap.of(
@@ -102,7 +102,7 @@ public class CastleCosts {
     }
 
     public static int drop(UnitType type) {
-        return units.containsKey(type) ? units.get(type).drop() : -1;
+        return units.containsKey(type) ? units.get(type).drop : -1;
     }
 
     public record Moneys(int cost, int income, int drop) {}
