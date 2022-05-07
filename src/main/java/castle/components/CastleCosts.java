@@ -18,42 +18,42 @@ public class CastleCosts {
     public static OrderedMap<StatusEffect, Integer> effects;
 
     public static void load() {
-       units = OrderedMap.of(
-                UnitTypes.dagger,   new Moneys(70,    0,  20),
-                UnitTypes.mace,     new Moneys(180,   1,  50),
-                UnitTypes.fortress, new Moneys(650,   4,  200),
-                UnitTypes.scepter,  new Moneys(3000,  20, 850),
+        units = OrderedMap.of(
+                UnitTypes.dagger,   new Moneys(60,    0,  15),
+                UnitTypes.mace,     new Moneys(150,   1,  50),
+                UnitTypes.fortress, new Moneys(600,   4,  150),
+                UnitTypes.scepter,  new Moneys(3000,  20, 750),
                 UnitTypes.reign,    new Moneys(10000, 60, 1500),
 
-                UnitTypes.crawler,  new Moneys(50,    0,  15),
+                UnitTypes.crawler,  new Moneys(50,    0,  10),
                 UnitTypes.atrax,    new Moneys(200,   1,  60),
-                UnitTypes.spiroct,  new Moneys(700,   4,  250),
+                UnitTypes.spiroct,  new Moneys(650,   4,  200),
                 UnitTypes.arkyid,   new Moneys(3850,  20, 750),
-                UnitTypes.toxopid,  new Moneys(14000, 50, 1750),
+                UnitTypes.toxopid,  new Moneys(13000, 50, 1750),
 
                 UnitTypes.nova,     new Moneys(85,    0,  15),
-                UnitTypes.pulsar,   new Moneys(150,   1,  50),
-                UnitTypes.quasar,   new Moneys(750,   4,  300),
+                UnitTypes.pulsar,   new Moneys(160,   1,  50),
+                UnitTypes.quasar,   new Moneys(650,   4,  200),
                 UnitTypes.vela,     new Moneys(4000,  22, 750),
                 UnitTypes.corvus,   new Moneys(15000, 70, 1500),
 
-                UnitTypes.risso,    new Moneys(200,   0,  50),
+                UnitTypes.risso,    new Moneys(160,   0,  24),
                 UnitTypes.minke,    new Moneys(250,   1,  75),
                 UnitTypes.bryde,    new Moneys(1000  ,5,  200),
                 UnitTypes.sei,      new Moneys(4250,  24, 900),
                 UnitTypes.omura,    new Moneys(15000, 60, 2000),
 
-                UnitTypes.retusa,   new Moneys(150,   0,  50),
-                UnitTypes.oxynoe,   new Moneys(700,   4,  80),
-                UnitTypes.cyerce,   new Moneys(1650,  6,  200),
+                UnitTypes.retusa,   new Moneys(160,   0,  50),
+                UnitTypes.oxynoe,   new Moneys(650,   3,  80),
+                UnitTypes.cyerce,   new Moneys(1350,  6,  200),
                 UnitTypes.aegires,  new Moneys(5250,  26, 1000),
-                UnitTypes.navanax,  new Moneys(13500, 70, 2000),
+                UnitTypes.navanax,  new Moneys(13500, 70, 1350),
 
                 UnitTypes.flare,    new Moneys(100, 0, 20),
                 UnitTypes.horizon,  new Moneys(200, 1, 50),
                 UnitTypes.zenith,   new Moneys(850, 4, 150),
                 UnitTypes.antumbra, new Moneys(4000, 25, 750),
-                UnitTypes.eclipse,  new Moneys(12500, 50, 1750)
+                UnitTypes.eclipse,  new Moneys(12500, 50, 1250)
         );
 
         turrets = OrderedMap.of(
@@ -64,13 +64,13 @@ public class CastleCosts {
                 Blocks.wave,       250,
                 Blocks.lancer,     300,
                 Blocks.arc,        100,
-                Blocks.swarmer,    1650,
-                Blocks.salvo,      750,
+                Blocks.swarmer,    1500,
+                Blocks.salvo,      500,
                 Blocks.tsunami,    800,
                 Blocks.fuse,       1350,
                 Blocks.ripple,     1400,
                 Blocks.cyclone,    2000,
-                Blocks.foreshadow, 6000,
+                Blocks.foreshadow, 5000,
                 Blocks.spectre,    4000,
                 Blocks.meltdown,   3500
         );
@@ -95,9 +95,9 @@ public class CastleCosts {
         );
 
         effects = OrderedMap.of(
-                StatusEffects.overclock, 4000,
+                StatusEffects.overclock, 5000,
                 StatusEffects.overdrive, 12500,
-                StatusEffects.boss,      20000
+                StatusEffects.boss,      25000
         );
     }
 

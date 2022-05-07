@@ -29,10 +29,10 @@ import static mindustry.Vars.*;
 
 public class Main extends Plugin {
 
-    public static Seq<String> votesRtv = new Seq<>();
-    public static Interval interval = new Interval();
+    public static final Seq<String> votesRtv = new Seq<>();
+    public static final Interval interval = new Interval();
 
-    public static float voteRatio = 0.6f;
+    public static final float voteRatio = 0.6f;
 
     @Override
     public void init() {
