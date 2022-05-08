@@ -38,13 +38,13 @@ public class CastleCosts {
                 UnitTypes.corvus,   new Moneys(15000, 70, 1500),
 
                 UnitTypes.risso,    new Moneys(160,   0,  24),
-                UnitTypes.minke,    new Moneys(250,   1,  75),
+                UnitTypes.minke,    new Moneys(350,   1,  75),
                 UnitTypes.bryde,    new Moneys(1000,  5,  200),
                 UnitTypes.sei,      new Moneys(4250,  24, 900),
                 UnitTypes.omura,    new Moneys(15000, 60, 2000),
 
                 UnitTypes.retusa,   new Moneys(160,   0,  50),
-                UnitTypes.oxynoe,   new Moneys(650,   3,  80),
+                UnitTypes.oxynoe,   new Moneys(600,   3,  80),
                 UnitTypes.cyerce,   new Moneys(1350,  6,  200),
                 UnitTypes.aegires,  new Moneys(5250,  26, 1000),
                 UnitTypes.navanax,  new Moneys(13500, 70, 1350),
