@@ -39,7 +39,7 @@ public class CastleCosts {
 
                 UnitTypes.risso,    new Moneys(160,   0,  24),
                 UnitTypes.minke,    new Moneys(250,   1,  75),
-                UnitTypes.bryde,    new Moneys(1000  ,5,  200),
+                UnitTypes.bryde,    new Moneys(1000,  5,  200),
                 UnitTypes.sei,      new Moneys(4250,  24, 900),
                 UnitTypes.omura,    new Moneys(15000, 60, 2000),
 
