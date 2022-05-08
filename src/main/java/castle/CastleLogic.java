@@ -87,7 +87,7 @@ public class CastleLogic {
     }
 
     public static Unit spawnUnit(UnitType type, Team team, float x, float y) {
-        if (world.tileWorld(x, y).solid()) world.tileWorld(x, y).removeNet();
+        if (world.tileWorld(x, y) != null && world.tileWorld(x, y).solid()) world.tileWorld(x, y).removeNet();
         return type.spawn(team, x, y);
     }
 
