@@ -1,6 +1,7 @@
 package castle;
 
 import arc.func.Cons;
+import arc.func.Intp;
 import arc.util.Log;
 import castle.components.CastleCosts;
 import castle.components.CastleCosts.Moneys;
@@ -125,26 +126,24 @@ public class CastleGenerator implements Cons<Tiles> {
     }
 
     public void generateShop(int shopX, int shopY) {
+        Intp x = () -> shopX + offsetX * size;
+        Intp y = () -> shopY + offsetY * size;
+
         CastleCosts.units.each((type, money) -> {
-            addUnitRoom(type, money, shopX + size * offsetX++, shopY + size * offsetY * 2);
-            if (offsetX % 5 == 0) {
-                if (offsetY == 0) {
-                    offsetX -= 5;
-                    offsetY++;
-                }
-                else offsetY--;
-            }
+            addUnitRoom(type, money, x.get(), shopY + offsetY * size * 2);
+            if (++offsetX % 5 != 0) return;
+            if (offsetY == 0) {
+                offsetX -= 5;
+                offsetY++;
+            } else offsetY--;
         });
 
         CastleCosts.effects.each((effect, cost) -> {
-            new EffectRoom(effect, shopX + size * offsetX, shopY + size * offsetY++, cost);
-            if (offsetY % 4 == 0) {
-                offsetX++;
-                offsetY -= 4;
-            }
+            new EffectRoom(effect, x.get(), y.get(), cost);
+            offsetY++;
         });
 
-        new CreditsRoom(shopX + size * offsetX, shopY + size * offsetY);
+        new CreditsRoom(x.get(), y.get());
     }
 
     public void addUnitRoom(UnitType type, Moneys money, int x, int y) {

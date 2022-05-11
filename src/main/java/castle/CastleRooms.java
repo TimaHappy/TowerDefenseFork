@@ -281,7 +281,7 @@ public class CastleRooms {
 
         @Override
         public void buy(PlayerData data) {
-            Call.infoMessage(data.player.con, format("credits.text", findLocale(data.player)));
+            Call.infoMessage(data.player.con, format("credits.text", data.locale));
         }
     }
 }
