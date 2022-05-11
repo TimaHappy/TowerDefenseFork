@@ -27,8 +27,7 @@ import static mindustry.Vars.world;
 public class CastleGenerator implements Cons<Tiles> {
 
     public Tiles saved;
-    public boolean top;
-    public int offset;
+    public int offsetX, offsetY;
 
     public void loadMap(Map map) {
         try {
@@ -127,14 +126,25 @@ public class CastleGenerator implements Cons<Tiles> {
 
     public void generateShop(int shopX, int shopY) {
         CastleCosts.units.each((type, money) -> {
-            addUnitRoom(type, money, shopX + size * offset++, shopY + (top ? size * 2 : 0));
-            if (offset % 5 == 0 && (top = !top)) offset -= 5;
+            addUnitRoom(type, money, shopX + size * offsetX++, shopY + size * offsetY * 2);
+            if (offsetX % 5 == 0) {
+                if (offsetY == 0) {
+                    offsetX -= 5;
+                    offsetY++;
+                }
+                else offsetY--;
+            }
         });
 
         CastleCosts.effects.each((effect, cost) -> {
-            new EffectRoom(effect, shopX + size * offset++, shopY + (top ? size * 2 : 0), cost);
-            if (offset % 5 == 0 && (top = !top)) offset -= 5;
+            new EffectRoom(effect, shopX + size * offsetX, shopY + size * offsetY++, cost);
+            if (offsetY % 4 == 0) {
+                offsetX++;
+                offsetY -= 4;
+            }
         });
+
+        new CreditsRoom(shopX + size * offsetX, shopY + size * offsetY);
     }
 
     public void addUnitRoom(UnitType type, Moneys money, int x, int y) {

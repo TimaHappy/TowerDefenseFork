@@ -106,7 +106,7 @@ public class CastleRooms {
         public void spawn() {
             for (int x = startx; x <= endx; x++) for (int y = starty; y <= endy; y++) {
                 Block floor = x == startx || y == starty || x == endx || y == endy ? Blocks.metalFloor5 : Blocks.metalFloor;
-                world.tile(x, y).setFloor(floor.asFloor());
+                world.tiles.getc(x, y).setFloor(floor.asFloor());
             }
         }
     }
@@ -267,6 +267,15 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && interval.get(60f);
+        }
+    }
+
+    public static class CreditsRoom extends Room {
+        public CreditsRoom(int x, int y) {
+            super(x, y, 0, 4);
+
+            this.label.fontSize(2.5f);
+            this.label.text("Credits");
         }
     }
 }
