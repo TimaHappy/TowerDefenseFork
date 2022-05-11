@@ -50,11 +50,7 @@ public class Main extends Plugin {
             return action.tile == null || action.type != ActionType.placeBlock || (action.tile.dst(CastleRooms.shardedSpawn) > 64 && action.tile.dst(CastleRooms.blueSpawn) > 64);
         });
 
-        netServer.assigner = (player, arr) -> {
-            var players = Seq.with(arr);
-            int sharded = players.count(p -> p.team() == Team.sharded), blue = players.count(p -> p.team() == Team.blue);
-            return blue >= sharded ? Team.sharded : Team.blue;
-        };
+        netServer.assigner = (player, players) -> Groups.player.count(p -> p.team() == Team.blue) >= Groups.player.count(p -> p.team() == Team.sharded) ? Team.sharded : Team.blue;
 
         Events.on(PlayerJoin.class, event -> {
             if (PlayerData.datas.containsKey(event.player.uuid())) {

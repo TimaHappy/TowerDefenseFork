@@ -6,7 +6,6 @@ import arc.struct.Seq;
 import arc.util.Interval;
 import arc.util.Strings;
 import arc.util.Time;
-import castle.components.Bundle;
 import castle.components.CastleCosts;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
@@ -31,6 +30,8 @@ import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static castle.CastleLogic.spawnUnit;
+import static castle.components.Bundle.findLocale;
+import static castle.components.Bundle.format;
 import static mindustry.Vars.tilesize;
 import static mindustry.Vars.world;
 
@@ -138,7 +139,7 @@ public class CastleRooms {
             tile.setNet(block, team, 0);
             if (!(block instanceof CoreBlock)) tile.build.health(Float.MAX_VALUE);
 
-            Groups.player.each(p -> Call.label(p.con, Bundle.format("events.buy", Bundle.findLocale(p), data.player.coloredName()), 1f, getX(), getY()));
+            Groups.player.each(p -> Call.label(p.con, format("events.buy", findLocale(p), data.player.coloredName()), 1f, getX(), getY()));
         }
 
         @Override
@@ -276,6 +277,11 @@ public class CastleRooms {
 
             this.label.fontSize(2.5f);
             this.label.text("Credits");
+        }
+
+        @Override
+        public void buy(PlayerData data) {
+            Call.infoMessage(data.player.con, format("credits.text", findLocale(data.player)));
         }
     }
 }
