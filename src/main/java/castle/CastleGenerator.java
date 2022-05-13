@@ -1,7 +1,5 @@
 package castle;
 
-import arc.func.Cons;
-import arc.func.Intp;
 import arc.util.Log;
 import castle.components.CastleCosts;
 import castle.components.CastleCosts.Moneys;
@@ -25,7 +23,7 @@ import static castle.CastleRooms.*;
 import static mindustry.Vars.state;
 import static mindustry.Vars.world;
 
-public class CastleGenerator implements Cons<Tiles> {
+public class CastleGenerator {
 
     public Tiles saved;
     public int offsetX, offsetY;
@@ -62,7 +60,8 @@ public class CastleGenerator implements Cons<Tiles> {
 
                 @Override
                 public void end() {
-                    get(world.tiles);
+                    saved = world.tiles;
+                    generate();
                     world.endMapLoad();
                 }
             });
@@ -74,11 +73,8 @@ public class CastleGenerator implements Cons<Tiles> {
         }
     }
 
-    @Override
-    public void get(Tiles tiles) {
-        saved = tiles;
-
-        tiles = world.resize(world.width(), world.height() * 2 + size * 4 + 5);
+    public void generate() {
+        Tiles tiles  = world.resize(world.width(), world.height() * 2 + size * 4 + 5);
 
         for (int x = 0; x < tiles.width; x++) {
             for (int y = saved.height; y < tiles.height - saved.height; y++) {
@@ -126,24 +122,23 @@ public class CastleGenerator implements Cons<Tiles> {
     }
 
     public void generateShop(int shopX, int shopY) {
-        Intp x = () -> shopX + offsetX * size;
-        Intp y = () -> shopY + offsetY * size;
-
         CastleCosts.units.each((type, money) -> {
-            addUnitRoom(type, money, x.get(), shopY + offsetY * size * 2);
+            addUnitRoom(type, money, shopX + offsetX * size, shopY + offsetY * size * 2);
             if (++offsetX % 5 != 0) return;
             if (offsetY == 0) {
                 offsetX -= 5;
-                offsetY++;
+                ++offsetY;
             } else offsetY--;
         });
 
         CastleCosts.effects.each((effect, cost) -> {
-            new EffectRoom(effect, x.get(), y.get(), cost);
-            offsetY++;
+            new EffectRoom(effect, shopX + offsetX * size, shopY + offsetY * size, cost);
+            if (++offsetY != 4) return;
+            ++offsetX;
+            offsetY = 0;
         });
 
-        new CreditsRoom(x.get(), y.get());
+        new CreditsRoom(shopX + offsetX * size, shopY + offsetY * size);
     }
 
     public void addUnitRoom(UnitType type, Moneys money, int x, int y) {
