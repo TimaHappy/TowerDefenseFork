@@ -46,7 +46,7 @@ public class CastleCosts {
                 UnitTypes.retusa,   new Moneys(170,   0,  50),
                 UnitTypes.oxynoe,   new Moneys(625,   3,  80),
                 UnitTypes.cyerce,   new Moneys(1400,  6,  200),
-                UnitTypes.aegires,  new Moneys(5250,  26, 1000),
+                UnitTypes.aegires,  new Moneys(7000,  18, 1000),
                 UnitTypes.navanax,  new Moneys(13500, 70, 1350),
 
                 UnitTypes.flare,    new Moneys(60,    0, 20),
