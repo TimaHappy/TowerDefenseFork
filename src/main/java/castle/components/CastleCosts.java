@@ -26,7 +26,7 @@ public class CastleCosts {
                 UnitTypes.reign,    new Moneys(10000, 60, 1500),
 
                 UnitTypes.crawler,  new Moneys(50,    0,  10),
-                UnitTypes.atrax,    new Moneys(200,   1,  60),
+                UnitTypes.atrax,    new Moneys(180,   1,  60),
                 UnitTypes.spiroct,  new Moneys(600,   4,  200),
                 UnitTypes.arkyid,   new Moneys(3850,  20, 750),
                 UnitTypes.toxopid,  new Moneys(13000, 50, 1750),
@@ -37,7 +37,7 @@ public class CastleCosts {
                 UnitTypes.vela,     new Moneys(4000,  22, 750),
                 UnitTypes.corvus,   new Moneys(15000, 70, 1500),
 
-                UnitTypes.risso,    new Moneys(180,   0,  24),
+                UnitTypes.risso,    new Moneys(170,   0,  24),
                 UnitTypes.minke,    new Moneys(250,   1,  75),
                 UnitTypes.bryde,    new Moneys(1000,  5,  200),
                 UnitTypes.sei,      new Moneys(4250,  24, 900),
@@ -46,11 +46,11 @@ public class CastleCosts {
                 UnitTypes.retusa,   new Moneys(170,   0,  50),
                 UnitTypes.oxynoe,   new Moneys(625,   3,  80),
                 UnitTypes.cyerce,   new Moneys(1400,  6,  200),
-                UnitTypes.aegires,  new Moneys(5250,  26, 1000),
+                UnitTypes.aegires,  new Moneys(7000,  18, 1000),
                 UnitTypes.navanax,  new Moneys(13500, 70, 1350),
 
                 UnitTypes.flare,    new Moneys(60,    0, 20),
-                UnitTypes.horizon,  new Moneys(160,   1, 50),
+                UnitTypes.horizon,  new Moneys(200,   1, 50),
                 UnitTypes.zenith,   new Moneys(700,   4, 150),
                 UnitTypes.antumbra, new Moneys(3800,  25, 750),
                 UnitTypes.eclipse,  new Moneys(12000, 60, 1250)
