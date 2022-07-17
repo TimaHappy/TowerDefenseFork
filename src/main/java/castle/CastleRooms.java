@@ -30,7 +30,7 @@ import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static castle.CastleLogic.spawnUnit;
-import static castle.components.Bundle.findLocale;
+import static castle.Main.findLocale;
 import static castle.components.Bundle.format;
 import static mindustry.Vars.tilesize;
 import static mindustry.Vars.world;
@@ -268,20 +268,6 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && interval.get(60f);
-        }
-    }
-
-    public static class CreditsRoom extends Room {
-        public CreditsRoom(int x, int y) {
-            super(x, y, 0, 4);
-
-            this.label.fontSize(2.5f);
-            this.label.text("Credits");
-        }
-
-        @Override
-        public void buy(PlayerData data) {
-            Call.infoMessage(data.player.con, format("credits.text", data.locale));
         }
     }
 }

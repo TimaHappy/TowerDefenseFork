@@ -137,8 +137,6 @@ public class CastleGenerator {
             ++offsetX;
             offsetY = 0;
         });
-
-        new CreditsRoom(shopX + offsetX * size, shopY + offsetY * size);
     }
 
     public void addUnitRoom(UnitType type, Moneys money, int x, int y) {

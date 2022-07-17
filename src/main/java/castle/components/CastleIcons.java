@@ -54,7 +54,6 @@ public class CastleIcons {
                 Blocks.coreFoundation, Iconc.blockCoreFoundation,
                 Blocks.coreShard, Iconc.blockCoreShard,
 
-                Blocks.commandCenter, Iconc.blockCommandCenter,
                 Blocks.laserDrill, Iconc.blockLaserDrill,
 
                 Blocks.duo, Iconc.blockDuo,

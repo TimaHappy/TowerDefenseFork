@@ -9,15 +9,13 @@ import castle.components.PlayerData;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
 import mindustry.game.Team;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Player;
-import mindustry.gen.Unit;
+import mindustry.gen.*;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.meta.BlockGroup;
 
+import static castle.Main.findLocale;
 import static mindustry.Vars.*;
 
 public class CastleLogic {
@@ -76,7 +74,7 @@ public class CastleLogic {
         Call.updateGameOver(team);
 
         Log.info("Игра окончена. Загружаю новую карту...");
-        Groups.player.each(p -> Call.infoMessage(p.con, Bundle.format(team == Team.derelict ? "events.draw" : "events.gameover", Bundle.findLocale(p), colorizedTeam(team))));
+        Groups.player.each(p -> Call.infoMessage(p.con, Bundle.format(team == Team.derelict ? "events.draw" : "events.gameover", findLocale(p), colorizedTeam(team))));
         Call.hideHudText();
 
         Timer.schedule(CastleLogic::restart, 10f);
@@ -93,5 +91,9 @@ public class CastleLogic {
 
     public static boolean isBreak() {
         return world.isGenerating() || state.gameOver;
+    }
+
+    public static boolean onEnemySide(Teamc teamc) {
+        return (teamc.team() == Team.sharded && teamc.y() > world.unitHeight() / 2f) || (teamc.team() == Team.blue && teamc.y() < world.unitHeight() / 2f);
     }
 }

@@ -5,8 +5,10 @@ import arc.math.Mathf;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Interval;
+import arc.util.Structs;
 import castle.CastleRooms.Room;
-import castle.ai.AIShell;
+import castle.ai.DefenderAI;
+import castle.components.Bundle;
 import castle.components.CastleIcons;
 import castle.components.CastleCosts;
 import castle.components.PlayerData;
@@ -22,9 +24,9 @@ import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.production.Drill;
 import mindustry.world.blocks.storage.CoreBlock;
 
+import java.util.Locale;
+
 import static castle.CastleLogic.*;
-import static castle.components.Bundle.bundled;
-import static castle.components.Bundle.sendToChat;
 import static mindustry.Vars.*;
 
 public class Main extends Plugin {
@@ -36,13 +38,14 @@ public class Main extends Plugin {
 
     @Override
     public void init() {
-        CastleLogic.load();
-        CastleIcons.load();
+        Bundle.load();
         CastleCosts.load();
+        CastleIcons.load();
+        CastleLogic.load();
 
-        content.units().each(unit -> {
-           var parent = unit.defaultController;
-           unit.defaultController = () -> new AIShell(parent);
+        content.units().each(type -> {
+           var controller = type.controller;
+           type.controller = unit -> onEnemySide(unit) ? controller.get(unit) : new DefenderAI();
         });
 
         netServer.admins.addActionFilter(action -> {
@@ -139,5 +142,18 @@ public class Main extends Plugin {
         handler.removeCommand("gameover");
 
         handler.register("gameover", "End the game.", args -> gameOver(Team.derelict));
+    }
+
+    public static Locale findLocale(Player player) {
+        Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(player.locale) || player.locale.startsWith(l.toString()));
+        return locale != null ? locale : Bundle.defaultLocale;
+    }
+
+    public static void bundled(Player player, String key, Object... values) {
+        player.sendMessage(Bundle.format(key, findLocale(player), values));
+    }
+
+    public static void sendToChat(String key, Object... values) {
+        Groups.player.each(player -> bundled(player, key, values));
     }
 }

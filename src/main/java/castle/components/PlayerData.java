@@ -17,6 +17,7 @@ import java.util.Locale;
 
 import static castle.CastleLogic.spawnUnit;
 import static castle.CastleLogic.timer;
+import static castle.Main.findLocale;
 
 public class PlayerData {
 
@@ -60,7 +61,7 @@ public class PlayerData {
 
     public void handlePlayerJoin(Player player) {
         this.player = player;
-        this.locale = Bundle.findLocale(player);
+        this.locale = findLocale(player);
         this.interval = new Interval();
     }
 
