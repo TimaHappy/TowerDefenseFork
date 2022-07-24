@@ -24,11 +24,14 @@ public class CastleLogic {
     public static int timer = 45 * 60;
 
     public static void load() {
-        rules.pvp = true;
+        //rules.pvp = true;
         rules.canGameOver = false;
 
         rules.unitCap = 500;
         rules.unitCapVariable = false;
+
+        rules.dropZoneRadius = 10f;
+        rules.showSpawns = true;
 
         rules.polygonCoreProtection = true;
         rules.buildSpeedMultiplier = 0.5f;
@@ -93,7 +96,7 @@ public class CastleLogic {
         return world.isGenerating() || state.gameOver;
     }
 
-    public static boolean onEnemySide(Teamc teamc) {
-        return (teamc.team() == Team.sharded && teamc.y() > world.unitHeight() / 2f) || (teamc.team() == Team.blue && teamc.y() < world.unitHeight() / 2f);
-    }
+    //public static boolean onEnemySide(Teamc teamc) {
+    //    return (teamc.team() == Team.sharded && teamc.y() > world.unitHeight() / 2f) || (teamc.team() == Team.blue && teamc.y() < world.unitHeight() / 2f);
+    //}
 }

@@ -74,7 +74,7 @@ public class CastleGenerator {
     }
 
     public void generate() {
-        Tiles tiles  = world.resize(world.width(), world.height() * 2 + size * 4 + 5);
+        Tiles tiles = world.resize(world.width(), world.height() * 2 + size * 4 + 5);
 
         for (int x = 0; x < tiles.width; x++) {
             for (int y = saved.height; y < tiles.height - saved.height; y++) {

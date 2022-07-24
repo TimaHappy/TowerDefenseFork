@@ -7,10 +7,9 @@ import arc.util.CommandHandler;
 import arc.util.Interval;
 import arc.util.Structs;
 import castle.CastleRooms.Room;
-import castle.ai.DefenderAI;
 import castle.components.Bundle;
-import castle.components.CastleIcons;
 import castle.components.CastleCosts;
+import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.game.EventType.*;
@@ -27,7 +26,8 @@ import mindustry.world.blocks.storage.CoreBlock;
 import java.util.Locale;
 
 import static castle.CastleLogic.*;
-import static mindustry.Vars.*;
+import static mindustry.Vars.netServer;
+import static mindustry.Vars.state;
 
 public class Main extends Plugin {
 
@@ -42,11 +42,6 @@ public class Main extends Plugin {
         CastleCosts.load();
         CastleIcons.load();
         CastleLogic.load();
-
-        content.units().each(type -> {
-           var controller = type.controller;
-           type.controller = unit -> onEnemySide(unit) ? controller.get(unit) : new DefenderAI();
-        });
 
         netServer.admins.addActionFilter(action -> {
             if (action.tile != null && (action.tile.block() instanceof Turret || action.tile.block() instanceof Drill)) return false;
