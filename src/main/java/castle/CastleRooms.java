@@ -232,10 +232,10 @@ public class CastleRooms {
 
             if (roomType == UnitRoomType.attack) {
                 tile = data.player.team() == Team.sharded ? blueSpawn : shardedSpawn;
-                spawnUnit(unitType, data.player.team(), tile.worldx() + Mathf.range(40), tile.worldy() + Mathf.range(40));
+                spawnUnit(unitType, data.player.team(), tile.worldx() + Mathf.range(unitType.hitSize + 40f), tile.worldy() + Mathf.range(unitType.hitSize + 40f));
             } else if (data.player.team().core() != null) {
                 tile = data.player.team().core().tile;
-                spawnUnit(unitType, data.player.team(), tile.worldx() + 40, tile.worldy() + Mathf.range(40));
+                spawnUnit(unitType, data.player.team(), tile.worldx() + unitType.hitSize + 40f, tile.worldy() + Mathf.range(unitType.hitSize + 40f));
             }
         }
 
