@@ -17,6 +17,7 @@ import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.TreeBlock;
 import mindustry.world.blocks.storage.CoreBlock;
 
+import static castle.CastleLogic.rules;
 import static castle.CastleRooms.*;
 import static mindustry.Vars.state;
 import static mindustry.Vars.world;
@@ -64,7 +65,7 @@ public class CastleGenerator {
                 }
             });
 
-            state.map = map;
+
         } catch (Throwable e) {
             state.set(State.menu);
             Log.err(e);
@@ -100,7 +101,7 @@ public class CastleGenerator {
             }
 
             if (save.block() instanceof Turret turret) {
-                // не работает if (!turret.supportsEnv(state.rules.env)) return;
+                if (!turret.supportsEnv(state.rules.env)) return;
 
                 new TurretRoom(turret, Team.sharded, save.x, save.y);
                 new TurretRoom(turret, Team.blue, save.x, tiles.height - save.y - 2 + turret.size % 2);
@@ -123,7 +124,7 @@ public class CastleGenerator {
 
     public void generateShop(int shopX, int shopY) {
         CastleCosts.units.each((type, money) -> {
-            // не работает if (!type.supportsEnv(state.rules.env)) return;
+            if (!type.supportsEnv(state.rules.env)) return;
 
             new UnitRoom(type, UnitRoom.UnitRoomType.attack, money.income(), shopX + offsetX * size, shopY + offsetY * size * 2, money.cost());
             new UnitRoom(type, UnitRoom.UnitRoomType.defend, -money.income(), shopX + offsetX * size, shopY + offsetY * size * 2 + size, money.cost());

@@ -94,7 +94,7 @@ public class Main extends Plugin {
             else if (interval.get(60f)) timer--;
         });
 
-        Events.on(ServerLoadEvent.class, event -> Time.runTask(60f, () -> {
+        Events.on(ServerLoadEvent.class, event -> Time.runTask(360f, () -> {
             CastleLogic.restart();
             netServer.openServer();
         }));

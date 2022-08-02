@@ -6,10 +6,12 @@ import arc.util.Log;
 import arc.util.Timer;
 import castle.components.Bundle;
 import castle.components.PlayerData;
+import mindustry.content.Planets;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
 import mindustry.game.Team;
 import mindustry.gen.*;
+import mindustry.maps.Map;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.UnitFactory;
@@ -44,6 +46,8 @@ public class CastleLogic {
         rules.teams.get(Team.sharded).cheat = true;
         rules.teams.get(Team.blue).cheat = true;
 
+        rules.env = Planets.serpulo.defaultEnv;
+
         rules.bannedBlocks.addAll(content.blocks().select(block -> block instanceof CoreBlock || block instanceof UnitFactory || block.group == BlockGroup.turrets || block.group == BlockGroup.drills || block.group == BlockGroup.logic));
     }
 
@@ -58,12 +62,16 @@ public class CastleLogic {
         CastleRooms.rooms.clear();
         PlayerData.datas.clear();
 
-        CastleGenerator gen = new CastleGenerator();
-        gen.loadMap(maps.getNextMap(Gamemode.pvp, state.map));
+        CastleGenerator generator = new CastleGenerator();
+        Map map = maps.getNextMap(Gamemode.pvp, state.map);
+        generator.loadMap(map);
+
+        state.map = map;
+        state.rules = map.rules(rules);
+
         Call.worldDataBegin();
 
         timer = 45 * 60;
-        state.rules = rules;
         logic.play();
 
         players.each(player -> {
@@ -95,8 +103,4 @@ public class CastleLogic {
     public static boolean isBreak() {
         return world.isGenerating() || state.gameOver;
     }
-
-    //public static boolean onEnemySide(Teamc teamc) {
-    //    return (teamc.team() == Team.sharded && teamc.y() > world.unitHeight() / 2f) || (teamc.team() == Team.blue && teamc.y() < world.unitHeight() / 2f);
-    //}
 }
