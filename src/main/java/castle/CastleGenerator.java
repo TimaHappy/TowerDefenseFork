@@ -1,13 +1,17 @@
 package castle;
 
 import arc.util.Log;
+import arc.util.Structs;
+import castle.CastleLogic.AllowedContent;
 import castle.components.CastleCosts;
 import mindustry.content.Blocks;
+import mindustry.content.Items;
 import mindustry.core.GameState.State;
 import mindustry.game.Team;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.type.Item;
+import mindustry.type.unit.ErekirUnitType;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.WorldContext;
@@ -17,7 +21,7 @@ import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.TreeBlock;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static castle.CastleLogic.rules;
+import static castle.CastleLogic.allowedContent;
 import static castle.CastleRooms.*;
 import static mindustry.Vars.state;
 import static mindustry.Vars.world;
@@ -99,12 +103,18 @@ public class CastleGenerator {
             }
 
             if (save.block() instanceof Turret turret) {
+                boolean isErekirTurret = Structs.contains(turret.requirements, e -> Items.erekirOnlyItems.contains(e.item));
+                if (allowedContent == AllowedContent.erekir && !isErekirTurret ||
+                    allowedContent == AllowedContent.serpulo && isErekirTurret) continue;
+
                 new TurretRoom(turret, Team.sharded, save.x, save.y);
                 new TurretRoom(turret, Team.blue, save.x, tiles.height - save.y - 2 + turret.size % 2);
             }
 
             if (save.build instanceof SorterBuild sorterBuild) {
                 Item item = sorterBuild.config();
+                if (item == Items.coal || item == Items.scrap || item == Items.sand) continue;
+
                 new MinerRoom(item, Team.sharded, save.x, save.y);
                 new MinerRoom(item, Team.blue, save.x, tiles.height - save.y - 1);
             }
@@ -120,7 +130,9 @@ public class CastleGenerator {
 
     public void generateShop(int shopX, int shopY) {
         CastleCosts.units.each((type, money) -> {
-            // не работает if (!type.supportsEnv(state.rules.env)) return;
+            boolean isErekirUnit = type instanceof ErekirUnitType;
+            if (allowedContent == AllowedContent.erekir && !isErekirUnit ||
+                allowedContent == AllowedContent.serpulo && isErekirUnit) return;
 
             new UnitRoom(type, UnitRoom.UnitRoomType.attack, money.income(), shopX + offsetX * size, shopY + offsetY * size * 2, money.cost());
             new UnitRoom(type, UnitRoom.UnitRoomType.defend, -money.income(), shopX + offsetX * size, shopY + offsetY * size * 2 + size, money.cost());

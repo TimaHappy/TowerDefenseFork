@@ -6,6 +6,7 @@ import arc.util.Log;
 import arc.util.Timer;
 import castle.components.Bundle;
 import castle.components.PlayerData;
+import mindustry.content.Items;
 import mindustry.content.Planets;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
@@ -23,6 +24,7 @@ import static mindustry.Vars.*;
 public class CastleLogic {
 
     public static Rules rules = new Rules();
+    public static AllowedContent allowedContent;
     public static int timer = 45 * 60;
 
     public static void load() {
@@ -62,12 +64,24 @@ public class CastleLogic {
         CastleRooms.rooms.clear();
         PlayerData.datas.clear();
 
-        CastleGenerator generator = new CastleGenerator();
         Map map = maps.getNextMap(Gamemode.pvp, state.map);
-        generator.loadMap(map);
 
         state.map = map;
         state.rules = map.rules(rules);
+
+        var serpuloOnlyItems = Items.serpuloItems.asSet();
+        serpuloOnlyItems.removeAll(Items.erekirOnlyItems);
+
+        if (state.rules.env == Planets.erekir.defaultEnv || state.rules.hiddenBuildItems.equals(Items.erekirOnlyItems.asSet())) {
+            allowedContent = AllowedContent.erekir;
+        } else if (state.rules.env == Planets.serpulo.defaultEnv || state.rules.hiddenBuildItems.equals(serpuloOnlyItems)) {
+            allowedContent = AllowedContent.serpulo;
+        } else {
+            allowedContent = AllowedContent.any;
+        }
+
+        CastleGenerator generator = new CastleGenerator();
+        generator.loadMap(map);
 
         Call.worldDataBegin();
 
@@ -102,5 +116,9 @@ public class CastleLogic {
 
     public static boolean isBreak() {
         return world.isGenerating() || state.gameOver;
+    }
+
+    public enum AllowedContent {
+        erekir, serpulo, any
     }
 }
