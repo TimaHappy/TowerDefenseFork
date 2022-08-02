@@ -11,7 +11,6 @@ import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
-import mindustry.content.Liquids;
 import mindustry.entities.Units;
 import mindustry.game.Team;
 import mindustry.gen.Call;
@@ -19,21 +18,18 @@ import mindustry.gen.Groups;
 import mindustry.gen.Iconc;
 import mindustry.gen.WorldLabel;
 import mindustry.type.Item;
+import mindustry.type.Liquid;
 import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
-import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.blocks.defense.turrets.ItemTurret.ItemTurretBuild;
-import mindustry.world.blocks.defense.turrets.LiquidTurret.LiquidTurretBuild;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static castle.CastleLogic.spawnUnit;
 import static castle.Main.findLocale;
 import static castle.components.Bundle.format;
-import static mindustry.Vars.tilesize;
-import static mindustry.Vars.world;
+import static mindustry.Vars.*;
 
 public class CastleRooms {
 
@@ -123,7 +119,7 @@ public class CastleRooms {
 
             this.block = block;
             this.team = team;
-            this.label.text(CastleIcons.get(block) + " :[white] " + cost);
+            this.label.text(CastleIcons.get(block.name) + " :[white] " + cost);
         }
 
         public BlockRoom(Block block, Team team, int x, int y, int cost) {
@@ -158,19 +154,35 @@ public class CastleRooms {
             super.buy(data);
 
             Tile source = world.tile(startx, y);
-            if (tile.build instanceof ItemTurretBuild build) {
-                source.setNet(Blocks.itemSource, team, 0);
-                source.build.configure(((ItemTurret) build.block).ammoTypes.entries().next().key);
-            } else if (tile.build instanceof LiquidTurretBuild || tile.block() == Blocks.meltdown) {
-                source.setNet(Blocks.liquidSource, team, 0);
-                source.build.configure(Liquids.cryofluid);
-            } else return;
+            int timeOffset = 0;
 
-            source.build.health(Float.MAX_VALUE);
-            Time.run(60f, () -> {
-                Call.effect(Fx.mineHuge, source.worldx(), source.worldy(), 0, team.color);
-                source.removeNet();
-            });
+            Item item = content.items().find(i -> block.consumesItem(i));
+            if (item != null) {
+                Time.run(++timeOffset * 60f, () -> {
+                    source.setNet(Blocks.itemSource, team, 0);
+                    source.build.configure(item);
+                    source.build.health(Float.MAX_VALUE);
+                });
+
+                Time.run(++timeOffset * 60f, () -> {
+                    Call.effect(Fx.mineHuge, source.worldx(), source.worldy(), 0, team.color);
+                    source.removeNet();
+                });
+            }
+
+            Liquid liquid = content.liquids().find(l -> block.consumesLiquid(l));
+            if (liquid != null) {
+                Time.run(++timeOffset * 60f, () -> {
+                    source.setNet(Blocks.liquidSource, team, 0);
+                    source.build.configure(liquid);
+                    source.build.health(Float.MAX_VALUE);
+                });
+
+                Time.run(++timeOffset * 60f, () -> {
+                    Call.effect(Fx.mineHuge, source.worldx(), source.worldy(), 0, team.color);
+                    source.removeNet();
+                });
+            }
         }
     }
 
@@ -185,15 +197,15 @@ public class CastleRooms {
             this.item = item;
             this.amount = (int) (300f - item.cost * 150f);
 
-            this.label.text("[" + CastleIcons.get(item) + "] : " + cost);
+            this.label.text("[" + CastleIcons.get(item.name) + "] : " + cost);
         }
 
         @Override
         public void update() {
             if (bought && interval.get(300f)) {
-                float randomX = getX() + Mathf.range(12f), randomY = getY() + Mathf.range(12f);
-                Call.effect(Fx.mineHuge, randomX, randomY, 0f, team.color);
-                Call.transferItemTo(null, item, amount, randomX, randomY, team.core());
+                float randX = getX() + Mathf.range(12f), randY = getY() + Mathf.range(12f);
+                Call.effect(Fx.mineHuge, randX, randY, 0f, team.color);
+                Call.transferItemTo(null, item, amount, randX, randY, team.core());
             }
         }
     }
@@ -218,7 +230,7 @@ public class CastleRooms {
             this.label.set(getX(), getY() + 12f);
             this.label.fontSize(2.25f);
             this.label.text(" ".repeat(Math.max(0, (String.valueOf(income).length() + String.valueOf(cost).length() + 2) / 2)) +
-                    CastleIcons.get(unitType) + (roomType == UnitRoomType.attack ? " [accent]\uE865" : " [scarlet]\uE84D") +
+                    CastleIcons.get(unitType.name) + (roomType == UnitRoomType.attack ? " [accent]\uE865" : " [scarlet]\uE84D") +
                     "\n[gray]" + cost +
                     "\n[white]" + Iconc.blockPlastaniumCompressor + " : " + (income < 0 ? "[crimson]" : income > 0 ? "[lime]+" : "[gray]") + income);
         }
@@ -228,13 +240,11 @@ public class CastleRooms {
             super.buy(data);
             data.income += income;
 
-            Tile tile;
-
             if (roomType == UnitRoomType.attack) {
-                tile = data.player.team() == Team.sharded ? blueSpawn : shardedSpawn;
+                Tile tile = data.player.team() == Team.sharded ? blueSpawn : shardedSpawn;
                 spawnUnit(unitType, data.player.team(), tile.worldx() + Mathf.range(unitType.hitSize + 40f), tile.worldy() + Mathf.range(unitType.hitSize + 40f));
             } else if (data.player.team().core() != null) {
-                tile = data.player.team().core().tile;
+                Tile tile = data.player.team().core().tile;
                 spawnUnit(unitType, data.player.team(), tile.worldx() + unitType.hitSize + 40f, tile.worldy() + Mathf.range(unitType.hitSize + 40f));
             }
         }
@@ -256,7 +266,7 @@ public class CastleRooms {
 
             this.label.set(getX(), getY() + 12f);
             this.label.fontSize(2.25f);
-            this.label.text("[accent]" + Strings.capitalize(effect.name) + "\n" + "effect" + "\n[white]" + CastleIcons.get(effect) + " : [gray]" + cost);
+            this.label.text("[accent]" + Strings.capitalize(effect.name) + "\n" + "effect" + "\n[white]" + CastleIcons.get(effect.name) + " : [gray]" + cost);
         }
 
         @Override

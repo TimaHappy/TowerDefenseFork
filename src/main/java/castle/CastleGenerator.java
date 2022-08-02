@@ -2,14 +2,12 @@ package castle;
 
 import arc.util.Log;
 import castle.components.CastleCosts;
-import castle.components.CastleCosts.Moneys;
 import mindustry.content.Blocks;
 import mindustry.core.GameState.State;
 import mindustry.game.Team;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.type.Item;
-import mindustry.type.UnitType;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.WorldContext;
@@ -93,15 +91,17 @@ public class CastleGenerator {
         for (Tile save : saved) {
             if (!save.isCenter()) continue;
 
-            if (save.block() instanceof CoreBlock block) {
-                tiles.getc(save.x, save.y).setNet(block, Team.sharded, 0);
-                tiles.getc(save.x, tiles.height - save.y - 1).setNet(block, Team.blue, 0);
+            if (save.block() instanceof CoreBlock core) {
+                tiles.getc(save.x, save.y).setNet(core, Team.sharded, 0);
+                tiles.getc(save.x, tiles.height - save.y - 1).setNet(core, Team.blue, 0);
 
                 new BlockRoom(Blocks.coreNucleus, Team.sharded, save.x, save.y, 5000);
                 new BlockRoom(Blocks.coreNucleus, Team.blue, save.x, tiles.height - save.y - 1, 5000);
             }
 
             if (save.block() instanceof Turret turret) {
+                // не работает if (!turret.supportsEnv(state.rules.env)) return;
+
                 new TurretRoom(turret, Team.sharded, save.x, save.y);
                 new TurretRoom(turret, Team.blue, save.x, tiles.height - save.y - 2 + turret.size % 2);
             }
@@ -123,7 +123,11 @@ public class CastleGenerator {
 
     public void generateShop(int shopX, int shopY) {
         CastleCosts.units.each((type, money) -> {
-            addUnitRoom(type, money, shopX + offsetX * size, shopY + offsetY * size * 2);
+            // не работает if (!type.supportsEnv(state.rules.env)) return;
+
+            new UnitRoom(type, UnitRoom.UnitRoomType.attack, money.income(), shopX + offsetX * size, shopY + offsetY * size * 2, money.cost());
+            new UnitRoom(type, UnitRoom.UnitRoomType.defend, -money.income(), shopX + offsetX * size, shopY + offsetY * size * 2 + size, money.cost());
+
             if (++offsetX % 5 != 0) return;
             if (offsetY == 0) {
                 offsetX -= 5;
@@ -133,14 +137,10 @@ public class CastleGenerator {
 
         CastleCosts.effects.each((effect, cost) -> {
             new EffectRoom(effect, shopX + offsetX * size, shopY + offsetY * size, cost);
+
             if (++offsetY != 4) return;
             ++offsetX;
             offsetY = 0;
         });
-    }
-
-    public void addUnitRoom(UnitType type, Moneys money, int x, int y) {
-        new UnitRoom(type, UnitRoom.UnitRoomType.attack, money.income(), x, y, money.cost());
-        new UnitRoom(type, UnitRoom.UnitRoomType.defend, -money.income(), x, y + size, money.cost());
     }
 }

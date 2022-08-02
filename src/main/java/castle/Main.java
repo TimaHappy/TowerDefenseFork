@@ -6,6 +6,7 @@ import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Interval;
 import arc.util.Structs;
+import arc.util.Time;
 import castle.CastleRooms.Room;
 import castle.components.Bundle;
 import castle.components.CastleCosts;
@@ -93,8 +94,10 @@ public class Main extends Plugin {
             else if (interval.get(60f)) timer--;
         });
 
-        CastleLogic.restart();
-        netServer.openServer();
+        Events.on(ServerLoadEvent.class, event -> Time.runTask(60f, () -> {
+            CastleLogic.restart();
+            netServer.openServer();
+        }));
     }
 
     @Override
