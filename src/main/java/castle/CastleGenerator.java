@@ -64,8 +64,6 @@ public class CastleGenerator {
                     world.endMapLoad();
                 }
             });
-
-
         } catch (Throwable e) {
             state.set(State.menu);
             Log.err(e);
@@ -101,8 +99,6 @@ public class CastleGenerator {
             }
 
             if (save.block() instanceof Turret turret) {
-                if (!turret.supportsEnv(state.rules.env)) return;
-
                 new TurretRoom(turret, Team.sharded, save.x, save.y);
                 new TurretRoom(turret, Team.blue, save.x, tiles.height - save.y - 2 + turret.size % 2);
             }
@@ -124,7 +120,7 @@ public class CastleGenerator {
 
     public void generateShop(int shopX, int shopY) {
         CastleCosts.units.each((type, money) -> {
-            if (!type.supportsEnv(state.rules.env)) return;
+            // не работает if (!type.supportsEnv(state.rules.env)) return;
 
             new UnitRoom(type, UnitRoom.UnitRoomType.attack, money.income(), shopX + offsetX * size, shopY + offsetY * size * 2, money.cost());
             new UnitRoom(type, UnitRoom.UnitRoomType.defend, -money.income(), shopX + offsetX * size, shopY + offsetY * size * 2 + size, money.cost());
