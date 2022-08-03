@@ -6,12 +6,14 @@ import arc.util.Log;
 import arc.util.Timer;
 import castle.components.Bundle;
 import castle.components.PlayerData;
-import mindustry.content.Items;
 import mindustry.content.Planets;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
 import mindustry.game.Team;
-import mindustry.gen.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Player;
+import mindustry.gen.Unit;
 import mindustry.maps.Map;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.storage.CoreBlock;
@@ -66,7 +68,6 @@ public class CastleLogic {
 
         Map map = maps.getNextMap(Gamemode.pvp, state.map);
 
-        state.map = map;
         state.rules = map.rules(rules);
 
         var erekirOnlyItems = Planets.erekir.hiddenItems.asSet();

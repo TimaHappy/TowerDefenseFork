@@ -18,6 +18,7 @@ import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.io.MapIO;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
 import mindustry.world.blocks.defense.turrets.Turret;
@@ -27,8 +28,7 @@ import mindustry.world.blocks.storage.CoreBlock;
 import java.util.Locale;
 
 import static castle.CastleLogic.*;
-import static mindustry.Vars.netServer;
-import static mindustry.Vars.state;
+import static mindustry.Vars.*;
 
 public class Main extends Plugin {
 
@@ -85,7 +85,7 @@ public class Main extends Plugin {
         Events.run(Trigger.update, () -> {
             if (isBreak() || state.serverPaused) return;
 
-            Groups.unit.each(unit -> unit.isFlying() && (unit.tileOn() == null || unit.tileOn().floor() == Blocks.space), Call::unitDespawn);
+            Groups.unit.each(unit -> unit.isFlying() && !unit.spawnedByCore && (unit.tileOn() == null || unit.tileOn().floor() == Blocks.space), Call::unitDespawn);
 
             PlayerData.datas().each(PlayerData::update);
             CastleRooms.rooms.each(Room::update);

@@ -69,6 +69,8 @@ public class CastleGenerator {
                     world.endMapLoad();
                 }
             });
+
+            state.map = map;
         } catch (Throwable e) {
             state.set(State.menu);
             Log.err(e);
@@ -76,7 +78,7 @@ public class CastleGenerator {
     }
 
     public void generate() {
-        Tiles tiles = world.resize(world.width(), world.height() * 2 + size * 4 + 5);
+        Tiles tiles = world.resize(world.width(), world.height() * 2 + size * 9 / 2);
 
         for (int x = 0; x < tiles.width; x++) {
             for (int y = saved.height; y < tiles.height - saved.height; y++) {
@@ -92,41 +94,41 @@ public class CastleGenerator {
             }
         }
 
-        for (Tile save : saved) {
-            if (!save.isCenter()) continue;
+        saved.eachTile(tile -> {
+            if (!tile.isCenter()) return;
 
-            if (save.block() instanceof CoreBlock) {
+            if (tile.block() instanceof CoreBlock) {
                 Block defaultCore = isSerpulo() ? Blocks.coreShard : Blocks.coreBastion;
                 Block core = isSerpulo() ? Blocks.coreNucleus : Blocks.coreAcropolis;
 
-                tiles.getc(save.x, save.y).setNet(defaultCore, Team.sharded, 0);
-                tiles.getc(save.x, tiles.height - save.y - 1).setNet(defaultCore, Team.blue, 0);
+                tiles.getc(tile.x, tile.y).setNet(defaultCore, Team.sharded, 0);
+                tiles.getc(tile.x, tiles.height - tile.y - 1).setNet(defaultCore, Team.blue, 0);
 
-                new BlockRoom(core, Team.sharded, save.x, save.y, 5000);
-                new BlockRoom(core, Team.blue, save.x, tiles.height - save.y - 1, 5000);
+                new BlockRoom(core, Team.sharded, tile.x, tile.y, 5000);
+                new BlockRoom(core, Team.blue, tile.x, tiles.height - tile.y - 2 + core.size % 2, 5000);
             }
 
-            if (save.block() instanceof Turret turret) {
+            if (tile.block() instanceof Turret turret) {
                 boolean isErekirTurret = Structs.contains(turret.requirements, e -> Planets.serpulo.hiddenItems.contains(e.item));
-                if (isErekir() && !isErekirTurret || isSerpulo() && isErekirTurret) continue;
+                if (isErekir() && !isErekirTurret || isSerpulo() && isErekirTurret) return;
 
-                new TurretRoom(turret, Team.sharded, save.x, save.y);
-                new TurretRoom(turret, Team.blue, save.x, tiles.height - save.y - 2 + turret.size % 2);
+                new TurretRoom(turret, Team.sharded, tile.x, tile.y);
+                new TurretRoom(turret, Team.blue, tile.x, tiles.height - tile.y - 2 + turret.size % 2);
             }
 
-            if (save.build instanceof SorterBuild sorterBuild) {
+            if (tile.build instanceof SorterBuild sorterBuild) {
                 Item item = sorterBuild.config();
-                if (item == Items.coal || item == Items.scrap || item == Items.sand) continue;
+                if (item == Items.coal || item == Items.scrap || item == Items.sand) return;
 
-                new MinerRoom(item, Team.sharded, save.x, save.y);
-                new MinerRoom(item, Team.blue, save.x, tiles.height - save.y - 1);
+                new MinerRoom(item, Team.sharded, tile.x, tile.y);
+                new MinerRoom(item, Team.blue, tile.x, tiles.height - tile.y - 1);
             }
 
-            if (save.overlay() == Blocks.spawn) {
-                shardedSpawn = tiles.getc(save.x, save.y);
-                blueSpawn = tiles.getc(save.x, tiles.height - save.y - 1);
+            if (tile.overlay() == Blocks.spawn) {
+                shardedSpawn = tiles.getc(tile.x, tile.y);
+                blueSpawn = tiles.getc(tile.x, tiles.height - tile.y - 1);
             }
-        }
+        });
 
         generateShop(8, saved.height + 7);
     }
