@@ -37,7 +37,6 @@ public class CastleGenerator {
             SaveIO.load(map.file, world.new FilterContext(map) {
                 @Override
                 public void end() {
-                    applyFilters();
                     generate();
                     world.endMapLoad();
                 }
