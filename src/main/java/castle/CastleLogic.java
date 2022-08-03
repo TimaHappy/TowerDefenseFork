@@ -118,6 +118,14 @@ public class CastleLogic {
         return world.isGenerating() || state.gameOver;
     }
 
+    public static boolean isSerpulo() {
+        return allowedContent == AllowedContent.serpulo;
+    }
+
+    public static boolean isErekir() {
+        return allowedContent == AllowedContent.erekir;
+    }
+
     public enum AllowedContent {
         erekir, serpulo, any
     }

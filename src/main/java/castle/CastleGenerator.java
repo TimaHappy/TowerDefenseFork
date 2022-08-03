@@ -12,6 +12,7 @@ import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.type.Item;
 import mindustry.type.unit.ErekirUnitType;
+import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.WorldContext;
@@ -21,7 +22,7 @@ import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.TreeBlock;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static castle.CastleLogic.allowedContent;
+import static castle.CastleLogic.*;
 import static castle.CastleRooms.*;
 import static mindustry.Vars.state;
 import static mindustry.Vars.world;
@@ -94,12 +95,15 @@ public class CastleGenerator {
         for (Tile save : saved) {
             if (!save.isCenter()) continue;
 
-            if (save.block() instanceof CoreBlock core) {
-                tiles.getc(save.x, save.y).setNet(core, Team.sharded, 0);
-                tiles.getc(save.x, tiles.height - save.y - 1).setNet(core, Team.blue, 0);
+            if (save.block() instanceof CoreBlock) {
+                Block defaultCore = isSerpulo() ? Blocks.coreShard : Blocks.coreBastion;
+                Block core = isSerpulo() ? Blocks.coreNucleus : Blocks.coreAcropolis;
 
-                new BlockRoom(Blocks.coreNucleus, Team.sharded, save.x, save.y, 5000);
-                new BlockRoom(Blocks.coreNucleus, Team.blue, save.x, tiles.height - save.y - 1, 5000);
+                tiles.getc(save.x, save.y).setNet(defaultCore, Team.sharded, 0);
+                tiles.getc(save.x, tiles.height - save.y - 1).setNet(defaultCore, Team.blue, 0);
+
+                new BlockRoom(core, Team.sharded, save.x, save.y, 5000);
+                new BlockRoom(core, Team.blue, save.x, tiles.height - save.y - 1, 5000);
             }
 
             if (save.block() instanceof Turret turret) {
@@ -131,8 +135,7 @@ public class CastleGenerator {
     public void generateShop(int shopX, int shopY) {
         CastleCosts.units.each((type, money) -> {
             boolean isErekirUnit = type instanceof ErekirUnitType;
-            if (allowedContent == AllowedContent.erekir && !isErekirUnit ||
-                allowedContent == AllowedContent.serpulo && isErekirUnit) return;
+            if (isErekir() && !isErekirUnit || isSerpulo() && isErekirUnit) return;
 
             new UnitRoom(type, UnitRoom.UnitRoomType.attack, money.income(), shopX + offsetX * size, shopY + offsetY * size * 2, money.cost());
             new UnitRoom(type, UnitRoom.UnitRoomType.defend, -money.income(), shopX + offsetX * size, shopY + offsetY * size * 2 + size, money.cost());
@@ -145,11 +148,13 @@ public class CastleGenerator {
         });
 
         CastleCosts.effects.each((effect, cost) -> {
-            new EffectRoom(effect, shopX + offsetX * size, shopY + offsetY * size, cost);
+            new EffectRoom(effect, shopX + offsetX * size, shopY + offsetY * size * 2, cost);
 
-            if (++offsetY != 4) return;
-            ++offsetX;
-            offsetY = 0;
+            if (++offsetX % 5 != 0) return;
+            if (offsetY == 0) {
+                offsetX -= 5;
+                ++offsetY;
+            } else offsetY--;
         });
     }
 }
