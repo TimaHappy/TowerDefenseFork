@@ -2,10 +2,10 @@ package castle;
 
 import arc.util.Log;
 import arc.util.Structs;
-import castle.CastleLogic.AllowedContent;
 import castle.components.CastleCosts;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
+import mindustry.content.Planets;
 import mindustry.core.GameState.State;
 import mindustry.game.Team;
 import mindustry.io.SaveIO;
@@ -107,9 +107,8 @@ public class CastleGenerator {
             }
 
             if (save.block() instanceof Turret turret) {
-                boolean isErekirTurret = Structs.contains(turret.requirements, e -> Items.erekirOnlyItems.contains(e.item));
-                if (allowedContent == AllowedContent.erekir && !isErekirTurret ||
-                    allowedContent == AllowedContent.serpulo && isErekirTurret) continue;
+                boolean isErekirTurret = Structs.contains(turret.requirements, e -> Planets.serpulo.hiddenItems.contains(e.item));
+                if (isErekir() && !isErekirTurret || isSerpulo() && isErekirTurret) continue;
 
                 new TurretRoom(turret, Team.sharded, save.x, save.y);
                 new TurretRoom(turret, Team.blue, save.x, tiles.height - save.y - 2 + turret.size % 2);

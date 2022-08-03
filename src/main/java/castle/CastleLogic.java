@@ -69,10 +69,10 @@ public class CastleLogic {
         state.map = map;
         state.rules = map.rules(rules);
 
-        var serpuloOnlyItems = Items.serpuloItems.asSet();
-        serpuloOnlyItems.removeAll(Items.erekirOnlyItems);
+        var erekirOnlyItems = Planets.erekir.hiddenItems.asSet();
+        var serpuloOnlyItems = Planets.serpulo.hiddenItems.asSet();
 
-        if (state.rules.env == Planets.erekir.defaultEnv || state.rules.hiddenBuildItems.equals(Items.erekirOnlyItems.asSet())) {
+        if (state.rules.env == Planets.erekir.defaultEnv || state.rules.hiddenBuildItems.equals(erekirOnlyItems)) {
             allowedContent = AllowedContent.erekir;
         } else if (state.rules.env == Planets.serpulo.defaultEnv || state.rules.hiddenBuildItems.equals(serpuloOnlyItems)) {
             allowedContent = AllowedContent.serpulo;
