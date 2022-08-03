@@ -18,7 +18,6 @@ import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.io.MapIO;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
 import mindustry.world.blocks.defense.turrets.Turret;
@@ -42,7 +41,6 @@ public class Main extends Plugin {
         Bundle.load();
         CastleCosts.load();
         CastleIcons.load();
-        CastleLogic.load();
 
         netServer.admins.addActionFilter(action -> {
             if (action.tile != null && (action.tile.block() instanceof Turret || action.tile.block() instanceof Drill)) return false;

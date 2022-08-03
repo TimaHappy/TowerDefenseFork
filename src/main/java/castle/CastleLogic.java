@@ -25,12 +25,11 @@ import static mindustry.Vars.*;
 
 public class CastleLogic {
 
-    public static Rules rules = new Rules();
     public static AllowedContent allowedContent;
     public static int timer = 45 * 60;
 
-    public static void load() {
-        // TODO rules.pvp = true;
+    public static void applyRules(Rules rules) {
+        rules.pvp = true;
         rules.canGameOver = false;
 
         rules.unitCap = 500;
@@ -50,8 +49,6 @@ public class CastleLogic {
         rules.teams.get(Team.sharded).cheat = true;
         rules.teams.get(Team.blue).cheat = true;
 
-        rules.env = Planets.serpulo.defaultEnv;
-
         rules.bannedBlocks.addAll(content.blocks().select(block -> block instanceof CoreBlock || block instanceof UnitFactory || block.group == BlockGroup.turrets || block.group == BlockGroup.drills || block.group == BlockGroup.logic));
     }
 
@@ -68,7 +65,8 @@ public class CastleLogic {
 
         Map map = maps.getNextMap(Gamemode.pvp, state.map);
 
-        state.rules = map.rules(rules);
+        state.rules = map.rules(new Rules());
+        applyRules(state.rules);
 
         var erekirOnlyItems = Planets.erekir.hiddenItems.asSet();
         var serpuloOnlyItems = Planets.serpulo.hiddenItems.asSet();
