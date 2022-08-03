@@ -26,7 +26,7 @@ public class PlayerData {
     public Player player;
     public Interval interval;
 
-    public int money = 100500; // TODO 0
+    public int money = 0;
     public int income = 15;
 
     public boolean hideHud = false;
