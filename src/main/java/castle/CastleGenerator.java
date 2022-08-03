@@ -15,14 +15,14 @@ import mindustry.type.unit.ErekirUnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
-import mindustry.world.WorldContext;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.distribution.Sorter.SorterBuild;
 import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.TreeBlock;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static castle.CastleLogic.*;
+import static castle.CastleLogic.isErekir;
+import static castle.CastleLogic.isSerpulo;
 import static castle.CastleRooms.*;
 import static mindustry.Vars.state;
 import static mindustry.Vars.world;
@@ -34,37 +34,10 @@ public class CastleGenerator {
 
     public void loadMap(Map map) {
         try {
-            SaveIO.load(map.file, new WorldContext() {
-                @Override
-                public Tile tile(int index) {
-                    return world.tiles.geti(index);
-                }
-
-                @Override
-                public void resize(int width, int height) {
-                    world.resize(width, height);
-                }
-
-                @Override
-                public Tile create(int x, int y, int floorID, int overlayID, int wallID) {
-                    Tile tile = new Tile(x, y, floorID, overlayID, wallID);
-                    world.tiles.set(x, y, tile);
-                    return tile;
-                }
-
-                @Override
-                public boolean isGenerating() {
-                    return world.isGenerating();
-                }
-
-                @Override
-                public void begin() {
-                    world.beginMapLoad();
-                }
-
+            SaveIO.load(map.file, world.new FilterContext(map) {
                 @Override
                 public void end() {
-                    saved = world.tiles;
+                    applyFilters();
                     generate();
                     world.endMapLoad();
                 }
