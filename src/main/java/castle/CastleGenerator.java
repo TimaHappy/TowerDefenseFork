@@ -29,7 +29,6 @@ import static mindustry.Vars.world;
 
 public class CastleGenerator {
 
-    public Tiles saved;
     public int offsetX, offsetY;
 
     public void loadMap(Map map) {
@@ -50,6 +49,7 @@ public class CastleGenerator {
     }
 
     public void generate() {
+        Tiles saved = world.tiles;
         Tiles tiles = world.resize(world.width(), world.height() * 2 + size * 9 / 2);
 
         for (int x = 0; x < tiles.width; x++) {
