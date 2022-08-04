@@ -20,7 +20,7 @@ public class CastleCosts {
     public static void load() {
         units = OrderedMap.of(
                 UnitTypes.dagger,   new Moneys(60,    0,  15),
-                UnitTypes.mace,     new Moneys(180,   1,  50),
+                UnitTypes.mace,     new Moneys(170,   1,  50),
                 UnitTypes.fortress, new Moneys(550,   4,  150),
                 UnitTypes.scepter,  new Moneys(3000,  20, 750),
                 UnitTypes.reign,    new Moneys(10000, 60, 1500),
@@ -37,7 +37,7 @@ public class CastleCosts {
                 UnitTypes.vela,     new Moneys(4000,  22, 750),
                 UnitTypes.corvus,   new Moneys(15000, 70, 1500),
 
-                UnitTypes.risso,    new Moneys(170,   0,  24),
+                UnitTypes.risso,    new Moneys(175,   0,  24),
                 UnitTypes.minke,    new Moneys(250,   1,  75),
                 UnitTypes.bryde,    new Moneys(1000,  5,  200),
                 UnitTypes.sei,      new Moneys(4250,  24, 900),
@@ -46,13 +46,13 @@ public class CastleCosts {
                 UnitTypes.retusa,   new Moneys(170,   0,  50),
                 UnitTypes.oxynoe,   new Moneys(625,   3,  80),
                 UnitTypes.cyerce,   new Moneys(1400,  6,  200),
-                UnitTypes.aegires,  new Moneys(7000,  18, 1000),
+                UnitTypes.aegires,  new Moneys(7000,  16, 1250),
                 UnitTypes.navanax,  new Moneys(13500, 70, 1350),
 
                 UnitTypes.flare,    new Moneys(60,    0, 20),
-                UnitTypes.horizon,  new Moneys(200,   1, 50),
+                UnitTypes.horizon,  new Moneys(240,   1, 70),
                 UnitTypes.zenith,   new Moneys(700,   4, 150),
-                UnitTypes.antumbra, new Moneys(3800,  25, 750),
+                UnitTypes.antumbra, new Moneys(4000,  25, 850),
                 UnitTypes.eclipse,  new Moneys(12000, 60, 1250),
 
                 UnitTypes.stell,    new Moneys(60,    0, 20),
@@ -80,15 +80,15 @@ public class CastleCosts {
                 Blocks.scorch,     200,
                 Blocks.hail,       250,
                 Blocks.wave,       250,
-                Blocks.lancer,     300,
+                Blocks.lancer,     250,
                 Blocks.arc,        100,
-                Blocks.swarmer,    1500,
-                Blocks.salvo,      500,
+                Blocks.swarmer,    1450,
+                Blocks.salvo,      600,
                 Blocks.tsunami,    800,
                 Blocks.fuse,       1350,
                 Blocks.ripple,     1400,
                 Blocks.cyclone,    2000,
-                Blocks.foreshadow, 5000,
+                Blocks.foreshadow, 4500,
                 Blocks.spectre,    4000,
                 Blocks.meltdown,   3500,
 
@@ -125,9 +125,9 @@ public class CastleCosts {
         );
 
         effects = OrderedMap.of(
-                StatusEffects.overclock, 5000,
-                StatusEffects.overdrive, 12500,
-                StatusEffects.boss,      25000
+                StatusEffects.overclock, 4250,
+                StatusEffects.overdrive, 11500,
+                StatusEffects.boss,      20000
         );
     }
 
