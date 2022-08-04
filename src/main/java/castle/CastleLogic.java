@@ -66,7 +66,6 @@ public class CastleLogic {
         Map map = maps.getNextMap(Gamemode.pvp, state.map);
 
         state.rules = map.rules(new Rules());
-        applyRules(state.rules);
 
         var erekirOnlyItems = Planets.erekir.hiddenItems.asSet();
         var serpuloOnlyItems = Planets.serpulo.hiddenItems.asSet();
@@ -81,6 +80,8 @@ public class CastleLogic {
 
         CastleGenerator generator = new CastleGenerator();
         generator.loadMap(map);
+
+        applyRules(state.rules);
 
         Call.worldDataBegin();
 
