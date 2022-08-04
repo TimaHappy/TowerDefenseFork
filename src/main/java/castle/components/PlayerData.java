@@ -1,5 +1,6 @@
 package castle.components;
 
+import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Interval;
@@ -12,6 +13,7 @@ import mindustry.gen.Player;
 
 import java.util.Locale;
 
+import static castle.CastleLogic.isBreak;
 import static castle.CastleLogic.timer;
 import static castle.Main.findLocale;
 
@@ -37,7 +39,7 @@ public class PlayerData {
     }
 
     public void update() {
-        if (!player.con.isConnected()) return;
+        if (!player.con.isConnected() || isBreak()) return;
 
         if (interval.get(60f)) money += income * getBonus();
 
@@ -60,7 +62,7 @@ public class PlayerData {
     }
 
     public float getBonus() {
-        return Math.max((float) Groups.player.size() / Groups.player.count(p -> p.team() == player.team()) / 2f, 1f);
+        return Mathf.clamp((float) Groups.player.size() / Groups.player.count(p -> p.team() == player.team()) / 2f, 1f, 5f);
     }
 
     public String getStringBonus() {

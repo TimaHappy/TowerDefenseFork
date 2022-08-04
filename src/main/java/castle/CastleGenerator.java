@@ -17,8 +17,6 @@ import mindustry.world.Tile;
 import mindustry.world.Tiles;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.distribution.Sorter.SorterBuild;
-import mindustry.world.blocks.environment.Prop;
-import mindustry.world.blocks.environment.TreeBlock;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import static castle.CastleLogic.isErekir;
@@ -61,8 +59,8 @@ public class CastleGenerator {
         for (int x = 0; x < saved.width; x++) {
             for (int y = 0; y < saved.height; y++) {
                 Tile save = saved.getc(x, y);
-                tiles.set(x, y, new Tile(x, y, save.floor(), save.overlay() != Blocks.spawn ? save.overlay() : Blocks.air, save.block() instanceof Prop || save.block() instanceof TreeBlock ? save.block() : Blocks.air));
-                tiles.set(x, tiles.height - y - 1, new Tile(x, tiles.height - y - 1, save.floor(), save.overlay() != Blocks.spawn ? save.overlay() : Blocks.air, save.block() instanceof Prop || save.block() instanceof TreeBlock ? save.block() : Blocks.air));
+                tiles.set(x, y, new Tile(x, y, save.floor(), save.overlay() != Blocks.spawn ? save.overlay() : Blocks.air, !save.block().breakable ? save.block() : Blocks.air));
+                tiles.set(x, tiles.height - y - 1, new Tile(x, tiles.height - y - 1, save.floor(), save.overlay() != Blocks.spawn ? save.overlay() : Blocks.air, !save.block().breakable ? save.block() : Blocks.air));
             }
         }
 
@@ -73,11 +71,13 @@ public class CastleGenerator {
                 Block defaultCore = isSerpulo() ? Blocks.coreShard : Blocks.coreBastion;
                 Block core = isSerpulo() ? Blocks.coreNucleus : Blocks.coreAcropolis;
 
-                tiles.getc(tile.x, tile.y).setNet(defaultCore, Team.sharded, 0);
-                tiles.getc(tile.x, tiles.height - tile.y - 1).setNet(defaultCore, Team.blue, 0);
+                Tile shardedCore = tiles.getc(tile.x, tile.y), blueCore = tiles.getc(tile.x, tiles.height - tile.y - 2 + core.size % 2);
 
-                new BlockRoom(core, Team.sharded, tile.x, tile.y, 5000);
-                new BlockRoom(core, Team.blue, tile.x, tiles.height - tile.y - 2 + core.size % 2, 5000);
+                shardedCore.setNet(defaultCore, Team.sharded, 0);
+                blueCore.setNet(defaultCore, Team.blue, 0);
+
+                new BlockRoom(core, Team.sharded, shardedCore.x, shardedCore.y, 5000);
+                new BlockRoom(core, Team.blue, blueCore.x, blueCore.y, 5000);
             }
 
             if (tile.block() instanceof Turret turret) {
