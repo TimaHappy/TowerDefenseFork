@@ -13,8 +13,8 @@ import mindustry.gen.Player;
 
 import java.util.Locale;
 
-import static castle.CastleLogic.isBreak;
-import static castle.CastleLogic.timer;
+import static castle.CastleUtils.isBreak;
+import static castle.CastleUtils.timer;
 import static castle.Main.findLocale;
 
 public class PlayerData {
@@ -30,12 +30,12 @@ public class PlayerData {
     public boolean hideHud = false;
     public Locale locale;
 
-    public static Seq<PlayerData> datas() {
-        return datas.values().toSeq();
-    }
-
     public PlayerData(Player player) {
         handlePlayerJoin(player);
+    }
+
+    public static Seq<PlayerData> datas() {
+        return datas.values().toSeq();
     }
 
     public void update() {
@@ -43,13 +43,15 @@ public class PlayerData {
 
         if (interval.get(60f)) money += income * getBonus();
 
-        if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
+        if (player.shooting)
+            CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
 
         if (hideHud) return;
         StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
 
         if (getBonus() > 1f) hud.append(Strings.format(" [lightgray](x@)", getStringBonus()));
-        if (Units.getCap(player.team()) <= player.team().data().unitCount) hud.append(Bundle.format("ui.hud.unit-limit", locale, Units.getCap(player.team())));
+        if (Units.getCap(player.team()) <= player.team().data().unitCount)
+            hud.append(Bundle.format("ui.hud.unit-limit", locale, Units.getCap(player.team())));
 
         hud.append(Bundle.format("ui.hud.timer", locale, timer));
         Call.setHudText(player.con, hud.toString());

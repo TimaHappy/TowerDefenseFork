@@ -14,9 +14,9 @@ import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.distribution.Sorter.SorterBuild;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static castle.CastleLogic.isErekir;
-import static castle.CastleLogic.isSerpulo;
 import static castle.CastleRooms.*;
+import static castle.CastleUtils.isErekir;
+import static castle.CastleUtils.isSerpulo;
 import static mindustry.Vars.world;
 
 public class CastleGenerator {
@@ -25,7 +25,7 @@ public class CastleGenerator {
 
     public static void generate() {
         Tiles saved = world.tiles;
-        Tiles tiles = world.resize(world.width(), world.height() * 2 + size * 9 / 2);
+        Tiles tiles = world.resize(world.width(), world.height() * 2 + size * 13 / 2);
 
         for (int x = 0; x < tiles.width; x++) {
             for (int y = saved.height; y < tiles.height - saved.height; y++) {
@@ -49,13 +49,13 @@ public class CastleGenerator {
         for (int x = 0; x < saved.width; x++) {
             for (int y = 0; y < saved.height; y++) {
                 Tile tile = saved.getc(x, y);
-                if (!tile.isCenter()) return;
+                if (!tile.isCenter()) continue;
 
                 int y2 = tiles.height - y - 2 + tile.block().size % 2;
 
                 if (tile.block() instanceof CoreBlock) {
-                    tiles.getc(x, y).setNet(CastleLogic.planet.defaultCore, Team.sharded, 0);
-                    tiles.getc(x, y2).setNet(CastleLogic.planet.defaultCore, Team.blue, 0);
+                    tiles.getc(x, y).setNet(CastleUtils.planet.defaultCore, Team.sharded, 0);
+                    tiles.getc(x, y2).setNet(CastleUtils.planet.defaultCore, Team.blue, 0);
 
                     Block core = isSerpulo() ? Blocks.coreNucleus : Blocks.coreAcropolis;
                     y2 = tiles.height - y - 2 + core.size % 2;
@@ -66,9 +66,9 @@ public class CastleGenerator {
 
                 if (tile.block() instanceof Turret turret) {
                     boolean isErekirTurret = Structs.contains(turret.requirements, stack -> Planets.serpulo.hiddenItems.contains(stack.item));
-                    if (isErekir() && !isErekirTurret || isSerpulo() && isErekirTurret) return;
+                    if (isErekir() && !isErekirTurret || isSerpulo() && isErekirTurret) continue;
 
-                    if (!CastleCosts.turrets.containsKey(turret)) return;
+                    if (!CastleCosts.turrets.containsKey(turret)) continue;
 
                     new TurretRoom(turret, Team.sharded, x, y);
                     new TurretRoom(turret, Team.blue, x, y2);
@@ -76,7 +76,7 @@ public class CastleGenerator {
 
                 if (tile.build instanceof SorterBuild sorter) {
                     Item item = sorter.config();
-                    if (!CastleCosts.items.containsKey(item)) return;
+                    if (!CastleCosts.items.containsKey(item)) continue;
 
                     Block drill = isSerpulo() ? Blocks.laserDrill : Blocks.impactDrill;
                     y2 = tiles.height - y - 2 + drill.size % 2;
@@ -96,6 +96,8 @@ public class CastleGenerator {
     }
 
     public static void generateShop(int shopX, int shopY) {
+        offsetX = offsetY = 0; // Сбрасываем offset, оставшийся от генерации старой карты
+
         CastleCosts.units.each((type, money) -> {
             boolean isErekirUnit = type instanceof ErekirUnitType;
             if (isErekir() && !isErekirUnit || isSerpulo() && isErekirUnit) return;
@@ -104,20 +106,16 @@ public class CastleGenerator {
             new UnitRoom(type, UnitRoom.UnitRoomType.defend, -money.income(), shopX + offsetX * size, shopY + offsetY * size * 2 + size, money.cost());
 
             if (++offsetX % 5 != 0) return;
-            if (offsetY == 0) {
-                offsetX -= 5;
-                ++offsetY;
-            } else offsetY--;
+            if (++offsetY % 3 != 0) offsetX -= 5;
+            else offsetY -= 3;
         });
 
         CastleCosts.effects.each((effect, cost) -> {
             new EffectRoom(effect, shopX + offsetX * size, shopY + offsetY * size * 2, cost);
 
             if (++offsetX % 5 != 0) return;
-            if (offsetY == 0) {
-                offsetX -= 5;
-                ++offsetY;
-            } else offsetY--;
+            if (++offsetY % 3 != 0) offsetX -= 5;
+            else offsetY -= 3;
         });
     }
 }

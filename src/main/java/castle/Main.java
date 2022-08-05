@@ -23,8 +23,8 @@ import mindustry.world.blocks.production.Drill;
 
 import java.util.Locale;
 
-import static castle.CastleLogic.isBreak;
-import static castle.CastleLogic.timer;
+import static castle.CastleUtils.isBreak;
+import static castle.CastleUtils.timer;
 import static mindustry.Vars.*;
 
 public class Main extends Plugin {
@@ -34,6 +34,19 @@ public class Main extends Plugin {
 
     public static final float voteRatio = 0.6f;
     public static final int roundTime = 45 * 60;
+
+    public static Locale findLocale(Player player) {
+        Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(player.locale) || player.locale.startsWith(l.toString()));
+        return locale != null ? locale : Bundle.defaultLocale;
+    }
+
+    public static void bundled(Player player, String key, Object... values) {
+        player.sendMessage(Bundle.format(key, findLocale(player), values));
+    }
+
+    public static void sendToChat(String key, Object... values) {
+        Groups.player.each(player -> bundled(player, key, values));
+    }
 
     @Override
     public void init() {
@@ -48,6 +61,14 @@ public class Main extends Plugin {
 
             return !(action.tile.block() instanceof Turret) && !(action.tile.block() instanceof Drill);
         });
+
+        netServer.assigner = (player, players) -> {
+            Seq<Player> seq = Seq.with(players);
+            int sharded = seq.count(p -> p.team() == Team.sharded);
+            int blue = seq.count(p -> p.team() == Team.blue);
+
+            return sharded > blue ? Team.blue : Team.sharded;
+        };
 
         Events.on(PlayerJoin.class, event -> {
             if (PlayerData.datas.containsKey(event.player.uuid())) {
@@ -80,7 +101,8 @@ public class Main extends Plugin {
         });
 
         Events.on(PlayEvent.class, event -> {
-            CastleLogic.timer = roundTime;
+            CastleUtils.timer = roundTime;
+            CastleUtils.applyRules(state.rules);
             Groups.player.each(player -> PlayerData.datas.put(player.uuid(), new PlayerData(player)));
         });
 
@@ -128,18 +150,5 @@ public class Main extends Plugin {
             votesRtv.clear();
             Events.fire(new GameOverEvent(Team.derelict));
         });
-    }
-
-    public static Locale findLocale(Player player) {
-        Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(player.locale) || player.locale.startsWith(l.toString()));
-        return locale != null ? locale : Bundle.defaultLocale;
-    }
-
-    public static void bundled(Player player, String key, Object... values) {
-        player.sendMessage(Bundle.format(key, findLocale(player), values));
-    }
-
-    public static void sendToChat(String key, Object... values) {
-        Groups.player.each(player -> bundled(player, key, values));
     }
 }

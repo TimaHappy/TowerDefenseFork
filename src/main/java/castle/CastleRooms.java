@@ -32,10 +32,9 @@ import static mindustry.Vars.*;
 
 public class CastleRooms {
 
-    public static Seq<Room> rooms = new Seq<>();
-
     public static final int size = 10;
     public static final Seq<Tile> shardedSpawns = new Seq<>(), blueSpawns = new Seq<>();
+    public static Seq<Room> rooms = new Seq<>();
 
     public static class Room implements Position {
         public int x;
@@ -100,10 +99,11 @@ public class CastleRooms {
         }
 
         public void spawn() {
-            for (int x = startx; x <= endx; x++) for (int y = starty; y <= endy; y++) {
-                Block floor = x == startx || y == starty || x == endx || y == endy ? Blocks.metalFloor5 : Blocks.metalFloor;
-                world.tiles.getc(x, y).setFloor(floor.asFloor());
-            }
+            for (int x = startx; x <= endx; x++)
+                for (int y = starty; y <= endy; y++) {
+                    Block floor = x == startx || y == starty || x == endx || y == endy ? Blocks.metalFloor5 : Blocks.metalFloor;
+                    world.tiles.getc(x, y).setFloor(floor.asFloor());
+                }
         }
     }
 
@@ -210,13 +210,8 @@ public class CastleRooms {
     }
 
     public static class UnitRoom extends Room {
-        public enum UnitRoomType {
-            attack, defend
-        }
-
         public UnitType unitType;
         public UnitRoomType roomType;
-
         public int income;
 
         public UnitRoom(UnitType unitType, UnitRoomType roomType, int income, int x, int y, int cost) {
@@ -254,7 +249,11 @@ public class CastleRooms {
         }
 
         public void spawnUnit(UnitType type, Team team, float x, float y) {
+            // TODO
+        }
 
+        public enum UnitRoomType {
+            attack, defend
         }
     }
 
