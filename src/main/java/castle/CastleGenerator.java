@@ -3,7 +3,6 @@ package castle;
 import arc.util.Structs;
 import castle.components.CastleCosts;
 import mindustry.content.Blocks;
-import mindustry.content.Items;
 import mindustry.content.Planets;
 import mindustry.game.Team;
 import mindustry.type.Item;
@@ -36,49 +35,62 @@ public class CastleGenerator {
 
         for (int x = 0; x < saved.width; x++) {
             for (int y = 0; y < saved.height; y++) {
-                Tile save = saved.getc(x, y);
-                tiles.set(x, y, new Tile(x, y, save.floor(), save.overlay() != Blocks.spawn ? save.overlay() : Blocks.air, !save.block().breakable ? save.block() : Blocks.air));
-                tiles.set(x, tiles.height - y - 1, new Tile(x, tiles.height - y - 1, save.floor(), save.overlay() != Blocks.spawn ? save.overlay() : Blocks.air, !save.block().breakable ? save.block() : Blocks.air));
+                Tile tile = saved.getc(x, y);
+
+                Block floor = tile.floor();
+                Block overlay = tile.overlay().needsSurface ? tile.overlay() : Blocks.air;
+                Block wall = !tile.block().hasBuilding() && tile.isCenter() ? tile.block() : Blocks.air;
+
+                tiles.set(x, y, new Tile(x, y, floor, overlay, wall));
+                tiles.set(x, tiles.height - y - 1, new Tile(x, tiles.height - y - 1, floor, overlay, wall));
             }
         }
 
-        saved.eachTile(tile -> {
-            if (!tile.isCenter()) return;
+        for (int x = 0; x < saved.width; x++) {
+            for (int y = 0; y < saved.height; y++) {
+                Tile tile = saved.getc(x, y);
+                if (!tile.isCenter()) return;
 
-            if (tile.block() instanceof CoreBlock) {
-                Block defaultCore = isSerpulo() ? Blocks.coreShard : Blocks.coreBastion;
-                Block core = isSerpulo() ? Blocks.coreNucleus : Blocks.coreAcropolis;
+                int y2 = tiles.height - y - 2 + tile.block().size % 2;
 
-                Tile shardedCore = tiles.getc(tile.x, tile.y), blueCore = tiles.getc(tile.x, tiles.height - tile.y - 2 + core.size % 2);
+                if (tile.block() instanceof CoreBlock) {
+                    tiles.getc(x, y).setNet(CastleLogic.planet.defaultCore, Team.sharded, 0);
+                    tiles.getc(x, y2).setNet(CastleLogic.planet.defaultCore, Team.blue, 0);
 
-                shardedCore.setNet(defaultCore, Team.sharded, 0);
-                blueCore.setNet(defaultCore, Team.blue, 0);
+                    Block core = isSerpulo() ? Blocks.coreNucleus : Blocks.coreAcropolis;
+                    y2 = tiles.height - y - 2 + core.size % 2;
 
-                new BlockRoom(core, Team.sharded, shardedCore.x, shardedCore.y, 5000);
-                new BlockRoom(core, Team.blue, blueCore.x, blueCore.y, 5000);
+                    new BlockRoom(core, Team.sharded, x, y, 5000);
+                    new BlockRoom(core, Team.blue, x, y2, 5000);
+                }
+
+                if (tile.block() instanceof Turret turret) {
+                    boolean isErekirTurret = Structs.contains(turret.requirements, stack -> Planets.serpulo.hiddenItems.contains(stack.item));
+                    if (isErekir() && !isErekirTurret || isSerpulo() && isErekirTurret) return;
+
+                    if (!CastleCosts.turrets.containsKey(turret)) return;
+
+                    new TurretRoom(turret, Team.sharded, x, y);
+                    new TurretRoom(turret, Team.blue, x, y2);
+                }
+
+                if (tile.build instanceof SorterBuild sorter) {
+                    Item item = sorter.config();
+                    if (!CastleCosts.items.containsKey(item)) return;
+
+                    Block drill = isSerpulo() ? Blocks.laserDrill : Blocks.impactDrill;
+                    y2 = tiles.height - y - 2 + drill.size % 2;
+
+                    new MinerRoom(drill, item, Team.sharded, x, y);
+                    new MinerRoom(drill, item, Team.blue, x, y2);
+                }
+
+                if (tile.overlay() == Blocks.spawn) {
+                    shardedSpawns.add(tiles.getc(x, y));
+                    blueSpawns.add(tiles.getc(x, y2));
+                }
             }
-
-            if (tile.block() instanceof Turret turret) {
-                boolean isErekirTurret = Structs.contains(turret.requirements, e -> Planets.serpulo.hiddenItems.contains(e.item));
-                if (isErekir() && !isErekirTurret || isSerpulo() && isErekirTurret) return;
-
-                new TurretRoom(turret, Team.sharded, tile.x, tile.y);
-                new TurretRoom(turret, Team.blue, tile.x, tiles.height - tile.y - 2 + turret.size % 2);
-            }
-
-            if (tile.build instanceof SorterBuild sorterBuild) {
-                Item item = sorterBuild.config();
-                if (!CastleCosts.items.containsKey(item)) return;
-
-                new MinerRoom(item, Team.sharded, tile.x, tile.y);
-                new MinerRoom(item, Team.blue, tile.x, tiles.height - tile.y - 1);
-            }
-
-            if (tile.overlay() == Blocks.spawn) {
-                shardedSpawns.add(tiles.getc(tile.x, tile.y));
-                blueSpawns.add(tiles.getc(tile.x, tiles.height - tile.y - 1));
-            }
-        });
+        }
 
         generateShop(8, saved.height + 7);
     }

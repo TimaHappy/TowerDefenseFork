@@ -190,8 +190,8 @@ public class CastleRooms {
         public int amount;
         public Interval interval = new Interval();
 
-        public MinerRoom(Item item, Team team, int x, int y) {
-            super(Blocks.laserDrill, team, x, y, CastleCosts.items.get(item));
+        public MinerRoom(Block drill, Item item, Team team, int x, int y) {
+            super(drill, team, x, y, CastleCosts.items.get(item));
 
             this.item = item;
             this.amount = (int) (300f - item.cost * 150f);

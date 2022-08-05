@@ -14,7 +14,7 @@ sourceSets.main {
 }
 
 ext {
-    mindustryVersion = 'v136'
+    mindustryVersion = 'v137'
 }
 
 dependencies {
