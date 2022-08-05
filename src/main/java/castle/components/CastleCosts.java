@@ -55,23 +55,23 @@ public class CastleCosts {
                 UnitTypes.antumbra, new Moneys(4000,  25, 850),
                 UnitTypes.eclipse,  new Moneys(12000, 60, 1250),
 
-                UnitTypes.stell,    new Moneys(60,    0, 20),
-                UnitTypes.locus,    new Moneys(180,   1,  50),
-                UnitTypes.precept,  new Moneys(550,   4,  150),
-                UnitTypes.vanquish, new Moneys(3000,  20, 750),
+                UnitTypes.stell,    new Moneys(360,    2, 20),
+                UnitTypes.locus,    new Moneys(900,   5,  50),
+                UnitTypes.precept,  new Moneys(2000,   12,  150),
+                UnitTypes.vanquish, new Moneys(5000,  30, 750),
                 UnitTypes.conquer,  new Moneys(10000, 60, 1500),
 
-                UnitTypes.merui,    new Moneys(50,    0,  10),
-                UnitTypes.cleroi,   new Moneys(180,   1,  60),
-                UnitTypes.anthicus, new Moneys(600,   4,  200),
-                UnitTypes.tecta,    new Moneys(3850,  20, 750),
-                UnitTypes.collaris, new Moneys(13000, 50, 1750),
+                UnitTypes.merui,    new Moneys(360,    2,  10),
+                UnitTypes.cleroi,   new Moneys(1000,   4,  60),
+                UnitTypes.anthicus, new Moneys(2500,   12,  200),
+                UnitTypes.tecta,    new Moneys(5700,  30, 750),
+                UnitTypes.collaris, new Moneys(11000, 60, 1750),
 
-                UnitTypes.elude,    new Moneys(60,    0, 20),
-                UnitTypes.avert,    new Moneys(200,   1, 50),
-                UnitTypes.obviate,  new Moneys(700,   4, 150),
-                UnitTypes.quell,    new Moneys(3800,  25, 750),
-                UnitTypes.disrupt,  new Moneys(12000, 60, 1250)
+                UnitTypes.elude,    new Moneys(300,    2, 20),
+                UnitTypes.avert,    new Moneys(900,   4, 50),
+                UnitTypes.obviate,  new Moneys(2500,   10, 150),
+                UnitTypes.quell,    new Moneys(6000,  22, 750),
+                UnitTypes.disrupt,  new Moneys(13000, 45, 1250)
         );
 
         turrets = OrderedMap.of(
@@ -92,7 +92,7 @@ public class CastleCosts {
                 Blocks.spectre,    4000,
                 Blocks.meltdown,   3500,
 
-                Blocks.breach,     1750,
+                Blocks.breach,     900
                 Blocks.diffuse,    2250,
                 Blocks.sublimate,  2500,
                 Blocks.titan,      2000,
