@@ -1,15 +1,11 @@
 package castle;
 
-import arc.util.Log;
 import arc.util.Structs;
 import castle.components.CastleCosts;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.content.Planets;
-import mindustry.core.GameState.State;
 import mindustry.game.Team;
-import mindustry.io.SaveIO;
-import mindustry.maps.Map;
 import mindustry.type.Item;
 import mindustry.type.unit.ErekirUnitType;
 import mindustry.world.Block;
@@ -22,31 +18,13 @@ import mindustry.world.blocks.storage.CoreBlock;
 import static castle.CastleLogic.isErekir;
 import static castle.CastleLogic.isSerpulo;
 import static castle.CastleRooms.*;
-import static mindustry.Vars.state;
 import static mindustry.Vars.world;
 
 public class CastleGenerator {
 
-    public int offsetX, offsetY;
+    public static int offsetX, offsetY;
 
-    public void loadMap(Map map) {
-        try {
-            SaveIO.load(map.file, world.new FilterContext(map) {
-                @Override
-                public void end() {
-                    generate();
-                    world.endMapLoad();
-                }
-            });
-
-            state.map = map;
-        } catch (Throwable e) {
-            state.set(State.menu);
-            Log.err(e);
-        }
-    }
-
-    public void generate() {
+    public static void generate() {
         Tiles saved = world.tiles;
         Tiles tiles = world.resize(world.width(), world.height() * 2 + size * 9 / 2);
 
@@ -90,22 +68,22 @@ public class CastleGenerator {
 
             if (tile.build instanceof SorterBuild sorterBuild) {
                 Item item = sorterBuild.config();
-                if (item == Items.coal || item == Items.scrap || item == Items.sand) return;
+                if (!CastleCosts.items.containsKey(item)) return;
 
                 new MinerRoom(item, Team.sharded, tile.x, tile.y);
                 new MinerRoom(item, Team.blue, tile.x, tiles.height - tile.y - 1);
             }
 
             if (tile.overlay() == Blocks.spawn) {
-                shardedSpawn = tiles.getc(tile.x, tile.y);
-                blueSpawn = tiles.getc(tile.x, tiles.height - tile.y - 1);
+                shardedSpawns.add(tiles.getc(tile.x, tile.y));
+                blueSpawns.add(tiles.getc(tile.x, tiles.height - tile.y - 1));
             }
         });
 
         generateShop(8, saved.height + 7);
     }
 
-    public void generateShop(int shopX, int shopY) {
+    public static void generateShop(int shopX, int shopY) {
         CastleCosts.units.each((type, money) -> {
             boolean isErekirUnit = type instanceof ErekirUnitType;
             if (isErekir() && !isErekirUnit || isSerpulo() && isErekirUnit) return;

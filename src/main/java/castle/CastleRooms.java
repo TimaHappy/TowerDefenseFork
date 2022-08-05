@@ -26,7 +26,6 @@ import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.storage.CoreBlock;
 
-import static castle.CastleLogic.spawnUnit;
 import static castle.Main.findLocale;
 import static castle.components.Bundle.format;
 import static mindustry.Vars.*;
@@ -36,7 +35,7 @@ public class CastleRooms {
     public static Seq<Room> rooms = new Seq<>();
 
     public static final int size = 10;
-    public static Tile shardedSpawn, blueSpawn;
+    public static final Seq<Tile> shardedSpawns = new Seq<>(), blueSpawns = new Seq<>();
 
     public static class Room implements Position {
         public int x;
@@ -241,7 +240,7 @@ public class CastleRooms {
             data.income += income;
 
             if (roomType == UnitRoomType.attack) {
-                Tile tile = data.player.team() == Team.sharded ? blueSpawn : shardedSpawn;
+                Tile tile = data.player.team() == Team.sharded ? blueSpawns.random() : shardedSpawns.random();
                 spawnUnit(unitType, data.player.team(), tile.worldx() + Mathf.range(unitType.hitSize + 40f), tile.worldy() + Mathf.range(unitType.hitSize + 40f));
             } else if (data.player.team().core() != null) {
                 Tile tile = data.player.team().core().tile;
@@ -252,6 +251,10 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && Units.getCap(data.player.team()) > data.player.team().data().unitCount;
+        }
+
+        public void spawnUnit(UnitType type, Team team, float x, float y) {
+
         }
     }
 
