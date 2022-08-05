@@ -92,7 +92,7 @@ public class CastleCosts {
                 Blocks.spectre,    4000,
                 Blocks.meltdown,   3500,
 
-                Blocks.breach,     900
+                Blocks.breach,     900,
                 Blocks.diffuse,    2250,
                 Blocks.sublimate,  2500,
                 Blocks.titan,      2000,
