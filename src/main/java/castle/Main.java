@@ -29,10 +29,8 @@ import static mindustry.Vars.*;
 
 public class Main extends Plugin {
 
-    public static final Seq<String> votesRtv = new Seq<>();
     public static final Interval interval = new Interval();
 
-    public static final float voteRatio = 0.6f;
     public static final int roundTime = 45 * 60;
 
     public static Locale findLocale(Player player) {
@@ -42,10 +40,6 @@ public class Main extends Plugin {
 
     public static void bundled(Player player, String key, Object... values) {
         player.sendMessage(Bundle.format(key, findLocale(player), values));
-    }
-
-    public static void sendToChat(String key, Object... values) {
-        Groups.player.each(player -> bundled(player, key, values));
     }
 
     @Override
@@ -78,12 +72,6 @@ public class Main extends Plugin {
             }
         });
 
-        Events.on(PlayerLeave.class, event -> {
-            if (votesRtv.remove(event.player.uuid())) {
-                sendToChat("commands.rtv.left", event.player.coloredName(), votesRtv.size, Mathf.ceil(voteRatio * Groups.player.size()));
-            }
-        });
-
         Events.on(UnitDestroyEvent.class, event -> {
             int income = CastleCosts.drop(event.unit.type);
             if (income <= 0 || event.unit.spawnedByCore) return;
@@ -102,7 +90,6 @@ public class Main extends Plugin {
 
         Events.on(PlayEvent.class, event -> {
             CastleUtils.timer = roundTime;
-            CastleUtils.applyRules(state.rules);
             Groups.player.each(player -> PlayerData.datas.put(player.uuid(), new PlayerData(player)));
         });
 
@@ -126,29 +113,6 @@ public class Main extends Plugin {
             data.hideHud = !data.hideHud;
             if (data.hideHud) Call.hideHudText(player.con);
             bundled(player, data.hideHud ? "commands.hud.off" : "commands.hud.on");
-        });
-
-        handler.<Player>register("rtv", "Vote to skip the map.", (args, player) -> {
-            if (votesRtv.contains(player.uuid())) {
-                bundled(player, "commands.rtv.already-voted");
-                return;
-            }
-
-            if (isBreak()) {
-                bundled(player, "commands.rtv.can-not-vote");
-                return;
-            }
-
-            votesRtv.add(player.uuid());
-            int current = votesRtv.size;
-            int required = Mathf.ceil(voteRatio * Groups.player.size());
-            sendToChat("commands.rtv.vote", player.coloredName(), current, required);
-
-            if (current < required) return;
-
-            sendToChat("commands.rtv.passed");
-            votesRtv.clear();
-            Events.fire(new GameOverEvent(Team.derelict));
         });
     }
 }

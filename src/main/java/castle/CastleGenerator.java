@@ -1,5 +1,6 @@
 package castle;
 
+import arc.struct.Seq;
 import arc.util.Structs;
 import castle.components.CastleCosts;
 import mindustry.content.Blocks;
@@ -86,8 +87,8 @@ public class CastleGenerator {
                 }
 
                 if (tile.overlay() == Blocks.spawn) {
-                    shardedSpawns.add(tiles.getc(x, y));
-                    blueSpawns.add(tiles.getc(x, y2));
+                    spawns.get(Team.sharded, Seq::new).add(tiles.getc(x, y2));
+                    spawns.get(Team.blue, Seq::new).add(tiles.getc(x, y));
                 }
             }
         }

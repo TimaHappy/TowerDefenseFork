@@ -49,7 +49,7 @@ public class PlayerData {
         if (hideHud) return;
         StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
 
-        if (getBonus() > 1f) hud.append(Strings.format(" [lightgray](x@)", getStringBonus()));
+        if (getBonus() > 1f) hud.append(Strings.format(" [lightgray](x@)", Strings.autoFixed(getBonus(), 4)));
         if (Units.getCap(player.team()) <= player.team().data().unitCount)
             hud.append(Bundle.format("ui.hud.unit-limit", locale, Units.getCap(player.team())));
 
@@ -61,14 +61,10 @@ public class PlayerData {
         this.player = player;
         this.locale = findLocale(player);
         this.interval = new Interval();
+        this.interval.get(60f); // To prevent infinite income
     }
 
     public float getBonus() {
         return Mathf.clamp((float) Groups.player.size() / Groups.player.count(p -> p.team() == player.team()) / 2f, 1f, 5f);
-    }
-
-    public String getStringBonus() {
-        String bonus = String.valueOf(getBonus());
-        return bonus.substring(0, Math.min(4, bonus.length()));
     }
 }

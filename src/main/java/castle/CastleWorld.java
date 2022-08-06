@@ -8,10 +8,11 @@ import mindustry.game.Rules;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 
-import static mindustry.Vars.content;
 import static mindustry.Vars.state;
 
 public class CastleWorld extends World {
+
+    public Map map;
 
     @Override
     public void loadMap(Map map, Rules rules) {
@@ -20,8 +21,7 @@ public class CastleWorld extends World {
 
     @Override
     public void loadMap(Map map) {
-        Rules rules = map.applyRules(Gamemode.pvp);
-        CastleUtils.planet = content.planets().find(planet -> planet.accessible && (planet.defaultEnv == rules.env || planet.hiddenItems.asSet().equals(rules.hiddenBuildItems)));
+        CastleUtils.checkPlanet(this.map = map);
 
         try {
             SaveIO.load(map.file, context);
@@ -34,7 +34,8 @@ public class CastleWorld extends World {
     @Override
     public void endMapLoad() {
         CastleGenerator.generate();
-        CastleUtils.applyRules(state.rules);
+        state.map = map;
+        state.rules = CastleUtils.applyRules(map.applyRules(Gamemode.pvp));
         super.endMapLoad();
     }
 }

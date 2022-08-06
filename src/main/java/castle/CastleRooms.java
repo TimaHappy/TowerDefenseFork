@@ -2,10 +2,9 @@ package castle;
 
 import arc.math.Mathf;
 import arc.math.geom.Position;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
-import arc.util.Interval;
-import arc.util.Strings;
-import arc.util.Time;
+import arc.util.*;
 import castle.components.CastleCosts;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
@@ -13,10 +12,7 @@ import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.entities.Units;
 import mindustry.game.Team;
-import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Iconc;
-import mindustry.gen.WorldLabel;
+import mindustry.gen.*;
 import mindustry.type.Item;
 import mindustry.type.Liquid;
 import mindustry.type.StatusEffect;
@@ -33,7 +29,7 @@ import static mindustry.Vars.*;
 public class CastleRooms {
 
     public static final int size = 10;
-    public static final Seq<Tile> shardedSpawns = new Seq<>(), blueSpawns = new Seq<>();
+    public static final ObjectMap<Team, Seq<Tile>> spawns = new ObjectMap<>();
     public static Seq<Room> rooms = new Seq<>();
 
     public static class Room implements Position {
@@ -64,7 +60,7 @@ public class CastleRooms {
 
             this.cost = cost;
             this.size = size;
-            this.offset = size % 2 == 0 ? 0f : 4f;
+            this.offset = size % 2 * tilesize / 2f;
             this.tile = world.tile(x, y);
 
             this.label.set(getX(), getY());
@@ -157,30 +153,27 @@ public class CastleRooms {
 
             Item item = content.items().find(i -> block.consumesItem(i));
             if (item != null) {
-                Time.run(++timeOffset * 60f, () -> {
+                Timer.schedule(() -> {
                     source.setNet(Blocks.itemSource, team, 0);
                     source.build.configure(item);
                     source.build.health(Float.MAX_VALUE);
-                });
-
-                Time.run(++timeOffset * 60f, () -> {
-                    Call.effect(Fx.mineHuge, source.worldx(), source.worldy(), 0, team.color);
-                    source.removeNet();
-                });
+                }, ++timeOffset);
             }
 
             Liquid liquid = content.liquids().find(l -> block.consumesLiquid(l));
             if (liquid != null) {
-                Time.run(++timeOffset * 60f, () -> {
+                Timer.schedule(() -> {
                     source.setNet(Blocks.liquidSource, team, 0);
                     source.build.configure(liquid);
                     source.build.health(Float.MAX_VALUE);
-                });
+                }, ++timeOffset);
+            }
 
-                Time.run(++timeOffset * 60f, () -> {
+            if (item != null || liquid != null) {
+                Timer.schedule(() -> {
                     Call.effect(Fx.mineHuge, source.worldx(), source.worldy(), 0, team.color);
                     source.removeNet();
-                });
+                }, ++timeOffset);
             }
         }
     }
@@ -210,21 +203,21 @@ public class CastleRooms {
     }
 
     public static class UnitRoom extends Room {
-        public UnitType unitType;
+        public UnitType type;
         public UnitRoomType roomType;
         public int income;
 
-        public UnitRoom(UnitType unitType, UnitRoomType roomType, int income, int x, int y, int cost) {
+        public UnitRoom(UnitType type, UnitRoomType roomType, int income, int x, int y, int cost) {
             super(x, y, cost, 4);
 
-            this.unitType = unitType;
+            this.type = type;
             this.roomType = roomType;
             this.income = income;
 
             this.label.set(getX(), getY() + 12f);
             this.label.fontSize(2.25f);
             this.label.text(" ".repeat(Math.max(0, (String.valueOf(income).length() + String.valueOf(cost).length() + 2) / 2)) +
-                    CastleIcons.get(unitType.name) + (roomType == UnitRoomType.attack ? " [accent]\uE865" : " [scarlet]\uE84D") +
+                    CastleIcons.get(type.name) + (roomType == UnitRoomType.attack ? " [accent]\uE865" : " [scarlet]\uE84D") +
                     "\n[gray]" + cost +
                     "\n[white]" + Iconc.blockPlastaniumCompressor + " : " + (income < 0 ? "[crimson]" : income > 0 ? "[lime]+" : "[gray]") + income);
         }
@@ -234,22 +227,20 @@ public class CastleRooms {
             super.buy(data);
             data.income += income;
 
+            Tmp.v1.rnd(type.hitSize + 40f);
+
             if (roomType == UnitRoomType.attack) {
-                Tile tile = data.player.team() == Team.sharded ? blueSpawns.random() : shardedSpawns.random();
-                spawnUnit(unitType, data.player.team(), tile.worldx() + Mathf.range(unitType.hitSize + 40f), tile.worldy() + Mathf.range(unitType.hitSize + 40f));
-            } else if (data.player.team().core() != null) {
-                Tile tile = data.player.team().core().tile;
-                spawnUnit(unitType, data.player.team(), tile.worldx() + unitType.hitSize + 40f, tile.worldy() + Mathf.range(unitType.hitSize + 40f));
+                Tile spawn = spawns.get(data.player.team()).random();
+                type.spawn(data.player.team(), spawn.worldx() + Tmp.v1.x, spawn.worldy() + Tmp.v1.y);
+            } else if (data.player.core() != null) {
+                Building core = data.player.core();
+                type.spawn(data.player.team(), core.x + 40f, core.y + Tmp.v1.y);
             }
         }
 
         @Override
         public boolean canBuy(PlayerData data) {
             return super.canBuy(data) && Units.getCap(data.player.team()) > data.player.team().data().unitCount;
-        }
-
-        public void spawnUnit(UnitType type, Team team, float x, float y) {
-            // TODO
         }
 
         public enum UnitRoomType {
@@ -274,7 +265,7 @@ public class CastleRooms {
         @Override
         public void buy(PlayerData data) {
             super.buy(data);
-            Groups.unit.each(unit -> unit.team == data.player.team(), unit -> unit.apply(effect, Float.POSITIVE_INFINITY));
+            data.player.team().data().units.each(unit -> unit.apply(effect, Float.POSITIVE_INFINITY));
         }
 
         @Override
