@@ -36,8 +36,7 @@ public class PlayerData {
     public void update() {
         if (!player.con.isConnected()) return;
 
-        if (player.shooting)
-            CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
+        if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
 
         StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
 
@@ -53,7 +52,6 @@ public class PlayerData {
 
     public void updateMoney() {
         if (!player.con.isConnected()) return;
-
         money += income * getBonus();
     }
 

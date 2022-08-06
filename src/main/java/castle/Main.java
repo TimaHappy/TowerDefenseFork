@@ -20,6 +20,7 @@ import mindustry.world.blocks.production.Drill;
 
 import java.util.Locale;
 
+import static arc.Core.*;
 import static castle.CastleUtils.isBreak;
 import static castle.CastleUtils.timer;
 import static mindustry.Vars.*;
@@ -64,13 +65,13 @@ public class Main extends Plugin {
 
         Events.on(ResetEvent.class, event -> {
             CastleRooms.rooms.clear();
-            //PlayerData.datas.clear();
+            // PlayerData.datas.clear();
         });
 
-        Events.on(WorldLoadEvent.class, event -> {
+        Events.on(WorldLoadEvent.class, event -> app.post(() -> {
             CastleUtils.timer = roundTime;
             CastleUtils.applyRules(state.rules);
-        });
+        }));
 
         Events.run(Trigger.update, () -> {
             if (isBreak() || state.serverPaused) return;
