@@ -157,7 +157,7 @@ public class CastleRooms {
                     source.setNet(Blocks.itemSource, team, 0);
                     source.build.configure(item);
                     source.build.health(Float.MAX_VALUE);
-                }, ++timeOffset);
+                }, timeOffset++);
             }
 
             Liquid liquid = content.liquids().find(l -> block.consumesLiquid(l));
@@ -166,14 +166,14 @@ public class CastleRooms {
                     source.setNet(Blocks.liquidSource, team, 0);
                     source.build.configure(liquid);
                     source.build.health(Float.MAX_VALUE);
-                }, ++timeOffset);
+                }, timeOffset++);
             }
 
             if (item != null || liquid != null) {
                 Timer.schedule(() -> {
                     Call.effect(Fx.mineHuge, source.worldx(), source.worldy(), 0, team.color);
                     source.removeNet();
-                }, ++timeOffset);
+                }, timeOffset);
             }
         }
     }

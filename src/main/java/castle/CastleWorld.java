@@ -12,8 +12,6 @@ import static mindustry.Vars.state;
 
 public class CastleWorld extends World {
 
-    public Map map;
-
     @Override
     public void loadMap(Map map, Rules rules) {
         loadMap(map);
@@ -21,10 +19,11 @@ public class CastleWorld extends World {
 
     @Override
     public void loadMap(Map map) {
-        CastleUtils.checkPlanet(this.map = map);
+        CastleUtils.checkPlanet(map);
 
         try {
             SaveIO.load(map.file, context);
+            state.map = map;
         } catch (Exception e) {
             state.set(State.menu);
             Log.err(e);
@@ -34,8 +33,6 @@ public class CastleWorld extends World {
     @Override
     public void endMapLoad() {
         CastleGenerator.generate();
-        state.map = map;
-        state.rules = CastleUtils.applyRules(map.applyRules(Gamemode.pvp));
         super.endMapLoad();
     }
 }

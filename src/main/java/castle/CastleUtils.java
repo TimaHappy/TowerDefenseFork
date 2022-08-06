@@ -23,7 +23,7 @@ public class CastleUtils {
         planet = content.planets().find(planet -> planet.accessible && (planet.defaultEnv == rules.env || planet.hiddenItems.asSet().equals(rules.hiddenBuildItems)));
     }
 
-    public static Rules applyRules(Rules rules) {
+    public static void applyRules(Rules rules) {
         //rules.pvp = true;
 
         rules.unitCap = 500;
@@ -44,10 +44,6 @@ public class CastleUtils {
         rules.teams.get(Team.blue).cheat = true;
 
         rules.bannedBlocks.addAll(content.blocks().select(block -> block instanceof CoreBlock || block instanceof UnitFactory || block.group == BlockGroup.turrets || block.group == BlockGroup.drills || block.group == BlockGroup.logic));
-
-        planet.ruleSetter.get(rules);
-
-        return rules;
     }
 
     public static boolean isBreak() {
