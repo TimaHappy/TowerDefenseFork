@@ -28,11 +28,9 @@ public class CastleGenerator {
         Tiles saved = world.tiles;
         Tiles tiles = world.resize(world.width(), world.height() * 2 + size * 13 / 2);
 
-        for (int x = 0; x < tiles.width; x++) {
-            for (int y = saved.height; y < tiles.height - saved.height; y++) {
+        for (int x = 0; x < tiles.width; x++)
+            for (int y = saved.height; y < tiles.height - saved.height; y++)
                 tiles.set(x, y, new Tile(x, y, Blocks.space, Blocks.air, Blocks.air));
-            }
-        }
 
         for (int x = 0; x < saved.width; x++) {
             for (int y = 0; y < saved.height; y++) {
