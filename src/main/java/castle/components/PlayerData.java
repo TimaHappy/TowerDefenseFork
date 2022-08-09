@@ -1,7 +1,6 @@
 package castle.components;
 
 import arc.math.Mathf;
-import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Strings;
 import castle.CastleRooms;
@@ -16,7 +15,7 @@ import static castle.Main.findLocale;
 
 public class PlayerData {
 
-    public static ObjectMap<String, PlayerData> datas = new ObjectMap<>();
+    public static final Seq<PlayerData> data = new Seq<>();
 
     public Player player;
 
@@ -26,11 +25,11 @@ public class PlayerData {
     public Locale locale;
 
     public PlayerData(Player player) {
-        handlePlayerJoin(player);
+        this.handlePlayerJoin(player);
     }
 
-    public static Seq<PlayerData> datas() {
-        return datas.values().toSeq();
+    public static PlayerData getData(String uuid) {
+        return data.find(data -> data.player.uuid().equals(uuid));
     }
 
     public void update() {
@@ -53,7 +52,6 @@ public class PlayerData {
 
     public void updateMoney() {
         if (!player.con.isConnected()) return;
-
         money += income * getBonus();
     }
 
@@ -62,7 +60,12 @@ public class PlayerData {
         this.locale = findLocale(player);
     }
 
+    public void reset() {
+        this.money = 0;
+        this.income = 15;
+    }
+
     public float getBonus() {
-        return Mathf.clamp((float) datas().size / datas().count(data -> data.player.team() == player.team()) / 2f, 1f, 5f);
+        return Mathf.clamp((float) data.size / data.count(data -> data.player.team() == player.team()) / 2f, 1f, 5f);
     }
 }

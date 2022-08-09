@@ -3,7 +3,6 @@ package castle;
 import arc.util.Log;
 import mindustry.core.GameState.State;
 import mindustry.core.World;
-import mindustry.game.Gamemode;
 import mindustry.game.Rules;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;

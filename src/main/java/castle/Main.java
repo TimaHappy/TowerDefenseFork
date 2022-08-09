@@ -44,17 +44,18 @@ public class Main extends Plugin {
         netServer.admins.addActionFilter(action -> action.tile == null || !(action.tile.block() instanceof Turret) && !(action.tile.block() instanceof Drill));
 
         Events.on(PlayerJoin.class, event -> {
-            if (PlayerData.datas.containsKey(event.player.uuid())) {
-                PlayerData.datas.get(event.player.uuid()).handlePlayerJoin(event.player);
+            PlayerData data = PlayerData.getData(event.player.uuid());
+            if (data != null) {
+                data.handlePlayerJoin(event.player);
             } else {
-                PlayerData.datas.put(event.player.uuid(), new PlayerData(event.player));
+                PlayerData.data.add(new PlayerData(event.player));
             }
         });
 
         Events.on(UnitDestroyEvent.class, event -> {
             int income = CastleCosts.drop(event.unit.type);
             if (income <= 0 || event.unit.spawnedByCore) return;
-            PlayerData.datas().each(data -> {
+            PlayerData.data.each(data -> {
                 if (data.player.team() != event.unit.team) {
                     data.money += income;
                     Call.label(data.player.con, "[lime]+[accent] " + income, 2f, event.unit.x, event.unit.y);
@@ -64,7 +65,8 @@ public class Main extends Plugin {
 
         Events.on(ResetEvent.class, event -> {
             CastleRooms.rooms.clear();
-            //PlayerData.datas.clear();
+            PlayerData.data.filter(data -> data.player.con.isConnected());
+            PlayerData.data.each(PlayerData::reset);
         });
 
         Events.on(WorldLoadEvent.class, event -> {
@@ -77,14 +79,14 @@ public class Main extends Plugin {
 
             Groups.unit.each(unit -> unit.isFlying() && !unit.spawnedByCore && (unit.floorOn() == null || unit.floorOn() == Blocks.space), Call::unitDespawn);
 
-            PlayerData.datas().each(PlayerData::update);
+            PlayerData.data.each(PlayerData::update);
             CastleRooms.rooms.each(Room::update);
         });
 
         Timer.schedule(() -> {
             if (isBreak() || state.serverPaused) return;
 
-            PlayerData.datas().each(PlayerData::updateMoney);
+            PlayerData.data.each(PlayerData::updateMoney);
 
             if (--timer <= 0) Events.fire(new GameOverEvent(Team.derelict));
         }, 0f, 1f);
