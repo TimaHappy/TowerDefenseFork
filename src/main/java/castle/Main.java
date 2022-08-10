@@ -15,6 +15,7 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
+import mindustry.type.UnitType;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.production.Drill;
 
@@ -35,6 +36,11 @@ public class Main extends Plugin {
 
     @Override
     public void init() {
+        for (UnitType unit : content.units()) {
+            unit.controller = u -> !unit.playerControllable || !u.team.rules().rtsAi
+                    ? unit.aiController.get() : new CastleCommandAI();
+        }
+
         Bundle.load();
         CastleCosts.load();
         CastleIcons.load();
