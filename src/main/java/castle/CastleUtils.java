@@ -1,9 +1,11 @@
 package castle;
 
+import arc.util.OS;
 import mindustry.content.Planets;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
 import mindustry.game.Team;
+import mindustry.gen.Teamc;
 import mindustry.maps.Map;
 import mindustry.type.Planet;
 import mindustry.world.blocks.storage.CoreBlock;
@@ -24,17 +26,16 @@ public class CastleUtils {
     }
 
     public static void applyRules(Rules rules) {
-        // rules.pvp = true;
+        if (!OS.isWindows) rules.pvp = true;
 
         rules.unitCap = 500;
         rules.unitCapVariable = false;
 
-        rules.dropZoneRadius = 10f;
+        rules.dropZoneRadius = 80f;
         rules.showSpawns = true;
 
         rules.polygonCoreProtection = true;
         rules.buildSpeedMultiplier = 0.5f;
-        rules.buildCostMultiplier = 2.5f;
 
         rules.waves = false;
         rules.waveTimer = false;
@@ -44,6 +45,18 @@ public class CastleUtils {
         rules.teams.get(Team.blue).cheat = true;
 
         rules.bannedBlocks.addAll(content.blocks().select(block -> block instanceof CoreBlock || block instanceof UnitFactory || block.group == BlockGroup.turrets || block.group == BlockGroup.drills || block.group == BlockGroup.logic));
+    }
+
+    public static int countUnits(Team team) {
+        return team.data().units.count(unit -> unit.type.useUnitCap);
+    }
+
+    public static boolean onEnemySide(Teamc teamc) {
+        return switch (teamc.team().name) {
+            case "sharded" -> teamc.y() > world.unitHeight() / 2f;
+            case "blue" -> teamc.y() < world.unitHeight() / 2f;
+            default -> throw new IllegalStateException();
+        };
     }
 
     public static boolean isBreak() {

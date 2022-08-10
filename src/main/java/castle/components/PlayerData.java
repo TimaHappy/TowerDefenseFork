@@ -1,8 +1,6 @@
 package castle.components;
 
-import arc.math.Mathf;
 import arc.struct.Seq;
-import arc.util.Strings;
 import castle.CastleRooms;
 import mindustry.entities.Units;
 import mindustry.gen.Call;
@@ -10,12 +8,12 @@ import mindustry.gen.Player;
 
 import java.util.Locale;
 
-import static castle.CastleUtils.timer;
+import static castle.CastleUtils.*;
 import static castle.Main.findLocale;
 
 public class PlayerData {
 
-    public static final Seq<PlayerData> data = new Seq<>();
+    public static final Seq<PlayerData> datas = new Seq<>();
 
     public Player player;
 
@@ -29,7 +27,7 @@ public class PlayerData {
     }
 
     public static PlayerData getData(String uuid) {
-        return data.find(data -> data.player.uuid().equals(uuid));
+        return datas.find(data -> data.player.uuid().equals(uuid));
     }
 
     public void update() {
@@ -37,21 +35,12 @@ public class PlayerData {
 
         if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
 
-        StringBuilder hud = new StringBuilder(Bundle.format("ui.hud.balance", locale, money, income));
-
-        if (getBonus() > 1f)
-            hud.append(Strings.format(" [lightgray](x@)", Strings.autoFixed(getBonus(), 4)));
-
-        if (Units.getCap(player.team()) <= player.team().data().unitCount)
-            hud.append(Bundle.format("ui.hud.unit-limit", locale, Units.getCap(player.team())));
-
-        hud.append(Bundle.format("ui.hud.timer", locale, timer));
-        Call.setHudText(player.con, hud.toString());
+        Call.setHudText(player.con, Bundle.format("ui.hud", locale, money, income, countUnits(player.team()), Units.getCap(player.team()), timer));
     }
 
     public void updateMoney() {
         if (!player.con.isConnected()) return;
-        money += income * getBonus();
+        money += income;
     }
 
     public void handlePlayerJoin(Player player) {
@@ -62,9 +51,5 @@ public class PlayerData {
     public void reset() {
         this.money = 0;
         this.income = 15;
-    }
-
-    public float getBonus() {
-        return Mathf.clamp((float) data.size / data.count(data -> data.player.team() == player.team()) / 2f, 1f, 5f);
     }
 }

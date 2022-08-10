@@ -1,14 +1,16 @@
 package castle;
 
 import arc.Events;
+import arc.math.Mathf;
+import arc.util.Interval;
 import arc.util.Structs;
-import arc.util.Timer;
 import castle.CastleRooms.Room;
 import castle.components.Bundle;
 import castle.components.CastleCosts;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
 import mindustry.content.Blocks;
+import mindustry.content.Fx;
 import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.gen.Call;
@@ -21,6 +23,7 @@ import mindustry.world.blocks.production.Drill;
 
 import java.util.Locale;
 
+import static arc.Core.app;
 import static castle.CastleUtils.isBreak;
 import static castle.CastleUtils.timer;
 import static mindustry.Vars.*;
@@ -28,6 +31,8 @@ import static mindustry.Vars.*;
 public class Main extends Plugin {
 
     public static final int roundTime = 45 * 60;
+
+    public static final Interval interval = new Interval();
 
     public static Locale findLocale(Player player) {
         Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(player.locale) || player.locale.startsWith(l.toString()));
@@ -37,8 +42,7 @@ public class Main extends Plugin {
     @Override
     public void init() {
         for (UnitType unit : content.units()) {
-            unit.controller = u -> !unit.playerControllable || !u.team.rules().rtsAi
-                    ? unit.aiController.get() : new CastleCommandAI();
+            unit.controller = u -> !unit.playerControllable ? unit.aiController.get() : new CastleCommandAI();
         }
 
         Bundle.load();
@@ -51,17 +55,14 @@ public class Main extends Plugin {
 
         Events.on(PlayerJoin.class, event -> {
             PlayerData data = PlayerData.getData(event.player.uuid());
-            if (data != null) {
-                data.handlePlayerJoin(event.player);
-            } else {
-                PlayerData.data.add(new PlayerData(event.player));
-            }
+            if (data != null) data.handlePlayerJoin(event.player);
+            else PlayerData.datas.add(new PlayerData(event.player));
         });
 
         Events.on(UnitDestroyEvent.class, event -> {
             int income = CastleCosts.drop(event.unit.type);
             if (income <= 0 || event.unit.spawnedByCore) return;
-            PlayerData.data.each(data -> {
+            PlayerData.datas.each(data -> {
                 if (data.player.team() != event.unit.team) {
                     data.money += income;
                     Call.label(data.player.con, "[lime]+[accent] " + income, 2f, event.unit.x, event.unit.y);
@@ -71,13 +72,13 @@ public class Main extends Plugin {
 
         Events.on(ResetEvent.class, event -> {
             CastleRooms.rooms.clear();
-            PlayerData.data.filter(data -> data.player.con.isConnected());
-            PlayerData.data.each(PlayerData::reset);
+            PlayerData.datas.filter(data -> data.player.con.isConnected());
+            PlayerData.datas.each(PlayerData::reset);
         });
 
         Events.on(WorldLoadEvent.class, event -> {
             CastleUtils.timer = roundTime;
-            CastleUtils.applyRules(state.rules);
+            app.post(() -> CastleUtils.applyRules(state.rules));
         });
 
         Events.run(Trigger.update, () -> {
@@ -85,16 +86,21 @@ public class Main extends Plugin {
 
             Groups.unit.each(unit -> unit.isFlying() && !unit.spawnedByCore && (unit.floorOn() == null || unit.floorOn() == Blocks.space), Call::unitDespawn);
 
-            PlayerData.data.each(PlayerData::update);
+            PlayerData.datas.each(PlayerData::update);
             CastleRooms.rooms.each(Room::update);
+
+            if (interval.get(60f)) {
+                PlayerData.datas.each(PlayerData::updateMoney);
+                CastleRooms.spawns.each((team, spawns) -> spawns.each(spawn -> {
+                    for (int deg = 0; deg < 36; deg++) {
+                        float x = spawn.worldx() + Mathf.cosDeg(deg * 10) * state.rules.dropZoneRadius;
+                        float y = spawn.worldy() + Mathf.sinDeg(deg * 10) * state.rules.dropZoneRadius;
+                        Call.effect(Fx.mineSmall, x, y, 0f, team.color);
+                    }
+                }));
+
+                if (--timer <= 0) Events.fire(new GameOverEvent(Team.derelict));
+            }
         });
-
-        Timer.schedule(() -> {
-            if (isBreak() || state.serverPaused) return;
-
-            PlayerData.data.each(PlayerData::updateMoney);
-
-            if (--timer <= 0) Events.fire(new GameOverEvent(Team.derelict));
-        }, 0f, 1f);
     }
 }
