@@ -56,7 +56,7 @@ public class CastleCosts {
                 UnitTypes.eclipse, new Moneys(12000, 60, 1250),
 
                 UnitTypes.stell, new Moneys(330, 2, 100),
-                UnitTypes.locus, new Moneys(900, 12, 250),
+                UnitTypes.locus, new Moneys(900, 4, 250),
                 UnitTypes.precept, new Moneys(2200, 12, 600),
                 UnitTypes.vanquish, new Moneys(5000, 27, 1000),
                 UnitTypes.conquer, new Moneys(10000, 60, 1700),
