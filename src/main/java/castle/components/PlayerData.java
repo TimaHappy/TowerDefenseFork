@@ -8,7 +8,8 @@ import mindustry.gen.Player;
 
 import java.util.Locale;
 
-import static castle.CastleUtils.*;
+import static castle.CastleUtils.countUnits;
+import static castle.CastleUtils.timer;
 import static castle.Main.findLocale;
 
 public class PlayerData {
@@ -17,7 +18,7 @@ public class PlayerData {
 
     public Player player;
 
-    public int money = 0;
+    public int money = 100500;
     public int income = 15;
 
     public Locale locale;
@@ -33,9 +34,11 @@ public class PlayerData {
     public void update() {
         if (!player.con.isConnected()) return;
 
-        if (player.shooting) CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
+        if (player.shooting)
+            CastleRooms.rooms.each(room -> room.check(player.mouseX, player.mouseY) && room.canBuy(this), room -> room.buy(this));
 
-        Call.setHudText(player.con, Bundle.format("ui.hud", locale, money, income, countUnits(player.team()), Units.getCap(player.team()), timer));
+        int units = countUnits(player.team()), unitsLimit = Units.getCap(player.team());
+        Call.setHudText(player.con, Bundle.format("ui.hud", locale, money >= 0 ? "[lime]" : "[scarlet]", money, income >= 0 ? "[lime]" : "[scarlet]", income, units < unitsLimit ? "[lightgray]" : "[scarlet]", units, unitsLimit, timer));
     }
 
     public void updateMoney() {

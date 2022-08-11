@@ -3,7 +3,6 @@ package castle;
 import arc.Events;
 import arc.math.Mathf;
 import arc.util.Interval;
-import arc.util.Structs;
 import castle.CastleRooms.Room;
 import castle.components.Bundle;
 import castle.components.CastleCosts;
@@ -17,13 +16,13 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
+import mindustry.net.Administration.Config;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.production.Drill;
 
 import java.util.Locale;
 
-import static arc.Core.app;
 import static castle.CastleUtils.isBreak;
 import static castle.CastleUtils.timer;
 import static mindustry.Vars.*;
@@ -35,7 +34,7 @@ public class Main extends Plugin {
     public static final Interval interval = new Interval();
 
     public static Locale findLocale(Player player) {
-        Locale locale = Structs.find(Bundle.supportedLocales, l -> l.toString().equals(player.locale) || player.locale.startsWith(l.toString()));
+        Locale locale = Bundle.supportedLocales.find(l -> l.toString().equals(player.locale) || player.locale.startsWith(l.toString()));
         return locale != null ? locale : Bundle.defaultLocale;
     }
 
@@ -76,10 +75,9 @@ public class Main extends Plugin {
             PlayerData.datas.each(PlayerData::reset);
         });
 
-        Events.on(WorldLoadEvent.class, event -> {
-            CastleUtils.timer = roundTime;
-            app.post(() -> CastleUtils.applyRules(state.rules));
-        });
+        Events.on(PlayEvent.class, event -> CastleUtils.applyRules(state.rules));
+
+        Events.on(WorldLoadEvent.class, event -> CastleUtils.timer = roundTime);
 
         Events.run(Trigger.update, () -> {
             if (isBreak() || state.serverPaused) return;
@@ -102,5 +100,7 @@ public class Main extends Plugin {
                 if (--timer <= 0) Events.fire(new GameOverEvent(Team.derelict));
             }
         });
+
+        Config.startCommands.set("host,gameover"); // Теоретически это костыль, but who cares?
     }
 }

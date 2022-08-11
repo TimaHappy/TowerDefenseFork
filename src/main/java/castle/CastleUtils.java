@@ -1,6 +1,5 @@
 package castle;
 
-import arc.util.OS;
 import mindustry.content.Planets;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
@@ -26,10 +25,12 @@ public class CastleUtils {
     }
 
     public static void applyRules(Rules rules) {
-        if (!OS.isWindows) rules.pvp = true;
+        rules.pvp = true;
 
         rules.unitCap = 500;
         rules.unitCapVariable = false;
+
+        rules.canGameOver = true;
 
         rules.dropZoneRadius = 80f;
         rules.showSpawns = true;

@@ -1,11 +1,13 @@
 package castle;
 
-import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Position;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
-import arc.util.*;
+import arc.util.Interval;
+import arc.util.Strings;
+import arc.util.Timer;
+import arc.util.Tmp;
 import castle.components.CastleCosts;
 import castle.components.CastleIcons;
 import castle.components.PlayerData;
@@ -26,6 +28,7 @@ import mindustry.world.blocks.storage.CoreBlock;
 import static castle.CastleUtils.countUnits;
 import static castle.Main.findLocale;
 import static castle.components.Bundle.format;
+import static castle.components.Bundle.get;
 import static mindustry.Vars.*;
 
 public class CastleRooms {
@@ -229,24 +232,27 @@ public class CastleRooms {
             super.buy(data);
             data.income += income;
 
-            Tmp.v1.rnd(Math.min(Mathf.sqr(type.hitSize), state.rules.dropZoneRadius));
+            Tmp.v1.rnd(Math.min(type.hitSize, 48f));
 
             if (roomType == UnitRoomType.attack) {
                 Tile spawn = spawns.get(data.player.team()).random();
                 type.spawn(data.player.team(), spawn.worldx() + Tmp.v1.x, spawn.worldy() + Tmp.v1.y);
-
-                float xx = spawn.worldx() + Tmp.v1.x, yy = spawn.worldy() + Tmp.v1.y;
-
-                Timer.schedule(() -> Call.effect(Fx.freezing, xx, yy, 0f, Color.white), 1f, 1f, 30);
             } else if (data.player.core() != null) {
                 Building core = data.player.core();
-                type.spawn(data.player.team(), core.x + 64f, core.y + Tmp.v1.y);
+                type.spawn(data.player.team(), core.x + 48f, core.y + Tmp.v1.y);
             }
         }
 
         @Override
         public boolean canBuy(PlayerData data) {
-            return super.canBuy(data) && Units.getCap(data.player.team()) > countUnits(data.player.team());
+            if (!super.canBuy(data)) return false;
+
+            if (countUnits(data.player.team()) >= Units.getCap(data.player.team())) {
+                Call.announce(data.player.con, get("rooms.unit.limit", data.locale));
+                return false;
+            }
+
+            return true;
         }
 
         public enum UnitRoomType {
