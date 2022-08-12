@@ -21,6 +21,7 @@ import mindustry.net.Administration.Config;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.production.Drill;
+import mindustry.world.blocks.storage.CoreBlock;
 
 import java.util.Locale;
 
@@ -57,6 +58,12 @@ public class Main extends Plugin {
             PlayerData data = PlayerData.getData(event.player.uuid());
             if (data != null) data.handlePlayerJoin(event.player);
             else PlayerData.datas.add(new PlayerData(event.player));
+        });
+
+        Events.on(BlockDestroyEvent.class, event -> {
+            if (event.tile.block() instanceof CoreBlock && event.tile.team().cores().size <= 1) {
+                Events.fire(new GameOverEvent(event.tile.team() == Team.sharded ? Team.blue : Team.sharded));
+            }
         });
 
         Events.on(UnitDestroyEvent.class, event -> {

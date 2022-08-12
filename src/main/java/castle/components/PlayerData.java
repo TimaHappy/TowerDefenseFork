@@ -18,7 +18,7 @@ public class PlayerData {
 
     public Player player;
 
-    public int money = 100500;
+    public int money = 0;
     public int income = 15;
 
     public Locale locale;

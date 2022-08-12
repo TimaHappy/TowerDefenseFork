@@ -30,9 +30,9 @@ public class CastleUtils {
         rules.unitCap = 500;
         rules.unitCapVariable = false;
 
-        rules.canGameOver = true;
+        rules.canGameOver = false;
 
-        rules.dropZoneRadius = 80f;
+        rules.dropZoneRadius = 60f;
         rules.showSpawns = true;
 
         rules.polygonCoreProtection = true;
