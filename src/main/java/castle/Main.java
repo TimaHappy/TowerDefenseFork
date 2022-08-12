@@ -72,6 +72,7 @@ public class Main extends Plugin {
 
         Events.on(ResetEvent.class, event -> {
             CastleRooms.rooms.clear();
+            CastleRooms.spawns.clear();
             PlayerData.datas.filter(data -> data.player.con.isConnected());
             PlayerData.datas.each(PlayerData::reset);
         });

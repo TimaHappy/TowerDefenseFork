@@ -34,8 +34,8 @@ import static mindustry.Vars.*;
 public class CastleRooms {
 
     public static final int size = 10;
+    public static final Seq<Room> rooms = new Seq<>();
     public static final ObjectMap<Team, Seq<Tile>> spawns = new ObjectMap<>();
-    public static Seq<Room> rooms = new Seq<>();
 
     public static class Room implements Position {
         public int x;
@@ -65,11 +65,12 @@ public class CastleRooms {
 
             this.cost = cost;
             this.size = size;
-            this.offset = size % 2 * tilesize / 2f;
+            this.offset = (size % 2) * tilesize / 2f;
             this.tile = world.tile(x, y);
 
             this.label.set(getX(), getY());
             this.label.fontSize(1.75f);
+            this.label.flags(WorldLabel.flagBackground);
             this.label.flags(WorldLabel.flagOutline);
             this.label.add();
 
