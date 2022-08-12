@@ -221,8 +221,8 @@ public class CastleRooms {
 
             this.label.set(getX(), getY() + 12f);
             this.label.fontSize(2.25f);
-            this.label.text(" ".repeat(Math.max(0, (String.valueOf(income).length() + String.valueOf(cost).length() + 2) / 2)) +
-                    CastleIcons.get(type.name) + (roomType == UnitRoomType.attack ? " [accent]\uE865" : " [scarlet]\uE84D") +
+            this.label.text(" ".repeat((String.valueOf(cost).length() + String.valueOf(income).length() + 2) / 2) +
+                    CastleIcons.get(type.name) + " " + roomType.icon +
                     "\n[gray]" + cost +
                     "\n[white]" + Iconc.blockPlastaniumCompressor + " : " + (income < 0 ? "[crimson]" : income > 0 ? "[lime]+" : "[gray]") + income);
         }
@@ -256,7 +256,13 @@ public class CastleRooms {
         }
 
         public enum UnitRoomType {
-            attack, defend
+            attack("[accent]" + Iconc.modeAttack), defend("[scarlet]" + Iconc.defense);
+
+            public String icon;
+
+            UnitRoomType(String icon) {
+                this.icon = icon;
+            }
         }
     }
 
