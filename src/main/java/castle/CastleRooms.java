@@ -224,7 +224,7 @@ public class CastleRooms {
             this.label.text(" ".repeat((String.valueOf(cost).length() + String.valueOf(income).length() + 2) / 2) +
                     CastleIcons.get(type.name) + " " + roomType.icon +
                     "\n[gray]" + cost +
-                    "\n[white]" + Iconc.blockPlastaniumCompressor + " : " + (income < 0 ? "[crimson]" : income > 0 ? "[lime]+" : "[gray]") + income);
+                    "\n[white]" + Iconc.blockPlastaniumCompressor + " : " + (income > 0 ? "[lime]+" : income == 0 ? "[gray]" : "[crimson]") + income);
         }
 
         @Override
@@ -246,6 +246,11 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             if (!super.canBuy(data)) return false;
+
+            if (income < 0 && data.income + income < 0) {
+                Call.announce(data.player.con, get("rooms.unit.too-low-income", data.locale));
+                return false;
+            }
 
             if (countUnits(data.player.team()) >= Units.getCap(data.player.team())) {
                 Call.announce(data.player.con, get("rooms.unit.limit", data.locale));

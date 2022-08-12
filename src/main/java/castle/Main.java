@@ -1,6 +1,7 @@
 package castle;
 
 import arc.Events;
+import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.util.Interval;
 import castle.CastleRooms.Room;
@@ -82,7 +83,10 @@ public class Main extends Plugin {
         Events.run(Trigger.update, () -> {
             if (isBreak() || state.serverPaused) return;
 
-            Groups.unit.each(unit -> unit.isFlying() && !unit.spawnedByCore && (unit.floorOn() == null || unit.floorOn() == Blocks.space), Call::unitDespawn);
+            Groups.unit.each(unit -> unit.isFlying() && !unit.spawnedByCore && (unit.floorOn() == null || unit.floorOn() == Blocks.space), unit -> {
+                Call.effect(Fx.unitEnvKill, unit.x, unit.y, 0f, Color.scarlet);
+                Call.unitDespawn(unit);
+            });
 
             PlayerData.datas.each(PlayerData::update);
             CastleRooms.rooms.each(Room::update);
