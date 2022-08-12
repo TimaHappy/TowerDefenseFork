@@ -92,15 +92,16 @@ public class CastleCosts {
                 Blocks.spectre, 4000,
                 Blocks.meltdown, 3500,
 
-                Blocks.breach, 900,
-                Blocks.diffuse, 2250,
-                Blocks.sublimate, 2500,
-                Blocks.titan, 2200,
-                Blocks.disperse, 3500,
-                Blocks.afflict, 2300,
-                Blocks.lustre, 4500,
-                Blocks.smite, 5000,
-                Blocks.malign, 15000
+                Blocks.breach, 750,
+                Blocks.diffuse, 1750,
+                Blocks.sublimate, 2000,
+                Blocks.titan, 1900,
+                Blocks.disperse, 3000,
+                Blocks.afflict, 2250,
+                Blocks.lustre, 4000,
+                Blocks.scathe, 4250,
+                Blocks.smite, 4500,
+                Blocks.malign, 12500
         );
 
         items = OrderedMap.of(
