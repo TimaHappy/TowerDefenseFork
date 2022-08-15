@@ -20,7 +20,7 @@ public class CastleCosts {
     public static void load() {
         units = OrderedMap.of(
                 UnitTypes.dagger, new Moneys(60, 0, 15),
-                UnitTypes.mace, new Moneys(170, 2, 50),
+                UnitTypes.mace, new Moneys(170, 1, 50),
                 UnitTypes.fortress, new Moneys(550, 4, 200),
                 UnitTypes.scepter, new Moneys(3000, 20, 750),
                 UnitTypes.reign, new Moneys(10000, 60, 1500),
@@ -31,7 +31,7 @@ public class CastleCosts {
                 UnitTypes.arkyid, new Moneys(4300, 20, 1000),
                 UnitTypes.toxopid, new Moneys(13000, 50, 1750),
 
-                UnitTypes.nova, new Moneys(85, 0, 15),
+                UnitTypes.nova, new Moneys(75, 0, 15),
                 UnitTypes.pulsar, new Moneys(190, 1, 50),
                 UnitTypes.quasar, new Moneys(600, 4, 200),
                 UnitTypes.vela, new Moneys(3800, 22, 750),
@@ -50,12 +50,12 @@ public class CastleCosts {
                 UnitTypes.navanax, new Moneys(13500, 70, 1350),
 
                 UnitTypes.flare, new Moneys(60, 0, 20),
-                UnitTypes.horizon, new Moneys(240, 1, 70),
+                UnitTypes.horizon, new Moneys(200, 1, 70),
                 UnitTypes.zenith, new Moneys(700, 4, 150),
                 UnitTypes.antumbra, new Moneys(4100, 23, 850),
                 UnitTypes.eclipse, new Moneys(12000, 60, 1250),
 
-                UnitTypes.stell, new Moneys(330, 2, 100),
+                UnitTypes.stell, new Moneys(360, 2, 100),
                 UnitTypes.locus, new Moneys(900, 4, 250),
                 UnitTypes.precept, new Moneys(2200, 12, 600),
                 UnitTypes.vanquish, new Moneys(5000, 27, 1000),
