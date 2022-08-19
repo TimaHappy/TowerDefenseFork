@@ -17,7 +17,6 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
-import mindustry.net.Administration.Config;
 import mindustry.type.UnitType;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.production.Drill;
@@ -43,6 +42,7 @@ public class Main extends Plugin {
     @Override
     public void init() {
         for (UnitType unit : content.units()) {
+            unit.payloadCapacity = 0f;
             unit.controller = u -> !unit.playerControllable ? unit.aiController.get() : new CastleCommandAI();
         }
 
@@ -112,7 +112,5 @@ public class Main extends Plugin {
                 if (--timer <= 0) Events.fire(new GameOverEvent(Team.derelict));
             }
         });
-
-        Config.startCommands.set("host,gameover"); // Теоретически это костыль, but who cares?
     }
 }
