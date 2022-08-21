@@ -1,12 +1,7 @@
 package castle.components;
 
-import arc.files.Fi;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
-import arc.struct.StringMap;
-import arc.util.Strings;
-import arc.util.Structs;
-import mindustry.gen.Iconc;
 
 import java.text.MessageFormat;
 import java.util.Locale;
