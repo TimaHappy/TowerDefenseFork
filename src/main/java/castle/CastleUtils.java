@@ -56,7 +56,7 @@ public class CastleUtils {
         return switch (teamc.team().name) {
             case "sharded" -> teamc.y() > world.unitHeight() / 2f;
             case "blue" -> teamc.y() < world.unitHeight() / 2f;
-            default -> throw new IllegalStateException();
+            default -> false; // Если у юнита неверная команда, он не должен никого атаковать
         };
     }
 

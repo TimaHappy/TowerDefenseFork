@@ -17,13 +17,13 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
-import mindustry.type.UnitType;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.production.Drill;
 import mindustry.world.blocks.storage.CoreBlock;
 
 import java.util.Locale;
 
+import static castle.CastleRooms.spawns;
 import static castle.CastleUtils.isBreak;
 import static castle.CastleUtils.timer;
 import static mindustry.Vars.*;
@@ -41,10 +41,7 @@ public class Main extends Plugin {
 
     @Override
     public void init() {
-        for (UnitType unit : content.units()) {
-            unit.payloadCapacity = 0f;
-            unit.controller = u -> !unit.playerControllable ? unit.aiController.get() : new CastleCommandAI();
-        }
+        content.units().each(unit -> unit.playerControllable, unit -> unit.controller = u -> new CastleCommandAI());
 
         Bundle.load();
         CastleCosts.load();
@@ -52,7 +49,13 @@ public class Main extends Plugin {
 
         world = new CastleWorld();
 
-        netServer.admins.addActionFilter(action -> action.tile == null || !(action.tile.block() instanceof Turret) && !(action.tile.block() instanceof Drill));
+        netServer.admins.addActionFilter(action -> {
+            if (action.tile == null) return true;
+
+            if (action.tile.block() instanceof Turret || action.tile.block() instanceof Drill || !action.tile.block().buildVisibility.visible()) return false;
+
+            return !spawns.values().toSeq().contains(seq -> seq.contains(tile -> tile.dst(action.tile) < state.rules.dropZoneRadius));
+        });
 
         Events.on(PlayerJoin.class, event -> {
             PlayerData data = PlayerData.getData(event.player.uuid());
@@ -79,7 +82,7 @@ public class Main extends Plugin {
 
         Events.on(ResetEvent.class, event -> {
             CastleRooms.rooms.clear();
-            CastleRooms.spawns.clear();
+            spawns.clear();
             PlayerData.datas.filter(data -> data.player.con.isConnected());
             PlayerData.datas.each(PlayerData::reset);
         });
@@ -101,11 +104,11 @@ public class Main extends Plugin {
 
             if (interval.get(60f)) {
                 PlayerData.datas.each(PlayerData::updateMoney);
-                CastleRooms.spawns.each((team, spawns) -> spawns.each(spawn -> {
+                spawns.each((team, spawns) -> spawns.each(spawn -> {
                     for (int deg = 0; deg < 36; deg++) {
                         float x = spawn.worldx() + Mathf.cosDeg(deg * 10) * state.rules.dropZoneRadius;
                         float y = spawn.worldy() + Mathf.sinDeg(deg * 10) * state.rules.dropZoneRadius;
-                        Call.effect(Fx.mineSmall, x, y, 0f, team.color);
+                        Call.effect(Fx.mineBig, x, y, 0f, team.color);
                     }
                 }));
 
