@@ -20,6 +20,7 @@ import mindustry.mod.Plugin;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.production.Drill;
 import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.meta.BuildVisibility;
 
 import java.util.Locale;
 
@@ -58,7 +59,7 @@ public class Main extends Plugin {
                 for (var tile : entry.value)
                     if (tile.dst(action.tile) <= state.rules.dropZoneRadius) return false;
 
-            return !(action.tile.block() instanceof Turret) && !(action.tile.block() instanceof Drill) && action.tile.block().buildVisibility.visible();
+            return !(action.tile.block() instanceof Turret) && !(action.tile.block() instanceof Drill) && action.tile.block().buildVisibility != BuildVisibility.sandboxOnly;
         });
 
         Events.on(PlayerJoin.class, event -> {
