@@ -3,7 +3,6 @@ package castle;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.ai.types.CommandAI;
-import mindustry.gen.Teamc;
 
 import static castle.CastleUtils.onEnemySide;
 
@@ -16,7 +15,7 @@ public class CastleCommandAI extends CommandAI {
     @Override
     public void updateUnit() {
         if (!hasCommand() && Time.timeSinceMillis(lastCommandTime) > inactivityInterval && onEnemySide(unit) && unit.closestEnemyCore() != null) {
-            Teamc core = unit.closestEnemyCore();
+            var core = unit.closestEnemyCore();
             attackTarget = core;
             targetPos = Tmp.v1.set(core);
         } else {

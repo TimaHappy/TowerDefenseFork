@@ -23,9 +23,11 @@ import mindustry.world.blocks.storage.CoreBlock;
 
 import java.util.Locale;
 
+import static castle.CastleRooms.rooms;
 import static castle.CastleRooms.spawns;
 import static castle.CastleUtils.isBreak;
 import static castle.CastleUtils.timer;
+import static castle.components.PlayerData.datas;
 import static mindustry.Vars.*;
 
 public class Main extends Plugin {
@@ -52,15 +54,17 @@ public class Main extends Plugin {
         netServer.admins.addActionFilter(action -> {
             if (action.tile == null) return true;
 
-            if (action.tile.block() instanceof Turret || action.tile.block() instanceof Drill || !action.tile.block().buildVisibility.visible()) return false;
+            for (var entry : spawns)
+                for (var tile : entry.value)
+                    if (tile.dst(action.tile) <= state.rules.dropZoneRadius) return false;
 
-            return !spawns.values().toSeq().contains(seq -> seq.contains(tile -> tile.dst(action.tile) < state.rules.dropZoneRadius));
+            return !(action.tile.block() instanceof Turret) && !(action.tile.block() instanceof Drill) && action.tile.block().buildVisibility.visible();
         });
 
         Events.on(PlayerJoin.class, event -> {
-            PlayerData data = PlayerData.getData(event.player.uuid());
+            var data = PlayerData.getData(event.player.uuid());
             if (data != null) data.handlePlayerJoin(event.player);
-            else PlayerData.datas.add(new PlayerData(event.player));
+            else datas.add(new PlayerData(event.player));
         });
 
         Events.on(BlockDestroyEvent.class, event -> {
@@ -72,7 +76,7 @@ public class Main extends Plugin {
         Events.on(UnitDestroyEvent.class, event -> {
             int income = CastleCosts.drop(event.unit.type);
             if (income <= 0 || event.unit.spawnedByCore) return;
-            PlayerData.datas.each(data -> {
+            datas.each(data -> {
                 if (data.player.team() != event.unit.team) {
                     data.money += income;
                     Call.label(data.player.con, "[lime]+[accent] " + income, 2f, event.unit.x, event.unit.y);
@@ -81,10 +85,10 @@ public class Main extends Plugin {
         });
 
         Events.on(ResetEvent.class, event -> {
-            CastleRooms.rooms.clear();
+            rooms.clear();
             spawns.clear();
-            PlayerData.datas.filter(data -> data.player.con.isConnected());
-            PlayerData.datas.each(PlayerData::reset);
+            datas.filter(data -> data.player.con.isConnected());
+            datas.each(PlayerData::reset);
         });
 
         Events.on(PlayEvent.class, event -> CastleUtils.applyRules(state.rules));
@@ -99,11 +103,11 @@ public class Main extends Plugin {
                 Call.unitDespawn(unit);
             });
 
-            PlayerData.datas.each(PlayerData::update);
-            CastleRooms.rooms.each(Room::update);
+            datas.each(PlayerData::update);
+            rooms.each(Room::update);
 
             if (interval.get(60f)) {
-                PlayerData.datas.each(PlayerData::updateMoney);
+                datas.each(PlayerData::updateMoney);
                 spawns.each((team, spawns) -> spawns.each(spawn -> {
                     for (int deg = 0; deg < 36; deg++) {
                         float x = spawn.worldx() + Mathf.cosDeg(deg * 10) * state.rules.dropZoneRadius;

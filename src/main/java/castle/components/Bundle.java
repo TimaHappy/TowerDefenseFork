@@ -24,10 +24,10 @@ public class Bundle {
     private static final ObjectMap<Locale, MessageFormat> formats = new ObjectMap<>();
 
     public static void load() {
-        Seq<Fi> files = mods.getMod("castle-wars").root.child("bundles").seq();
+        var files = mods.getMod("castle-wars").root.child("bundles").seq();
 
         files.each(file -> {
-            String[] codes = file.nameWithoutExtension().split("_");
+            var codes = file.nameWithoutExtension().split("_");
 
             if (codes.length == 1) { // bundle.properties
                 supportedLocales.add(Locale.ROOT);
@@ -46,7 +46,7 @@ public class Bundle {
 
     public static String get(String key, String defaultValue, Locale locale) {
         try {
-            ResourceBundle bundle = bundles.get(locale, bundles.get(defaultLocale));
+            var bundle = bundles.get(locale, bundles.get(defaultLocale));
             return bundle.getString(key);
         } catch (MissingResourceException ignored) {
             return defaultValue;
@@ -58,12 +58,12 @@ public class Bundle {
     }
 
     public static String format(String key, Locale locale, Object... values) {
-        String pattern = get(key, locale);
+        var pattern = get(key, locale);
         if (values.length == 0) {
             return pattern;
         }
 
-        MessageFormat format = formats.get(locale, formats.get(defaultLocale));
+        var format = formats.get(locale, formats.get(defaultLocale));
         format.applyPattern(pattern);
         return format.format(values);
     }

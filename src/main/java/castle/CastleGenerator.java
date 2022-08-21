@@ -6,11 +6,9 @@ import castle.components.CastleCosts;
 import mindustry.content.Blocks;
 import mindustry.content.Planets;
 import mindustry.game.Team;
-import mindustry.type.Item;
 import mindustry.type.unit.ErekirUnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
-import mindustry.world.Tiles;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.distribution.Sorter.SorterBuild;
 import mindustry.world.blocks.storage.CoreBlock;
@@ -25,8 +23,8 @@ public class CastleGenerator {
     public static int offsetX, offsetY;
 
     public static void generate() {
-        Tiles saved = world.tiles;
-        Tiles tiles = world.resize(world.width(), world.height() * 2 + size * 13 / 2);
+        var saved = world.tiles;
+        var tiles = world.resize(world.width(), world.height() * 2 + size * 13 / 2);
 
         for (int x = 0; x < tiles.width; x++)
             for (int y = saved.height; y < tiles.height - saved.height; y++)
@@ -36,9 +34,9 @@ public class CastleGenerator {
             for (int y = 0; y < saved.height; y++) {
                 Tile tile = saved.getc(x, y);
 
-                Block floor = tile.floor();
-                Block overlay = tile.overlay().needsSurface ? tile.overlay() : Blocks.air;
-                Block wall = !tile.block().hasBuilding() && tile.isCenter() ? tile.block() : Blocks.air;
+                var floor = tile.floor();
+                var overlay = tile.overlay().needsSurface ? tile.overlay() : Blocks.air;
+                var wall = !tile.block().hasBuilding() && tile.isCenter() ? tile.block() : Blocks.air;
 
                 tiles.set(x, y, new Tile(x, y, floor, overlay, wall));
                 tiles.set(x, tiles.height - y - 1, new Tile(x, tiles.height - y - 1, floor, overlay, wall));
@@ -47,7 +45,7 @@ public class CastleGenerator {
 
         for (int x = 0; x < saved.width; x++) {
             for (int y = 0; y < saved.height; y++) {
-                Tile tile = saved.getc(x, y);
+                var tile = saved.getc(x, y);
                 if (!tile.isCenter()) continue;
 
                 int y2 = tiles.height - y - 2 + tile.block().size % 2;
@@ -56,7 +54,7 @@ public class CastleGenerator {
                     tiles.getc(x, y).setNet(CastleUtils.planet.defaultCore, Team.sharded, 0);
                     tiles.getc(x, y2).setNet(CastleUtils.planet.defaultCore, Team.blue, 0);
 
-                    Block core = isSerpulo() ? Blocks.coreNucleus : Blocks.coreAcropolis;
+                    var core = isSerpulo() ? Blocks.coreNucleus : Blocks.coreAcropolis;
                     y2 = tiles.height - y - 2 + core.size % 2;
 
                     new BlockRoom(core, Team.sharded, x, y, 5000);
@@ -74,7 +72,7 @@ public class CastleGenerator {
                 }
 
                 if (tile.build instanceof SorterBuild sorter) {
-                    Item item = sorter.config();
+                    var item = sorter.config();
                     if (!CastleCosts.items.containsKey(item)) continue;
 
                     Block drill = isSerpulo() ? Blocks.laserDrill : Blocks.impactDrill;

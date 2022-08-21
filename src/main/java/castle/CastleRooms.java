@@ -103,7 +103,7 @@ public class CastleRooms {
         public void spawn() {
             for (int x = startx; x <= endx; x++)
                 for (int y = starty; y <= endy; y++) {
-                    Block floor = x == startx || y == starty || x == endx || y == endy ? Blocks.metalFloor5 : Blocks.metalFloor;
+                    var floor = x == startx || y == starty || x == endx || y == endy ? Blocks.metalFloor5 : Blocks.metalFloor;
                     world.tiles.getc(x, y).setFloor(floor.asFloor());
                 }
         }
@@ -154,10 +154,10 @@ public class CastleRooms {
         public void buy(PlayerData data) {
             super.buy(data);
 
-            Tile source = world.tile(startx, y);
+            var source = world.tile(startx, y);
             int timeOffset = 0;
 
-            Item item = content.items().find(i -> block.consumesItem(i));
+            var item = content.items().find(i -> block.consumesItem(i));
             if (item != null) {
                 Timer.schedule(() -> {
                     source.setNet(Blocks.itemSource, team, 0);
@@ -166,7 +166,7 @@ public class CastleRooms {
                 }, timeOffset++);
             }
 
-            Liquid liquid = content.liquids().find(l -> block.consumesLiquid(l));
+            var liquid = content.liquids().find(l -> block.consumesLiquid(l));
             if (liquid != null) {
                 Timer.schedule(() -> {
                     source.setNet(Blocks.liquidSource, team, 0);
@@ -236,10 +236,10 @@ public class CastleRooms {
             Tmp.v1.rnd(Math.min(type.hitSize, 48f));
 
             if (roomType == UnitRoomType.attack) {
-                Tile spawn = spawns.get(data.player.team()).random();
+                var spawn = spawns.get(data.player.team()).random();
                 type.spawn(data.player.team(), spawn.worldx() + Tmp.v1.x, spawn.worldy() + Tmp.v1.y);
             } else if (data.player.core() != null) {
-                Building core = data.player.core();
+                var core = data.player.core();
                 type.spawn(data.player.team(), core.x + 48f, core.y + Tmp.v1.y);
             }
         }
@@ -247,11 +247,6 @@ public class CastleRooms {
         @Override
         public boolean canBuy(PlayerData data) {
             if (!super.canBuy(data)) return false;
-
-            if (income < 0 && data.income + income < 0) {
-                Call.announce(data.player.con, get("rooms.unit.too-low-income", data.locale));
-                return false;
-            }
 
             if (countUnits(data.player.team()) >= Units.getCap(data.player.team())) {
                 Call.announce(data.player.con, get("rooms.unit.limit", data.locale));
