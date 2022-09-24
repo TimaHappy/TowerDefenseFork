@@ -55,23 +55,23 @@ public class CastleCosts {
                 UnitTypes.antumbra, new Moneys(4100, 23, 850),
                 UnitTypes.eclipse, new Moneys(12000, 60, 1250),
 
-                UnitTypes.stell, new Moneys(360, 2, 100),
-                UnitTypes.locus, new Moneys(900, 4, 250),
-                UnitTypes.precept, new Moneys(2200, 12, 600),
-                UnitTypes.vanquish, new Moneys(5000, 27, 1000),
+                UnitTypes.stell, new Moneys(260, 2, 100),
+                UnitTypes.locus, new Moneys(800, 4, 250),
+                UnitTypes.precept, new Moneys(2000, 14, 600),
+                UnitTypes.vanquish, new Moneys(5500, 27, 1000),
                 UnitTypes.conquer, new Moneys(10000, 60, 1700),
 
-                UnitTypes.merui, new Moneys(360, 2, 100),
-                UnitTypes.cleroi, new Moneys(1000, 4, 400),
-                UnitTypes.anthicus, new Moneys(2500, 12, 750),
-                UnitTypes.tecta, new Moneys(5700, 25, 1100),
+                UnitTypes.merui, new Moneys(280, 2, 100),
+                UnitTypes.cleroi, new Moneys(900, 4, 400),
+                UnitTypes.anthicus, new Moneys(2450, 14, 750),
+                UnitTypes.tecta, new Moneys(5500, 26, 1100),
                 UnitTypes.collaris, new Moneys(11000, 55, 1900),
 
-                UnitTypes.elude, new Moneys(380, 2, 110),
+                UnitTypes.elude, new Moneys(300, 2, 110),
                 UnitTypes.avert, new Moneys(900, 4, 300),
-                UnitTypes.obviate, new Moneys(2500, 10, 750),
-                UnitTypes.quell, new Moneys(6000, 22, 1500),
-                UnitTypes.disrupt, new Moneys(13000, 45, 2300)
+                UnitTypes.obviate, new Moneys(2200, 12, 750),
+                UnitTypes.quell, new Moneys(4750, 25, 1500),
+                UnitTypes.disrupt, new Moneys(11500, 45, 2300)
         );
 
         turrets = OrderedMap.of(
@@ -92,15 +92,15 @@ public class CastleCosts {
                 Blocks.spectre, 4000,
                 Blocks.meltdown, 3500,
 
-                Blocks.breach, 750,
-                Blocks.diffuse, 1750,
-                Blocks.sublimate, 2000,
-                Blocks.titan, 1900,
-                Blocks.disperse, 3000,
+                Blocks.breach, 500,
+                Blocks.diffuse, 800,
+                Blocks.sublimate, 2500,
+                Blocks.titan, 2000,
+                Blocks.disperse, 3200,
                 Blocks.afflict, 2250,
-                Blocks.lustre, 4000,
+                Blocks.lustre, 4500,
                 Blocks.scathe, 4250,
-                Blocks.smite, 4500,
+                Blocks.smite, 5000,
                 Blocks.malign, 12500
         );
 
@@ -119,10 +119,10 @@ public class CastleCosts {
                 Items.blastCompound, 100,
                 Items.pyratite, 100,
 
-                Items.beryllium, 300,
+                Items.beryllium, 250,
                 Items.tungsten, 1000,
                 Items.oxide, 1500,
-                Items.carbide, 2000
+                Items.carbide, 1800
         );
 
         effects = OrderedMap.of(
