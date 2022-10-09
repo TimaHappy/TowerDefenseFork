@@ -60,75 +60,79 @@ public class Main extends Plugin {
         drops = ObjectMap.of(
                 crawler, with(copper, 20, lead, 10, silicon, 3),
                 atrax, with(copper, 30, lead, 40, graphite, 10, titanium, 5),
-                spiroct, with(lead, 100, silicon, 40, graphite, 40, thorium, 10),
+                spiroct, with(lead, 100, graphite, 40, silicon, 40, thorium, 10),
                 arkyid, with(copper, 300, graphite, 80, metaglass, 80, titanium, 80, thorium, 20, phaseFabric, 10),
-                toxopid, with(copper, 400, lead, 400, silicon, 120, graphite, 120, thorium, 40, plastanium, 40, phaseFabric, 5, surgeAlloy, 15),
+                toxopid, with(copper, 400, lead, 400, graphite, 120, silicon, 120, thorium, 40, plastanium, 40, surgeAlloy, 15, phaseFabric, 5),
 
                 dagger, with(copper, 20, lead, 10, silicon, 3),
-                mace, with(copper, 30, lead, 40, silicon, 10, titanium, 5),
-                fortress, with(lead, 100, silicon, 40, graphite, 40, thorium, 10),
+                mace, with(copper, 30, lead, 40, graphite, 10, titanium, 5),
+                fortress, with(lead, 100, graphite, 40, silicon, 40, thorium, 10),
                 scepter, with(copper, 300, silicon, 80, metaglass, 80, titanium, 80, thorium, 20, phaseFabric, 10),
-                reign, with(copper, 400, lead, 400, silicon, 120, graphite, 120, thorium, 40, plastanium, 40, phaseFabric, 5, surgeAlloy, 15),
+                reign, with(copper, 400, lead, 400, graphite, 120, silicon, 120, thorium, 40, plastanium, 40, surgeAlloy, 15, phaseFabric, 5),
 
                 nova, with(copper, 20, lead, 10, metaglass, 3),
                 pulsar, with(copper, 30, lead, 40, metaglass, 10),
                 quasar, with(lead, 100, metaglass, 40, silicon, 40, titanium, 80, thorium, 10),
                 vela, with(copper, 300, metaglass, 80, graphite, 80, titanium, 60, plastanium, 20, surgeAlloy, 5),
-                corvus, with(copper, 400, lead, 400, silicon, 100, metaglass, 120, graphite, 100, titanium, 120, thorium, 60, phaseFabric, 10, surgeAlloy, 10),
+                corvus, with(copper, 400, lead, 400, graphite, 100, silicon, 100, metaglass, 120, titanium, 120, thorium, 60, surgeAlloy, 10, phaseFabric, 10),
 
-                flare, with(copper, 20, lead, 10, graphite, 3, scrap, 1),
-                horizon, with(copper, 30, lead, 40, graphite, 10, scrap, 2),
-                zenith, with(lead, 100, silicon, 40, graphite, 40, titanium, 30, plastanium, 10, scrap, 3),
-                antumbra, with(copper, 300, graphite, 80, metaglass, 80, titanium, 60, surgeAlloy, 15, scrap, 4),
-                eclipse, with(copper, 400, lead, 400, silicon, 120, graphite, 120, titanium, 120, thorium, 40, plastanium, 40, phaseFabric, 10, surgeAlloy, 5, scrap, 5),
+                flare, with(copper, 20, lead, 10, graphite, 3),
+                horizon, with(copper, 30, lead, 40, graphite, 10),
+                zenith, with(lead, 100, graphite, 40, silicon, 40, titanium, 30, plastanium, 10),
+                antumbra, with(copper, 300, graphite, 80, metaglass, 80, titanium, 60, surgeAlloy, 15),
+                eclipse, with(copper, 400, lead, 400, graphite, 120, silicon, 120, titanium, 120, thorium, 40, plastanium, 40, surgeAlloy, 5, phaseFabric, 10),
 
                 mono, with(copper, 20, lead, 10, silicon, 3),
                 poly, with(copper, 30, lead, 40, silicon, 10, titanium, 5),
                 mega, with(lead, 100, silicon, 40, graphite, 40, thorium, 10),
                 quad, with(copper, 300, silicon, 80, metaglass, 80, titanium, 80, thorium, 20, phaseFabric, 10),
-                oct, with(copper, 400, lead, 400, silicon, 120, graphite, 120, thorium, 40, plastanium, 40, phaseFabric, 5, surgeAlloy, 15),
+                oct, with(copper, 400, lead, 400, graphite, 120, silicon, 120, thorium, 40, plastanium, 40, surgeAlloy, 15, phaseFabric, 5),
 
                 risso, with(copper, 20, lead, 10, metaglass, 3),
                 minke, with(copper, 30, lead, 40, metaglass, 10),
                 bryde, with(lead, 100, metaglass, 40, silicon, 40, titanium, 80, thorium, 10),
                 sei, with(copper, 300, metaglass, 80, graphite, 80, titanium, 60, plastanium, 20, surgeAlloy, 5),
-                omura, with(copper, 400, lead, 400, silicon, 100, metaglass, 120, graphite, 100, titanium, 120, thorium, 60, phaseFabric, 10, surgeAlloy, 10),
+                omura, with(copper, 400, lead, 400, graphite, 100, silicon, 100, metaglass, 120, titanium, 120, thorium, 60, surgeAlloy, 10, phaseFabric, 10),
+                
+                retusa, with(copper, 20, lead, 10, metaglass, 3),
+                oxynoe, with(copper, 30, lead, 40, metaglass, 10),
+                cyerce, with(lead, 100, metaglass, 40, silicon, 40, titanium, 80, thorium, 10),
+                aegires, with(copper, 300, metaglass, 80, graphite, 80, titanium, 60, plastanium, 20, surgeAlloy, 5),
+                navanax, with(copper, 400, lead, 400, graphite, 100, silicon, 100, metaglass, 120, titanium, 120, thorium, 60, surgeAlloy, 10, phaseFabric, 10),
 
-                retusa, with(copper, 8, lead, 2, scrap, 8),
-                oxynoe, with(copper, 12, lead, 4, scrap, 16, silicon, 8, plastanium, 2),
-                cyerce, with(lead, 23, metaglass, 27, scrap, 86, phaseFabric, 2, thorium, 4),
-                aegires, with(silicon, 47, phaseFabric, 8, surgeAlloy, 4, plastanium, 18, thorium, 18),
-                navanax, with(surgeAlloy, 50, phaseFabric, 50),
-
-                alpha, with(copper, 30, lead, 30, silicon, 20, graphite, 20, metaglass, 20),
+                alpha, with(copper, 30, lead, 30, graphite, 20, silicon, 20, metaglass, 20),
                 beta, with(titanium, 40, thorium, 20),
-                gamma, with(plastanium, 20, phaseFabric, 10, surgeAlloy, 10),
+                gamma, with(plastanium, 20, surgeAlloy, 10, phaseFabric, 10),
 
-                stell, with(beryllium, 10, graphite, 7, silicon, 5),
-                locus, with(beryllium, 20, graphite, 10, silicon, 15, tungsten, 15, oxide, 10),
-                precept, with(beryllium, 20, graphite, 15, silicon, 20, tungsten, 20, oxide, 20, thorium, 15),
-                vanquish, with(beryllium, 45, graphite, 25, silicon, 35, tungsten, 35, oxide, 25, thorium, 25, carbide, 10, surgeAlloy, 10),
-                conquer, with(beryllium, 50, graphite, 40, silicon, 50, tungsten, 50, oxide, 45, thorium, 35, carbide, 20, surgeAlloy, 20),
+                stell, with(beryllium, 20, silicon, 25),
+                locus, with(beryllium, 20, silicon, 20, tungsten, 15),
+                precept, with(beryllium, 45, silicon, 50, tungsten, 50, surgeAlloy, 75, thorium, 40),
+                vanquish, with(beryllium, 80, silicon, 100, tungsten, 120, oxide, 60, surgeAlloy, 125, thorium, 100, phaseFabric, 60),
+                conquer, with(beryllium, 250, graphite, 225, silicon, 125, tungsten, 140, oxide, 120, carbide, 240, surgeAlloy, 250, thorium, 240, phaseFabric, 120),
 
-                merui, with(beryllium, 5, graphite, 3, silicon, 2),
-                cleroi, with(beryllium, 15, graphite, 7, silicon, 5, tungsten, 7, oxide, 7),
-                anthicus, with(beryllium, 20, graphite, 15, silicon, 10, tungsten, 17, oxide, 12, thorium, 8),
-                tecta, with(beryllium, 30, graphite, 20, silicon, 30, tungsten, 30, oxide, 25, thorium, 8, carbide, 7, surgeAlloy, 7),
-                collaris, with(beryllium, 80, graphite, 60, silicon, 80, tungsten, 80, oxide, 50, thorium, 50, carbide, 30, surgeAlloy, 30),
+                elude, with(beryllium, 6, graphite, 25, silicon, 35),
+                avert, with(beryllium, 24, graphite, 50, silicon, 30, tungsten, 20),
+                obviate, with(beryllium, 48, graphite, 75, silicon, 50, tungsten, 45, carbide, 50, thorium, 40, phaseFabric, 75),
+                quell, with(beryllium, 96, graphite, 100, silicon, 140, tungsten, 70, oxide, 60, carbide, 75, surgeAlloy, 60, thorium, 100, phaseFabric, 125),
+                disrupt, with(beryllium, 122, graphite, 125, silicon, 155, tungsten, 100, oxide, 120, carbide, 240, surgeAlloy, 120, thorium, 240, phaseFabric, 250),
 
-                elude, with(beryllium, 15, graphite, 12, silicon, 8),
-                avert, with(beryllium, 30, graphite, 15, silicon, 23, tungsten, 23, oxide, 10),
-                obviate, with(beryllium, 45, graphite, 23, silicon, 30, tungsten, 30, oxide, 17, thorium, 23),
-                quell, with(beryllium, 72, graphite, 40, silicon, 56, tungsten, 56, oxide, 25, thorium, 40, carbide, 16, surgeAlloy, 16),
-                disrupt, with(beryllium, 55, graphite, 45, silicon, 55, tungsten, 55, oxide, 30, thorium, 40, carbide, 25, surgeAlloy, 25)
+                merui, with(beryllium, 25, silicon, 35, tungsten, 10),
+                cleroi, with(beryllium, 35, silicon, 25, tungsten, 20),
+                anthicus, with(beryllium, 50, graphite, 15, silicon, 50, tungsten, 65, oxide, 75, thorium, 40),
+                tecta, with(beryllium, 100, graphite, 45, silicon, 140, tungsten, 120, oxide, 125, surgeAlloy, 60, thorium, 100, phaseFabric, 125),
+                collaris, with(beryllium, 135, graphite, 90, silicon, 175, tungsten, 155, oxide, 250, carbide, 240, surgeAlloy, 120, thorium, 240, phaseFabric, 120),
+
+                evoke, with(beryllium, 50, graphite, 50, silicon, 50),
+                incite, with(tungsten, 25, oxide, 25, carbide, 50),
+                emanate, with(surgeAlloy, 25, thorium, 25, phaseFabric, 50)
         );
 
         pathfinder = new TowerPathfinder();
 
         content.units().each(type -> {
-            type.payloadCapacity = 0f;
+            type.payloadCapacity = 0;
 
-            type.legSplashDamage = 0f;
+            type.legSplashDamage = 0;
             type.mineWalls = false;
             type.mineFloor = false;
 
@@ -141,8 +145,10 @@ public class Main extends Plugin {
         crawler.aiController = GroundAI::new;
 
         netServer.admins.addActionFilter(action -> {
+            if (action.tile == null) return true;
+
             if (action.type == ActionType.placeBlock || action.type == ActionType.breakBlock) {
-                if (!(proximityCheck(action.tile, action.block) || action.block instanceof ShockMine || action.block instanceof CoreBlock || action.block instanceof ConstructBlock)) {
+                if (!(proximityCheck(action.tile, action.block) || action.block instanceof ShockMine || action.block instanceof CoreBlock || action.tile.block() instanceof ConstructBlock)) {
                     Call.label(action.player.con, "[scarlet]\uE868", 4f, action.tile.drawx(), action.tile.drawy());
                     return false;
                 }
