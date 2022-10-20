@@ -7,13 +7,14 @@ import mindustry.world.blocks.storage.CoreBlock;
 
 import static mindustry.Vars.state;
 import static mindustry.content.Blocks.darkPanel4;
+import static mindustry.content.Liquids.water;
 import static tower.Main.isPath;
 
 public class TowerPathfinder extends Pathfinder {
 
     @Override
     public int packTile(Tile tile) {
-        boolean nearLiquid = false, nearSolid = false, nearGround = false, solid = tile.solid(), allDeep = tile.floor().isDeep(), isPath = isPath(tile) || tile.floor().isLiquid;
+        boolean nearLiquid = false, nearSolid = false, nearGround = false, solid = tile.solid(), allDeep = tile.floor().isDeep(), isPath = isPath(tile) || tile.floor().liquidDrop == water; // Гениальная проверка на воду
 
         for (int i = 0; i < 4; i++) {
             var other = tile.nearby(i);

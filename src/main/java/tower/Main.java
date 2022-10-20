@@ -6,6 +6,7 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.*;
 import mindustry.ai.types.GroundAI;
+import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.mod.Plugin;
@@ -35,9 +36,9 @@ public class Main extends Plugin {
 
     public static float multiplier = 1f;
 
-    public static char getIcon(Item item) {
+    public static char getIcon(MappableContent content) {
         try {
-            return Reflect.get(Iconc.class, kebabToCamel("item-" + item.name));
+            return Reflect.get(Iconc.class, kebabToCamel(content.getContentType().name() + "-" + content.name));
         } catch (Exception e) {
             return '?';
         }
