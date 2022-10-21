@@ -106,9 +106,9 @@ public class Main extends Plugin {
                 gamma, with(plastanium, 20, surgeAlloy, 10, phaseFabric, 10),
 
                 stell, with(beryllium, 20, silicon, 25),
-                locus, with(beryllium, 20, silicon, 20, tungsten, 15),
-                precept, with(beryllium, 45, silicon, 50, tungsten, 50, surgeAlloy, 75, thorium, 40),
-                vanquish, with(beryllium, 80, silicon, 100, tungsten, 120, oxide, 60, surgeAlloy, 125, thorium, 100, phaseFabric, 60),
+                locus, with(beryllium, 20, graphite, 20, silicon, 20, tungsten, 15),
+                precept, with(beryllium, 45, graphite, 25, silicon, 50, tungsten, 50, surgeAlloy, 75, thorium, 40),
+                vanquish, with(beryllium, 80, graphite, 50, silicon, 100, tungsten, 120, oxide, 60, surgeAlloy, 125, thorium, 100, phaseFabric, 60),
                 conquer, with(beryllium, 250, graphite, 225, silicon, 125, tungsten, 140, oxide, 120, carbide, 240, surgeAlloy, 250, thorium, 240, phaseFabric, 120),
 
                 elude, with(beryllium, 6, graphite, 25, silicon, 35),
@@ -118,9 +118,9 @@ public class Main extends Plugin {
                 disrupt, with(beryllium, 122, graphite, 125, silicon, 155, tungsten, 100, oxide, 120, carbide, 240, surgeAlloy, 120, thorium, 240, phaseFabric, 250),
 
                 merui, with(beryllium, 25, silicon, 35, tungsten, 10),
-                cleroi, with(beryllium, 35, silicon, 25, tungsten, 20),
-                anthicus, with(beryllium, 50, graphite, 15, silicon, 50, tungsten, 65, oxide, 75, thorium, 40),
-                tecta, with(beryllium, 100, graphite, 45, silicon, 140, tungsten, 120, oxide, 125, surgeAlloy, 60, thorium, 100, phaseFabric, 125),
+                cleroi, with(beryllium, 35, graphite, 20, silicon, 25, tungsten, 20),
+                anthicus, with(beryllium, 50, graphite, 25, silicon, 50, tungsten, 65, oxide, 75, thorium, 40),
+                tecta, with(beryllium, 100, graphite, 50, silicon, 140, tungsten, 120, oxide, 125, surgeAlloy, 60, thorium, 100, phaseFabric, 125),
                 collaris, with(beryllium, 135, graphite, 90, silicon, 175, tungsten, 155, oxide, 250, carbide, 240, surgeAlloy, 120, thorium, 240, phaseFabric, 120),
 
                 evoke, with(beryllium, 50, graphite, 50, silicon, 50),
