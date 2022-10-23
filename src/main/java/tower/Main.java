@@ -137,6 +137,8 @@ public class Main extends Plugin {
             type.mineWalls = false;
             type.mineFloor = false;
 
+            type.range = type.maxRange = type.mineRange = 0f;
+
             type.targetAir = false;
             type.targetGround = false;
 
