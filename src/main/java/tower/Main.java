@@ -11,7 +11,8 @@ import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
-import mindustry.type.*;
+import mindustry.type.ItemStack;
+import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.ConstructBlock;
@@ -45,7 +46,7 @@ public class Main extends Plugin {
     }
 
     public static String trafficLightColor(float value) {
-        return "[#" + Integer.toHexString(Color.HSBtoRGB(value / 3f, 1f, 1f)).substring(2) + "]";
+        return Integer.toHexString(Color.HSBtoRGB(value / 3f, 1f, 1f)).substring(2);
     }
 
     public static boolean isPath(Tile tile) {
@@ -94,7 +95,7 @@ public class Main extends Plugin {
                 bryde, with(lead, 100, metaglass, 40, silicon, 40, titanium, 80, thorium, 10),
                 sei, with(copper, 300, metaglass, 80, graphite, 80, titanium, 60, plastanium, 20, surgeAlloy, 5),
                 omura, with(copper, 400, lead, 400, graphite, 100, silicon, 100, metaglass, 120, titanium, 120, thorium, 60, surgeAlloy, 10, phaseFabric, 10),
-                
+
                 retusa, with(copper, 20, lead, 10, metaglass, 3),
                 oxynoe, with(copper, 30, lead, 40, metaglass, 10),
                 cyerce, with(lead, 100, metaglass, 40, silicon, 40, titanium, 80, thorium, 10),
@@ -128,19 +129,11 @@ public class Main extends Plugin {
                 emanate, with(surgeAlloy, 25, thorium, 25, phaseFabric, 50)
         );
 
-        pathfinder = new TowerPathfinder();
+        TowerPathfinder.load();
 
         content.units().each(type -> {
-            type.payloadCapacity = 0;
-
-            type.legSplashDamage = 0;
-            type.mineWalls = false;
-            type.mineFloor = false;
-
-            type.range = type.maxRange = type.mineRange = 0f;
-
-            type.targetAir = false;
-            type.targetGround = false;
+            type.mineWalls = type.mineFloor = type.targetAir = type.targetGround = false;
+            type.payloadCapacity = type.legSplashDamage = type.range = type.maxRange = type.mineRange = 0;
 
             type.targetFlags = new BlockFlag[] {BlockFlag.core};
         });
@@ -157,7 +150,7 @@ public class Main extends Plugin {
                 }
             }
 
-            if ((action.type == ActionType.depositItem || action.type == ActionType.withdrawItem) && action.tile.block() != null && action.tile.block() instanceof CoreBlock) {
+            if ((action.type == ActionType.depositItem || action.type == ActionType.withdrawItem) && action.tile.block() instanceof CoreBlock) {
                 Call.label(action.player.con, "[scarlet]\uE868", 4f, action.tile.drawx(), action.tile.drawy());
                 return false;
             }
@@ -165,7 +158,7 @@ public class Main extends Plugin {
             return true;
         });
 
-        Events.run(Trigger.update, () -> Groups.unit.each(unit -> unit.team == state.rules.waveTeam, unit -> {
+        Timer.schedule(() -> Groups.unit.each(unit -> unit.team == state.rules.waveTeam, unit -> {
             var core = unit.closestEnemyCore();
             if (core == null || unit.dst(core) > 80f) return;
 
@@ -174,10 +167,9 @@ public class Main extends Plugin {
 
             Call.effect(damage > 50000f ? massiveExplosion : damage > 20000f ? reactorExplosion : blastExplosion, core.x(), core.y(), Math.max(1f, damage / 500f), state.rules.waveTeam.color);
             unit.kill();
-        }));
+        }), 0f, 1f);
 
         Events.on(WorldLoadEvent.class, event -> multiplier = 1f);
-
         Events.on(WaveEvent.class, event -> multiplier = Mathf.clamp(((state.wave * state.wave / 3175f) + 0.5f), multiplier, 100f));
 
         Events.on(UnitDestroyEvent.class, event -> {
@@ -210,6 +202,6 @@ public class Main extends Plugin {
             }
         });
 
-        Timer.schedule(() -> Groups.player.each(player -> Call.infoPopup(player.con, Strings.format("[yellow]\uE86D[accent] Units health multiplier: @@x", trafficLightColor(multiplier), Strings.autoFixed(multiplier, 3)), 1f, 20, 50, 20, 450, 0)), 0f, 1f);
+        Timer.schedule(() -> Groups.player.each(player -> Call.infoPopup(player.con, Strings.format("[yellow]\uE86D[accent] Units health multiplier: [#@]@x", trafficLightColor(multiplier), Strings.autoFixed(multiplier, 3)), 1f, 20, 50, 20, 450, 0)), 0f, 1f);
     }
 }
