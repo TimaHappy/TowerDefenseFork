@@ -14,19 +14,24 @@ public class TowerPathfinder extends Pathfinder {
     public static void load() {
         pathfinder = new TowerPathfinder();
 
-        costTypes.set(costGround, (team, tile) -> (PathTile.allDeep(tile) || PathTile.solid(tile)) ? impassable : 1 +
-                (PathTile.nearSolid(tile) ? 25 : 0) +
-                (PathTile.nearLiquid(tile) ? 25 : 0) +
+        costTypes.set(costGround, (team, tile) -> (PathTile.allDeep(tile) || (PathTile.team(tile) == team && PathTile.solid(tile))) ? impassable : 1 +
                 (PathTile.deep(tile) ? 6000 : 0) +
-                (PathTile.damages(tile) ? 30 : 0));
+                (PathTile.damages(tile) ? 50 : 0) +
+                (PathTile.nearSolid(tile) ? 50 : 0) +
+                (PathTile.nearLiquid(tile) ? 10 : 0)
+        );
 
         costTypes.set(costLegs, (team, tile) -> (PathTile.allDeep(tile) || PathTile.legSolid(tile)) ? impassable : 1 +
                 (PathTile.deep(tile) ? 6000 : 0) +
-                (PathTile.damages(tile) ? 30 : 0));
+                (PathTile.damages(tile) ? 50 : 0) +
+                (PathTile.nearSolid(tile) ? 10 : 0)
+        );
 
         costTypes.set(costNaval, (team, tile) -> (PathTile.solid(tile) || !PathTile.liquid(tile) ? 6000 : 1) +
-                (PathTile.nearGround(tile) || PathTile.nearSolid(tile) ? 25 : 0) +
-                (PathTile.damages(tile) ? 100 : 0));
+                (PathTile.damages(tile) ? 50 : 0) +
+                (PathTile.nearSolid(tile) ? 10 : 0) +
+                (PathTile.nearGround(tile) ? 10 : 0)
+        );
     }
 
     @Override
@@ -53,7 +58,7 @@ public class TowerPathfinder extends Pathfinder {
                 nearGround,
                 nearSolid,
                 tile.floor().isDeep() || !isPath(tile),
-                isPath(tile),
+                tile.floor().damageTaken > 0f || isPath(tile),
                 allDeep,
                 tile.block().teamPassable
         );

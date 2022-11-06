@@ -34,7 +34,6 @@ import static mindustry.type.ItemStack.with;
 public class Main extends Plugin {
 
     public static ObjectMap<UnitType, ItemStack[]> drops;
-
     public static float multiplier = 1f;
 
     public static char getIcon(MappableContent content) {
@@ -158,11 +157,11 @@ public class Main extends Plugin {
             return true;
         });
 
-        Timer.schedule(() -> Groups.unit.each(unit -> unit.team == state.rules.waveTeam, unit -> {
+        Timer.schedule(() -> state.rules.waveTeam.data().units.each(unit -> {
             var core = unit.closestEnemyCore();
             if (core == null || unit.dst(core) > 80f) return;
 
-            float damage = unit.health / Mathf.sqrt(multiplier / 16);
+            float damage = unit.health / Mathf.sqrt(multiplier / 16) / 4f;
             core.damage(damage, true);
 
             Call.effect(damage > 50000f ? massiveExplosion : damage > 20000f ? reactorExplosion : blastExplosion, core.x(), core.y(), Math.max(1f, damage / 500f), state.rules.waveTeam.color);
@@ -194,12 +193,13 @@ public class Main extends Plugin {
         });
 
         Events.on(UnitSpawnEvent.class, event -> {
-            if (event.unit.team() == state.rules.waveTeam) {
-                event.unit.maxHealth = event.unit.maxHealth * multiplier;
-                event.unit.health = event.unit.maxHealth;
-                event.unit.damageMultiplier = 0f;
-                event.unit.apply(disarmed, Float.MAX_VALUE);
-            }
+            if (event.unit.team != state.rules.waveTeam) return;
+
+            if (!event.unit.isBoss()) event.unit.clearStatuses();
+
+            event.unit.health = event.unit.maxHealth *= multiplier;
+            event.unit.damageMultiplier = 0f;
+            event.unit.apply(disarmed, Float.MAX_VALUE);
         });
 
         Timer.schedule(() -> Groups.player.each(player -> Call.infoPopup(player.con, Strings.format("[yellow]\uE86D[accent] Units health multiplier: [#@]@x", trafficLightColor(multiplier), Strings.autoFixed(multiplier, 3)), 1f, 20, 50, 20, 450, 0)), 0f, 1f);
