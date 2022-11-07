@@ -6,7 +6,6 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.*;
 import mindustry.ai.types.GroundAI;
-import mindustry.content.Blocks;
 import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
@@ -19,6 +18,7 @@ import mindustry.world.Tile;
 import mindustry.world.blocks.ConstructBlock;
 import mindustry.world.blocks.defense.ShockMine;
 import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.blocks.units.UnitBlock;
 import mindustry.world.meta.BlockFlag;
 
 import java.awt.Color;
@@ -173,6 +173,11 @@ public class Main extends Plugin {
 
         Events.on(WorldLoadEvent.class, event -> multiplier = 1f);
         Events.on(WaveEvent.class, event -> multiplier = Mathf.clamp(((state.wave * state.wave / 3175f) + 0.5f), multiplier, 100f));
+
+        Events.on(PlayEvent.class, event -> {
+            state.rules.bannedBlocks.addAll(content.blocks().select(block -> block instanceof UnitBlock));
+            state.rules.defaultTeam.rules().buildSpeedMultiplier = 2f;
+        });
 
         Events.on(UnitDestroyEvent.class, event -> {
             if (event.unit.team != state.rules.waveTeam) return;
