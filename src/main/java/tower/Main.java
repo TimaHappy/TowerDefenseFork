@@ -6,6 +6,7 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.*;
 import mindustry.ai.types.GroundAI;
+import mindustry.content.Blocks;
 import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
@@ -156,6 +157,8 @@ public class Main extends Plugin {
 
             return true;
         });
+
+        space = null;
 
         Timer.schedule(() -> state.rules.waveTeam.data().units.each(unit -> {
             var core = unit.closestEnemyCore();

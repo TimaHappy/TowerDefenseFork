@@ -14,7 +14,7 @@ public class TowerPathfinder extends Pathfinder {
     public static void load() {
         pathfinder = new TowerPathfinder();
 
-        costTypes.set(costGround, (team, tile) -> (PathTile.allDeep(tile) || (PathTile.team(tile) == team && PathTile.solid(tile))) ? impassable : 1 +
+        costTypes.set(costGround, (team, tile) -> (PathTile.allDeep(tile) || ((PathTile.team(tile) == 0 || PathTile.team(tile) == team) && PathTile.solid(tile))) ? impassable : 1 +
                 (PathTile.deep(tile) ? 6000 : 0) +
                 (PathTile.damages(tile) ? 50 : 0) +
                 (PathTile.nearSolid(tile) ? 50 : 0) +
@@ -43,22 +43,22 @@ public class TowerPathfinder extends Pathfinder {
             if (other == null) continue;
 
             if (other.floor().isLiquid) nearLiquid = true;
-            if (other.solid() || !isPath(other)) nearSolid = true;
+            if (other.solid() || !isPath(other)) nearSolid = true; // !isPath -> nearSolid
             if (!other.floor().isLiquid) nearGround = true;
             if (!other.floor().isDeep()) allDeep = false;
         }
 
         return PathTile.get(
-                0,
+                0, // Health doesn't matter
                 tile.getTeamID(),
                 tile.solid(),
                 tile.floor().isLiquid,
-                tile.staticDarkness() > 1,
+                tile.staticDarkness() > 1 || tile.floor().solid, // staticDarkness > 1 or floor.solid -> legSolid
                 nearLiquid,
                 nearGround,
                 nearSolid,
-                tile.floor().isDeep() || !isPath(tile),
-                tile.floor().damageTaken > 0f || isPath(tile),
+                tile.floor().isDeep() || !isPath(tile), // !isPath -> deep
+                tile.floor().damageTaken > 0f || !isPath(tile), // !isPath -> damages
                 allDeep,
                 tile.block().teamPassable
         );
