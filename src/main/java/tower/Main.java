@@ -5,7 +5,7 @@ import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.*;
-import mindustry.ai.types.GroundAI;
+import mindustry.ai.types.*;
 import mindustry.ctype.MappableContent;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
@@ -136,6 +136,8 @@ public class Main extends Plugin {
             type.payloadCapacity = type.legSplashDamage = type.range = type.maxRange = type.mineRange = 0;
 
             type.targetFlags = new BlockFlag[] {BlockFlag.core};
+
+            if (type.flying) type.aiController = FlyingAI::new;
         });
 
         crawler.aiController = GroundAI::new;
