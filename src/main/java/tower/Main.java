@@ -137,10 +137,8 @@ public class Main extends Plugin {
 
             type.targetFlags = new BlockFlag[] {BlockFlag.core};
 
-            if (type.flying) type.aiController = FlyingAI::new;
+            type.aiController = type.flying ? FlyingAI::new : GroundAI::new;
         });
-
-        crawler.aiController = GroundAI::new;
 
         netServer.admins.addActionFilter(action -> {
             if (action.tile == null) return true;
@@ -159,8 +157,6 @@ public class Main extends Plugin {
 
             return true;
         });
-
-        space = null;
 
         Timer.schedule(() -> state.rules.waveTeam.data().units.each(unit -> {
             var core = unit.closestEnemyCore();
