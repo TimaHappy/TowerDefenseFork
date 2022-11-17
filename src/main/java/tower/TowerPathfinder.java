@@ -9,25 +9,25 @@ import static tower.Main.isPath;
 
 public class TowerPathfinder extends Pathfinder {
 
-    public static final int impassable = -1;
+    public static final int impassable = -1, notPath = 100000;
 
     public static void load() {
         pathfinder = new TowerPathfinder();
 
         costTypes.set(costGround, (team, tile) -> (PathTile.allDeep(tile) || ((PathTile.team(tile) == 0 || PathTile.team(tile) == team) && PathTile.solid(tile))) ? impassable : 1 +
-                (PathTile.deep(tile) ? 6000 : 0) +
+                (PathTile.deep(tile) ? notPath : 0) +
                 (PathTile.damages(tile) ? 50 : 0) +
                 (PathTile.nearSolid(tile) ? 50 : 0) +
                 (PathTile.nearLiquid(tile) ? 10 : 0)
         );
 
         costTypes.set(costLegs, (team, tile) -> (PathTile.allDeep(tile) || PathTile.legSolid(tile)) ? impassable : 1 +
-                (PathTile.deep(tile) ? 6000 : 0) +
+                (PathTile.deep(tile) ? notPath : 0) +
                 (PathTile.damages(tile) ? 50 : 0) +
                 (PathTile.nearSolid(tile) ? 10 : 0)
         );
 
-        costTypes.set(costNaval, (team, tile) -> (PathTile.solid(tile) || !PathTile.liquid(tile) ? 6000 : 1) +
+        costTypes.set(costNaval, (team, tile) -> (PathTile.solid(tile) || !PathTile.liquid(tile) ? notPath : 1) +
                 (PathTile.damages(tile) ? 50 : 0) +
                 (PathTile.nearSolid(tile) ? 10 : 0) +
                 (PathTile.nearGround(tile) ? 10 : 0)
